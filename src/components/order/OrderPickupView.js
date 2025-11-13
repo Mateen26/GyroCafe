@@ -99,7 +99,7 @@ export default function OrderPickupView() {
   return (
     <main className="flex flex-col">
       <Section background="red">
-        <div className="space-y-4 text-white">
+        <div className="space-y-4 text-white py-20">
           <p className="text-xs uppercase tracking-[0.4em] text-white/70">
             Pickup Orders Only
           </p>
@@ -129,7 +129,7 @@ export default function OrderPickupView() {
         {items.length === 0 ? (
           <EmptyCart />
         ) : (
-          <div className="grid gap-12 lg:grid-cols-[1.2fr,1fr]">
+          <div className="grid gap-12 lg:grid-cols-[1.2fr,1fr] py-20">
             <div className="space-y-6">
               <header className="space-y-2">
                 <h2 className="text-2xl font-bold uppercase tracking-tight text-brand-dark">
@@ -183,7 +183,7 @@ export default function OrderPickupView() {
 
 function EmptyCart() {
   return (
-    <div className="flex flex-col items-center gap-6 text-center">
+    <div className="flex flex-col items-center gap-6 text-center py-20">
       <div className="relative h-40 w-40 opacity-80">
         <Image
           src="/slideshow/chicken gyro pita.png"
