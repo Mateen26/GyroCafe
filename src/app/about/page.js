@@ -15,23 +15,30 @@ export default function AboutPage() {
   return (
     <main className="flex flex-col">
       <Hero
-        backgroundImage="/mainbackground.JPG"
-        backgroundPosition="center 55%"
-        eyebrow="Gyro Cafe · Brooklyn Born"
-        title="Since 2007, A Brooklyn Classic."
-        description={`What started as a small family-run gyro counter became a neighborhood landmark. Every night, our grill stays hot, our sauces stay fresh, and our team greets you like family.`}
-        primaryCta={{ label: "View the Menu", href: "/menu" }}
-        secondaryCta={{
+        backgroundImage="/IMG_4354.JPG"
+        backgroundPosition="center 60%"
+        eyebrow="Gyro Cafe · Coney Island Ave"
+        title="Since 2007, a Brooklyn Classic."
+        description={`What started as a small family run gyro spot on Coney Island Avenue grew into a neighborhood staple. A place where the grill’s always hot, the sauce is always fresh, and the faces are familiar.\n\nFor nearly two decades, Gyro Café has been serving Brooklyn’s heartbeat: late-night meals, lunch breaks, and everything in between — made fresh, made Halal, Gyro’s The Cafe Way.`}
+        align="right"
+        vertical="bottom"
+        contentWidth="max-w-[150rem]"
+        primaryCta={{
           label: "Order Pickup",
-          href: "/order-pickup",
+          href: siteConfig.ctas.pickup.href,
         }}
-        subline="Open Late · Family-Owned · Halal Always"
+        secondaryCta={{
+          label: "Order Delivery",
+          href: siteConfig.deliveryUrl,
+          external: true,
+        }}
+        subline="Open Late · Family-Owned · Serving Brooklyn Since 2007"
       />
 
       <Section background="white">
         <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr] lg:items-center">
           <div className="space-y-5">
-            <p className="text-xs uppercase tracking-[0.4em] text-brand-red">
+            <p className="text-lg uppercase tracking-[0.4em] text-brand-red">
               Brooklyn Roots
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark md:text-4xl">
@@ -58,21 +65,12 @@ export default function AboutPage() {
                 </li>
               ))}
             </ul>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-neutral-200">
-              <Image
-                src="/template.jpeg"
-                alt="Vintage Gyro Cafe storefront"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 520px, 100vw"
-              />
-            </div>
           </div>
         </div>
       </Section>
 
-      <Section background="red">
-        <div className="grid gap-8 lg:grid-cols-3">
+      <Section background="white">
+        <div className="grid gap-8 lg:grid-cols-3 py-20">
           {[
             {
               title: "Halal & Handmade",
@@ -90,11 +88,11 @@ export default function AboutPage() {
                 "Our trio of sauces started as a family recipe. Today they bottle the very flavor of Gyro Cafe.",
             },
           ].map((item) => (
-            <div key={item.title} className="space-y-3 text-white">
+            <div key={item.title} className="space-y-3 text-brand-dark">
               <h3 className="text-xl font-bold uppercase tracking-wide">
                 {item.title}
               </h3>
-              <p className="text-sm leading-relaxed text-white/80">
+              <p className="text-sm leading-relaxed text-neutral-600">
                 {item.description}
               </p>
             </div>
@@ -104,7 +102,7 @@ export default function AboutPage() {
 
       <Section background="white">
         <div className="grid gap-10 lg:grid-cols-[1fr,1.1fr] lg:items-center">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-neutral-200">
+          {/* <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-neutral-200">
             <Image
               src="/slideshow/loaded friesn enhanced.jpg"
               alt="Gyro Cafe staff preparing food"
@@ -112,8 +110,8 @@ export default function AboutPage() {
               className="object-cover"
               sizes="(min-width: 1024px) 480px, 100vw"
             />
-          </div>
-          <div className="space-y-5">
+          </div> */}
+          <div className="space-y-5 py-20">
             <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark md:text-4xl">
               Community, Culture, Convenience
             </h2>
