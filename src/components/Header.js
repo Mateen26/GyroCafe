@@ -22,7 +22,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-[150rem] items-center justify-between gap-4 px-4 py-3 lg:px-16">
+      <div className="mx-auto flex w-full max-w-600 items-center justify-between gap-4 px-4 py-3 lg:px-16">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -95,7 +95,7 @@ export function Header() {
           >
             <HiOutlineShoppingBag className="text-2xl" />
             {cartCount > 0 ? (
-              <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-red px-1 text-[11px] font-semibold text-white">
+              <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-red px-1 text-[11px] font-semibold text-white">
                 {cartCount}
               </span>
             ) : null}
@@ -115,7 +115,7 @@ export function Header() {
 function MobileMenu({ open, onClose, links }) {
   return (
     <div
-      className={`fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300 ${
+      className={`fixed inset-0 z-60 bg-black/40 transition-opacity duration-300 ${
         open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
       }`}
     >

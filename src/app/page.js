@@ -113,7 +113,7 @@ function SaucedBanner() {
           sizes="100vw"
         />
         <div className="absolute inset-0 " />
-        <div className="relative mx-auto flex w-full max-w-[140rem] flex-col items-center gap-6 px-6 text-center text-white sm:px-12 lg:px-14">
+        <div className="relative mx-auto flex w-full max-w-560 flex-col items-center gap-6 px-6 text-center text-white sm:px-12 lg:px-14">
           <p className="text-lg uppercase tracking-[0.4em] text-white/70">
             Meet SAÜCED
           </p>
@@ -142,7 +142,7 @@ function ContactSection() {
             Visit Gyro Cafe
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark md:text-4xl">
-            Brooklyn’s Late-Night Staple
+            Brooklyn's Late-Night Staple
           </h2>
           <ContactDetails />
           <div className="flex flex-wrap gap-3">

@@ -9,7 +9,7 @@ export const siteConfig = {
   halalCertified: true,
   deliveryUrl:
     process.env.NEXT_PUBLIC_DELIVERY_URL ||
-    "https://www.ubereats.com/store/gyro-cafe-placeholder",
+    "https://www.ubereats.com/store/gyro-cafe-kensington-coney-island/sKOKD2u1T6a8rd72XqsPng?srsltid=AfmBOooeocbY2XSV2nDtSf3Mx2UBpcCsBtjdXUdj4EXof8h928EKW6SK",
   googleReviewUrl:
     process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
     "https://maps.google.com/?cid=gyro-cafe-review-placeholder",

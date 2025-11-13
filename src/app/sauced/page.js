@@ -9,7 +9,7 @@ import { menuItems } from "@/lib/menuData";
 export const metadata = {
   title: "SAÜCED · Gyro Cafe Signature Sauces",
   description:
-    "Take home Gyro Cafe’s original Mango, White, and Hot sauces. Bottled in-house, ready to pour, drip, and dip.",
+    "Take home Gyro Cafe's original Mango, White, and Hot sauces. Bottled in-house, ready to pour, drip, and dip.",
 };
 
 const saucedItems = menuItems.filter((item) => item.category === "sauced");
@@ -40,7 +40,7 @@ export default function SaucedPage() {
               </Button>
             </div>
           </div>
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/5 shadow-2xl shadow-black/30">
+          <div className="relative aspect-4/3 w-full overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/5 shadow-2xl shadow-black/30">
             <Image
               src="/threesouces.jpeg"
               alt="Gyro Cafe Sauced bottles"
