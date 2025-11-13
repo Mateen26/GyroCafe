@@ -27,9 +27,9 @@ export function MenuGrid({
 
   return (
     <Section background="white">
-      <div className="space-y-10">
+      <div className="space-y-10 py-20">
         <header className="space-y-4">
-          <p className="text-xs uppercase tracking-[0.4em] text-brand-red">
+          <p className="text-lg uppercase tracking-[0.4em] text-brand-red">
             Order for Pickup
           </p>
           <h1 className="text-4xl font-bold uppercase tracking-tight text-brand-dark">

@@ -32,9 +32,9 @@ export function ReviewsCarousel({
 
   return (
     <Section background={background}>
-      <div className="grid gap-10 lg:grid-cols-[1fr,1.2fr] lg:items-center">
+      <div className="grid gap-10 lg:grid-cols-[1fr,1.2fr] lg:items-center py-20">
         <div className="space-y-6">
-          <p className="text-xs uppercase tracking-[0.4em]">
+          <p className="text-lg uppercase tracking-[0.4em]">
             Our Community Speaks
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-tight md:text-4xl">

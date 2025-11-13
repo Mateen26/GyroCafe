@@ -16,9 +16,9 @@ export default function MenuPage() {
   return (
     <main className="flex flex-col">
       <Section background="red">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr] lg:items-center py-20">
           <div className="space-y-4 text-white">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+            <p className="text-lg uppercase tracking-[0.4em] text-white">
               Pick It Up, Keep It Sauced
             </p>
             <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl">

@@ -11,7 +11,7 @@ export function SaucedProductList({ items = [] }) {
   if (!items.length) return null;
 
   return (
-    <div className="grid gap-6 md:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-3 max-w-[70%] mx-auto">
       {items.map((item) => (
         <article
           key={item.id}

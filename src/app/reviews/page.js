@@ -31,9 +31,9 @@ export default function ReviewsPage() {
       />
 
       <Section background="white">
-        <div className="space-y-8">
+        <div className="space-y-8 py-20">
           <header className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.4em] text-brand-red">
+            <p className="text-lg uppercase tracking-[0.4em] text-brand-red">
               Across the Platforms
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark md:text-4xl">
@@ -67,17 +67,17 @@ export default function ReviewsPage() {
         </div>
       </Section>
 
-      <Section background="red">
-        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <Section background="white">
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5 py-10">
           {platforms.map((platform) => (
             <div
               key={platform.name}
-              className="rounded-3xl border border-white/20 bg-white/10 p-6 text-white shadow-lg"
+              className="rounded-3xl border border-neutral-200 bg-white p-6 text-brand-dark shadow-lg"
             >
               <p className="text-lg font-semibold uppercase tracking-wide">
                 {platform.name}
               </p>
-              <p className="mt-2 text-sm text-white/80">{platform.tagline}</p>
+              <p className="mt-2 text-sm text-neutral-600">{platform.tagline}</p>
             </div>
           ))}
         </div>

@@ -13,8 +13,8 @@ export default function ContactPage() {
   return (
     <main className="flex flex-col">
       <Section background="red">
-        <div className="space-y-5 text-white">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+        <div className="space-y-5 text-white py-20">
+          <p className="text-lg uppercase tracking-[0.4em] text-white">
             Say Hello
           </p>
           <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl">
@@ -34,7 +34,7 @@ export default function ContactPage() {
       </Section>
 
       <Section background="white">
-        <div className="grid gap-12 lg:grid-cols-[1fr,1.1fr]">
+        <div className="grid gap-12 lg:grid-cols-[1fr,1.1fr] py-20">
           <div className="space-y-6">
             <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark">
               Visit or Reach Out

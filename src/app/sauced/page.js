@@ -18,9 +18,9 @@ export default function SaucedPage() {
   return (
     <main className="flex flex-col">
       <Section background="red">
-        <div className="grid gap-10 lg:grid-cols-[1fr,1.1fr] lg:items-center">
-          <div className="space-y-5 text-white">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+        <div className="grid gap-10 lg:grid-cols-[1fr,1.1fr] lg:items-center py-10">
+          <div className="space-y-5 text-white mt-10">
+            <p className="text-lg uppercase tracking-[0.4em] text-white">
               The Café Way · SAÜCED
             </p>
             <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl">
@@ -35,7 +35,7 @@ export default function SaucedPage() {
               <Button href="/order-pickup" variant="light">
                 Add to Pickup Order
               </Button>
-              <Button href={siteConfig.deliveryUrl} external variant="ghost">
+              <Button href={siteConfig.deliveryUrl} external variant="light">
                 Want Delivery?
               </Button>
             </div>
@@ -53,9 +53,9 @@ export default function SaucedPage() {
       </Section>
 
       <Section background="white">
-        <div className="space-y-6">
-          <header className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.4em] text-brand-red">
+        <div className="space-y-6 py-10">
+          <header className="space-y-3 mt-10">
+            <p className="text-lg uppercase tracking-[0.4em] text-brand-red">
               SAÜCED Lineup
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark md:text-4xl">

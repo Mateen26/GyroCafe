@@ -241,7 +241,7 @@ export const menuItems = [
     name: "SAÜCED Hot Bottle",
     category: "sauced",
     price: 8.5,
-    image: "/threesouces.jpeg",
+    image: "/RED_SAUCE.jpg",
     description:
       "Fiery hot sauce crafted to kick up platters, wraps, and everything in between.",
     tags: ["sauced", "spicy"],

@@ -12,7 +12,7 @@ export default function CateringPage() {
   return (
     <main className="flex flex-col">
       <Section background="red">
-        <div className="space-y-5 text-white">
+        <div className="space-y-5 text-white py-20">
           <p className="text-xs uppercase tracking-[0.4em] text-white/70">
             Catering · Brooklyn & Beyond
           </p>
@@ -32,7 +32,7 @@ export default function CateringPage() {
       </Section>
 
       <Section background="white">
-        <div className="mx-auto w-full max-w-3xl space-y-10">
+        <div className="mx-auto w-full max-w-3xl space-y-10 py-20">
           <header className="space-y-3 text-center">
             <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark">
               Catering Request Form

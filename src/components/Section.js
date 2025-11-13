@@ -24,7 +24,7 @@ export function Section({
         children
       ) : (
         <div
-          className={`mx-auto w-full max-w-[110rem] px-6 lg:px-16 ${containerClassName}`}
+          className={`mx-auto max-w-[85%]  px-6 lg:px-16 ${containerClassName}`}
         >
           {children}
         </div>

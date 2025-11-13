@@ -14,7 +14,7 @@ export function SocialFeed({
 
   return (
     <Section background="white">
-      <div className="space-y-10">
+      <div className="space-y-10 py-20">
         <header className="max-w-3xl space-y-3">
           <p className="text-xs uppercase tracking-[0.4em] text-brand-red">
             Gyro Cafe on the Feed

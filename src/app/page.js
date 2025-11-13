@@ -43,7 +43,7 @@ export default function Home() {
         cta={{ label: "See Full Menu", href: "/menu" }}
       />
 
-      <Section background="red">
+      {/* <Section background="red">
         <div className="grid gap-12 lg:grid-cols-[1fr,1fr] lg:items-center">
           <div className="space-y-6">
             <p className="text-xs uppercase tracking-[0.4em] text-white/70">
@@ -80,7 +80,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </Section>
+      </Section> */}
 
       <SaucedBanner />
 
@@ -103,18 +103,18 @@ export default function Home() {
 
 function SaucedBanner() {
   return (
-    <Section background="transparent" className="p-0" noContainer>
-      <div className="relative isolate flex min-h-[320px] w-full items-center justify-center overflow-hidden bg-brand-red py-16">
+    <Section  className="p-0" noContainer>
+      <div className="relative  flex min-h-[1020px] w-full items-center justify-center overflow-hidden  py-16">
         <Image
           src="/threesouces.jpeg"
           alt="Gyro Cafe Sauced bottles"
           fill
-          className="object-cover opacity-60"
+          className="object-cover "
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-brand-red/70" />
+        <div className="absolute inset-0 " />
         <div className="relative mx-auto flex w-full max-w-[140rem] flex-col items-center gap-6 px-6 text-center text-white sm:px-12 lg:px-14">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+          <p className="text-lg uppercase tracking-[0.4em] text-white/70">
             Meet SAÜCED
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-tight md:text-4xl">
@@ -136,7 +136,7 @@ function SaucedBanner() {
 function ContactSection() {
   return (
     <Section background="white">
-      <div className="grid gap-10 lg:grid-cols-[1fr,1.2fr]">
+      <div className="grid gap-10 lg:grid-cols-[1fr,1.2fr] py-20">
         <div className="space-y-4">
           <p className="text-xs uppercase tracking-[0.4em] text-brand-red">
             Visit Gyro Cafe
