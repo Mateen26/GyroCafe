@@ -29,6 +29,7 @@ export const siteConfig = {
     { label: "Menu", href: "/menu" },
     { label: "Sauced", href: "/sauced" },
     { label: "Catering", href: "/catering" },
+    { label: "Promotions", href: "/promotions", icon: "🔥" },
     { label: "Reviews", href: "/reviews" },
     { label: "Contact Us", href: "/contact" },
   ],

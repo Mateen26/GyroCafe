@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/config";
 
 const footerLinks = [
   { label: "Contact Us", href: "/contact" },
+  { label: "Promotions", href: "/promotions", icon: "🔥" },
   { label: "Order Pickup", href: siteConfig.ctas.pickup.href },
   {
     label: "Order Delivery",
@@ -25,7 +26,7 @@ export function Footer() {
     <footer className="bg-brand-red text-white">
       <div className="mx-auto flex w-full max-w-[135rem] flex-col gap-10 px-6 py-14 lg:flex-row lg:items-start lg:justify-between lg:px-16">
         <div className="flex flex-col gap-4">
-          <div className="relative h-16 w-32">
+          <div className="relative h-24 w-48">
             <Image
               src="/logo.jpeg"
               alt="Gyro Cafe logo"
@@ -51,16 +52,22 @@ export function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:text-black"
+                  className="flex items-center gap-2 transition hover:text-black"
                 >
+                  {link.icon && (
+                    <span className="animate-fire text-sm">{link.icon}</span>
+                  )}
                   {link.label}
                 </a>
               ) : (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="transition hover:text-black"
+                  className="flex items-center gap-2 transition hover:text-black"
                 >
+                  {link.icon && (
+                    <span className="animate-fire text-sm">{link.icon}</span>
+                  )}
                   {link.label}
                 </Link>
               )

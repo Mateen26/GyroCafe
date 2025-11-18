@@ -14,6 +14,8 @@ export function CartDrawer() {
     isOpen,
     subtotal,
     promotion,
+    bogoPitaPromo,
+    totalDiscount,
     total,
     cartCount,
     updateQuantity,
@@ -78,34 +80,69 @@ export function CartDrawer() {
               </div>
             ) : (
               <ul className="space-y-5">
-                {items.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex gap-4 rounded-2xl border border-neutral-200 p-4"
-                  >
-                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
-                      {item.image ? (
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          sizes="160px"
-                          className="object-cover"
-                        />
-                      ) : null}
-                    </div>
-                    <div className="flex flex-1 flex-col justify-between">
-                      <div>
-                        <p className="text-xs uppercase tracking-wide text-neutral-500">
-                          {item.category}
-                        </p>
-                        <p className="font-semibold text-brand-dark">
-                          {item.name}
-                        </p>
-                        <p className="text-sm font-medium text-brand-red">
-                          ${item.price.toFixed(2)}
-                        </p>
+                {items.map((item) => {
+                  const isUpsell = item.metadata?.isUpsellItem === true;
+                  const isBogoDiscounted = item.metadata?.isBogoDiscounted === true;
+                  const displayPrice = item.price ?? 0;
+                  const regularPrice = isUpsell 
+                    ? (item.metadata?.upsellType === "fries" ? 4.5 : 2.5)
+                    : displayPrice;
+
+                  return (
+                    <li
+                      key={item.id}
+                      className={`flex gap-4 rounded-2xl border p-4 ${
+                        isUpsell 
+                          ? "border-brand-red/30 bg-brand-red/5" 
+                          : isBogoDiscounted
+                          ? "border-brand-red/20 bg-brand-red/5"
+                          : "border-neutral-200"
+                      }`}
+                    >
+                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
+                        {item.image ? (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            sizes="160px"
+                            className="object-cover"
+                          />
+                        ) : null}
                       </div>
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div>
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1">
+                              <p className="text-xs uppercase tracking-wide text-neutral-500">
+                                {item.category}
+                              </p>
+                              <p className="font-semibold text-brand-dark">
+                                {item.name}
+                              </p>
+                            </div>
+                            {isUpsell && (
+                              <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red">
+                                Add-On
+                              </span>
+                            )}
+                            {isBogoDiscounted && (
+                              <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red">
+                                50% Off
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-1 flex items-center gap-2">
+                            {isUpsell && regularPrice > displayPrice && (
+                              <span className="text-xs text-neutral-400 line-through">
+                                ${regularPrice.toFixed(2)}
+                              </span>
+                            )}
+                            <p className="text-sm font-medium text-brand-red">
+                              ${displayPrice.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
                       <div className="flex items-center justify-between">
                         <div className="inline-flex items-center rounded-full border border-neutral-200">
                           <button
@@ -143,7 +180,8 @@ export function CartDrawer() {
                       </div>
                     </div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
           </div>
@@ -151,14 +189,29 @@ export function CartDrawer() {
           <footer className="border-t border-neutral-200 px-6 py-5">
             <div className="space-y-3 text-sm text-neutral-600">
               <SummaryRow label="Subtotal" value={`$${subtotal.toFixed(2)}`} />
-              {promotion?.discount ? (
+              {bogoPitaPromo?.discount > 0 && (
+                <SummaryRow
+                  label="BOGO 50% Off Pitas"
+                  value={`- $${bogoPitaPromo.discount.toFixed(2)}`}
+                  highlight
+                  message="Buy any pita, get the second 50% off"
+                />
+              )}
+              {promotion?.discount > 0 && (
                 <SummaryRow
                   label={promotion?.label ?? "Promo Applied"}
                   value={`- $${promotion.discount.toFixed(2)}`}
                   highlight
                   message={promotion.description}
                 />
-              ) : null}
+              )}
+              {totalDiscount > 0 && (
+                <SummaryRow
+                  label="Total Discounts"
+                  value={`- $${totalDiscount.toFixed(2)}`}
+                  highlight
+                />
+              )}
               <SummaryRow
                 label="Total (Pickup)"
                 value={`$${total.toFixed(2)}`}

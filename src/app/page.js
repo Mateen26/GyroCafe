@@ -142,7 +142,7 @@ function ContactSection() {
             Visit Gyro Cafe
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-tight text-brand-dark md:text-4xl">
-            Brooklyn's Late-Night Staple
+          BROOKLYN'S ALL-DAY STAPLE
           </h2>
           <ContactDetails />
           <div className="flex flex-wrap gap-3">
@@ -188,13 +188,13 @@ function ContactDetails() {
       <p className="uppercase tracking-wide text-brand-dark">
         {siteConfig.hours}
       </p>
-      <div className="flex flex-wrap gap-3 pt-2 text-xs uppercase tracking-[0.3em] text-neutral-500">
+      {/* <div className="flex flex-wrap gap-3 pt-2 text-xs uppercase tracking-[0.3em] text-neutral-500">
         {menuCategories.slice(0, 4).map((category) => (
           <span key={category.id} className="rounded-full border border-neutral-200 px-3 py-1">
             {category.name}
           </span>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

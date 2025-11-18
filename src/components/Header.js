@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { HiMiniBars3, HiMiniXMark } from "react-icons/hi2";
 
@@ -22,7 +23,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-600 items-center justify-between gap-4 px-4 py-3 lg:px-16">
+      <div className="mx-auto flex w-full max-w-600 items-center justify-between gap-4 px-4 py-0 lg:px-16">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -34,7 +35,7 @@ export function Header() {
           </button>
 
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-12 w-24 shrink-0">
+            <div className="relative h-24 w-32 shrink-0">
               <Image
                 src="/logo.jpeg"
                 alt="Gyro Cafe logo"
@@ -43,21 +44,21 @@ export function Header() {
                 className="object-contain"
               />
             </div>
-            <div className="hidden text-left sm:flex sm:flex-col">
+            {/* <div className="hidden text-left sm:flex sm:flex-col">
               <span className="text-sm uppercase tracking-[0.2em] text-neutral-500">
                 {siteConfig.since}
               </span>
               <span className="font-semibold uppercase tracking-tight text-brand-dark">
                 {siteConfig.name}
               </span>
-            </div>
+            </div> */}
           </Link>
 
-          {siteConfig.halalCertified ? (
+          {/* {siteConfig.halalCertified ? (
             <span className="hidden rounded-full border border-brand-red/20 bg-brand-red/10 px-3 py-1 text-xs font-semibold uppercase text-brand-red md:inline-flex">
               Halal Certified
             </span>
-          ) : null}
+          ) : null} */}
         </div>
 
         <nav className="hidden items-center gap-6 text-sm font-medium uppercase tracking-wide text-neutral-700 md:flex xl:gap-10">
@@ -65,8 +66,11 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="transition hover:text-brand-red"
+              className="flex items-center gap-1.5 transition hover:text-brand-red"
             >
+              {link.icon && (
+                <span className="animate-fire text-base">{link.icon}</span>
+              )}
               {link.label}
             </Link>
           ))}
@@ -113,67 +117,113 @@ export function Header() {
 }
 
 function MobileMenu({ open, onClose, links }) {
-  return (
-    <div
-      className={`fixed inset-0 z-60 bg-black/40 transition-opacity duration-300 ${
-        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-      }`}
-    >
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Ensure component is mounted before using portal
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const menuContent = (
+    <>
+      {/* Backdrop */}
       <div
-        className={`absolute left-0 top-0 h-full w-[85%] max-w-xs transform bg-white p-6 transition-transform duration-300 ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={onClose}
+        aria-hidden="true"
+        style={{ zIndex: 9998 }}
+      />
+
+      {/* Menu Drawer */}
+      <div
+        className={`fixed left-0 top-0 h-full w-[85%] max-w-xs transform bg-white shadow-2xl transition-transform duration-300 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{
+          zIndex: 9999,
+          visibility: open ? "visible" : "visible",
+          willChange: "transform",
+        }}
       >
-        <div className="mb-6 flex items-center justify-between">
-          <span className="text-sm font-semibold uppercase tracking-[0.3em] text-neutral-500">
-            {siteConfig.since}
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close navigation menu"
-            className="rounded-full border border-neutral-200 p-2 text-neutral-700 transition hover:border-brand-red hover:text-brand-red"
-          >
-            <HiMiniXMark className="text-xl" />
-          </button>
-        </div>
-
-        <nav className="flex flex-col gap-4">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
+        <div className="flex h-full flex-col overflow-y-auto p-6">
+          {/* Header */}
+          <div className="mb-6 flex items-center justify-between">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-neutral-500">
+              {siteConfig.since}
+            </span>
+            <button
+              type="button"
               onClick={onClose}
-              className="text-lg font-semibold uppercase tracking-wide text-brand-dark transition hover:text-brand-red"
+              aria-label="Close navigation menu"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 shadow-sm transition hover:border-brand-red hover:text-brand-red"
             >
-              {link.label}
+              <HiMiniXMark className="text-xl" />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="flex flex-col gap-4">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={onClose}
+                className="flex items-center gap-2 text-lg font-semibold uppercase tracking-wide text-brand-dark transition hover:text-brand-red"
+              >
+                {link.icon && (
+                  <span className="animate-fire text-lg">{link.icon}</span>
+                )}
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* CTA Buttons */}
+          <div className="mt-8 space-y-3">
+            <Link
+              href={siteConfig.ctas.pickup.href}
+              onClick={onClose}
+              className="block rounded-full border border-brand-red bg-brand-red px-5 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white shadow-md shadow-brand-red/20 transition hover:opacity-90"
+            >
+              {siteConfig.ctas.pickup.label}
             </Link>
-          ))}
-        </nav>
+            <a
+              href={deliveryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onClose}
+              className="block rounded-full border border-brand-red px-5 py-3 text-center text-sm font-semibold uppercase tracking-wide text-brand-red transition hover:bg-brand-red/10"
+            >
+              {siteConfig.ctas.delivery.label}
+            </a>
+          </div>
 
-        <div className="mt-8 space-y-3">
-          <Link
-            href={siteConfig.ctas.pickup.href}
-            onClick={onClose}
-            className="block rounded-full border border-brand-red bg-brand-red px-5 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white shadow-md shadow-brand-red/20 transition hover:opacity-90"
-          >
-            {siteConfig.ctas.pickup.label}
-          </Link>
-          <a
-            href={deliveryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block rounded-full border border-brand-red px-5 py-3 text-center text-sm font-semibold uppercase tracking-wide text-brand-red transition hover:bg-brand-red/10"
-          >
-            {siteConfig.ctas.delivery.label}
-          </a>
+          {/* Footer Text */}
+          <p className="mt-auto pt-6 text-xs uppercase tracking-wide text-neutral-500">
+            Open Late · Family-Owned · Brooklyn Classic
+          </p>
         </div>
-
-        <p className="mt-6 text-xs uppercase tracking-wide text-neutral-500">
-          Open Late · Family-Owned · Brooklyn Classic
-        </p>
       </div>
-    </div>
+    </>
   );
+
+  // Render menu in a portal at document.body level
+  return createPortal(menuContent, document.body);
 }
 

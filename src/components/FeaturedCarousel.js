@@ -57,15 +57,15 @@ export function FeaturedCarousel({
       <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[1.05fr,1.2fr] lg:gap-10 lg:items-center">
         <div className="space-y-4 lg:space-y-8">
           <div className="space-y-4 lg:space-y-6">
-            <p className="text-sm lg:text-xl uppercase tracking-[0.4em] text-brand-red">
+            {/* <p className="text-sm lg:text-xl uppercase tracking-[0.4em] text-brand-red">
               Fresh · Local · Halal
-            </p>
+            </p> */}
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-brand-dark">
               {title}
             </h2>
-            <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-600">
+            {/* <p className="text-sm md:text-base lg:text-lg leading-relaxed text-neutral-600">
               {subtitle}
-            </p>
+            </p> */}
             <motion.div
               key={activeSlide?.id ?? activeIndex}
               initial={{ opacity: 0, y: 10 }}

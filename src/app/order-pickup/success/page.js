@@ -20,10 +20,10 @@ export default function OrderPickupSuccess({ searchParams }) {
       : "Pickup Order Received";
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col ">
       <Section background="red">
-        <div className="space-y-4 text-white">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+        <div className="space-y-4 text-white py-10">
+          <p className="text-lg uppercase tracking-[0.4em] text-white">
             Gyro Cafe Pickup
           </p>
           <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl">
@@ -38,7 +38,7 @@ export default function OrderPickupSuccess({ searchParams }) {
       </Section>
 
       <Section background="white">
-        <div className="space-y-6 text-sm text-neutral-600">
+        <div className="space-y-6 text-sm text-neutral-600 py-10">
           {name ? (
             <p className="text-base font-semibold uppercase tracking-wide text-brand-dark">
               Thank you, {name}!

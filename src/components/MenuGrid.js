@@ -75,7 +75,7 @@ export function MenuGrid({
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-cover transition duration-700 group-hover:scale-105"
+                    className="object-contain transition duration-700 group-hover:scale-105"
                     sizes="(min-width: 1280px) 360px, (min-width: 768px) 45vw, 100vw"
                   />
                 ) : null}
