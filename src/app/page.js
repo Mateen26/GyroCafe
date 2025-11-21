@@ -2,15 +2,19 @@ import Image from "next/image";
 
 import { Button } from "@/components/Button";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { FeaturedVideoSlider } from "@/components/FeaturedVideoSlider";
 import { Hero } from "@/components/Hero";
 import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 import { Section } from "@/components/Section";
 import { SocialFeed } from "@/components/SocialFeed";
+import { VideoSliderSection } from "@/components/VideoSliderSection";
 import { siteConfig } from "@/lib/config";
 import {
   featuredSlides,
   menuCategories,
-  socialFeedItems,
+  featuredVideos,
+  remainingVideos,
+  getMarqueeItems,
 } from "@/lib/menuData";
 import { reviews, reviewsSummary } from "@/lib/reviewsData";
 
@@ -93,7 +97,11 @@ export default function Home() {
 
       <SaucedBanner />
 
-      <SocialFeed items={socialFeedItems} />
+      <FeaturedVideoSlider items={featuredVideos} />
+
+      <VideoSliderSection items={remainingVideos} />
+
+      <SocialFeed items={getMarqueeItems()} />
 
       <ReviewsCarousel
         reviews={reviews}

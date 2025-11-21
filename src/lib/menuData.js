@@ -997,20 +997,25 @@ export const featuredSlides = [
   },
 ];
 
+// All social feed items (kept for backward compatibility)
 export const socialFeedItems = [
+  // You can use either local videos or Instagram URLs:
+  // For local videos: { id: "...", video: "/videos/1.MOV", caption: "..." }
+  // For Instagram posts: { id: "...", instagramUrl: "https://www.instagram.com/p/ABC123/", caption: "..." }
+  // Or use video field with Instagram URL: { id: "...", video: "https://www.instagram.com/p/ABC123/", caption: "..." }
   {
     id: "video-1",
-    video: "/videos/1.MOV",
+    video: "/videos/1BIG ORDER.MOV",
     caption: "Fresh gyro meat spinning on the grill — the heart of every platter.",
   },
   {
     id: "video-2",
-    video: "/videos/2.MOV",
+    video: "/videos/2GYROS THE CAFE WAY.MOV",
     caption: "Behind the scenes: Our signature sauces being mixed fresh daily.",
   },
   {
     id: "video-3",
-    video: "/videos/3.MOV",
+    video: "/videos/3MUHEED ONLY IN NYC.MOV",
     caption: "Loaded fries getting the full treatment — gyro meat, white sauce, hot sauce.",
   },
   {
@@ -1033,5 +1038,54 @@ export const socialFeedItems = [
     id: "video-9",
     video: "/videos/9.MOV",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
-  },
+  }
 ];
+
+// Featured videos (top 3) for the featured slider section
+export const featuredVideos = socialFeedItems.slice(0, 3);
+
+// Remaining videos for the video slider section
+export const remainingVideos = socialFeedItems.slice(3);
+
+/**
+ * Get menu items suitable for marquee (platters, kababs, etc.)
+ */
+function getMarqueeMenuItems() {
+  return menuItems.filter(
+    (item) =>
+      (item.category === "platters" ||
+        item.category === "wraps" ||
+        item.category === "naanwich" ||
+        item.category === "house-specials") &&
+      item.image
+  );
+}
+
+/**
+ * Creates alternating array of videos and menu item images for marquee
+ * Pattern: [video, menuImage, video, menuImage, ...]
+ */
+export function getMarqueeItems() {
+  const menuItemsForMarquee = getMarqueeMenuItems();
+  const marqueeItems = [];
+  
+  // Interleave videos with menu images
+  remainingVideos.forEach((videoItem, index) => {
+    // Add video
+    marqueeItems.push(videoItem);
+    
+    // Add menu image after each video (cycle through menu items)
+    if (menuItemsForMarquee.length > 0) {
+      const menuIndex = index % menuItemsForMarquee.length;
+      const menuItem = menuItemsForMarquee[menuIndex];
+      marqueeItems.push({
+        id: `menu-${menuItem.id}`,
+        image: menuItem.image,
+        caption: menuItem.name,
+        isMenuImage: true,
+      });
+    }
+  });
+  
+  return marqueeItems;
+}
