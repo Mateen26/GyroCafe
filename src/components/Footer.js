@@ -26,7 +26,7 @@ export function Footer() {
     <footer className="bg-brand-red text-white">
       <div className="mx-auto flex w-full max-w-[135rem] flex-col gap-10 px-6 py-14 lg:flex-row lg:items-start lg:justify-between lg:px-16">
         <div className="flex flex-col gap-4">
-          <div className="relative h-24 w-48">
+          <div className="relative h-32 w-64 md:h-24 md:w-48">
             <Image
               src="/logo.jpeg"
               alt="Gyro Cafe logo"

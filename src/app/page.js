@@ -43,6 +43,15 @@ export default function Home() {
         cta={{ label: "See Full Menu", href: "/menu" }}
       />
 
+      {/* MEET SAUCED Banner */}
+      <Section background="red" className="py-16 md:py-20">
+        <div className="text-center">
+          <h2 className="text-5xl font-bold uppercase tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl">
+            MEET SAUCED
+          </h2>
+        </div>
+      </Section>
+
       {/* <Section background="red">
         <div className="grid gap-12 lg:grid-cols-[1fr,1fr] lg:items-center">
           <div className="space-y-6">
@@ -103,24 +112,21 @@ export default function Home() {
 
 function SaucedBanner() {
   return (
-    <Section  className="p-0" noContainer>
-      <div className="relative  flex min-h-[1020px] w-full items-center justify-center overflow-hidden  py-16">
+    <Section className="p-0" noContainer>
+      <div className="relative flex min-h-[600px] w-full items-center justify-center overflow-hidden py-16 md:min-h-[1020px]">
         <Image
           src="/threesouces.jpeg"
           alt="Gyro Cafe Sauced bottles"
           fill
-          className="object-cover "
+          className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 " />
-        <div className="relative mx-auto flex w-full max-w-560 flex-col items-center gap-6 px-6 text-center text-white sm:px-12 lg:px-14">
-          <p className="text-lg uppercase tracking-[0.4em] text-white/70">
-            Meet SAÜCED
-          </p>
-          <h2 className="text-3xl font-bold uppercase tracking-tight md:text-4xl">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-6 text-center text-white sm:px-12 lg:px-16">
+          <h2 className="text-3xl font-bold uppercase tracking-tight md:text-4xl lg:text-5xl">
             Our Original Mango, White & Hot Sauces — Bottled
           </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
+          <p className="max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
             Crafted in-house from our day-one recipes. Dress your platters, dip
             your fries, or take the Gyro Cafe flavor home.
           </p>

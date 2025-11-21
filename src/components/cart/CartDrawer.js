@@ -83,10 +83,28 @@ export function CartDrawer() {
                 {items.map((item) => {
                   const isUpsell = item.metadata?.isUpsellItem === true;
                   const isBogoDiscounted = item.metadata?.isBogoDiscounted === true;
-                  const displayPrice = item.price ?? 0;
-                  const regularPrice = isUpsell 
-                    ? (item.metadata?.upsellType === "fries" ? 4.5 : 2.5)
-                    : displayPrice;
+                  
+                  // Calculate price for upsell items (promotional + full-price portions)
+                  let displayPrice = item.price ?? 0;
+                  let regularPrice = displayPrice;
+                  let itemTotal = displayPrice * (item.quantity ?? 1);
+                  
+                  if (isUpsell) {
+                    const promoPrice = item.price ?? 0; // Upsell promotional price
+                    const fullPrice = item.metadata?.upsellType === "fries" ? 4.5 : 2.5;
+                    const promoQty = item.metadata?.promotionalQuantity ?? (item.quantity ?? 1);
+                    const fullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+                    const totalQty = promoQty + fullPriceQty;
+                    
+                    // Calculate total price for this item
+                    itemTotal = (promoPrice * promoQty) + (fullPrice * fullPriceQty);
+                    
+                    // Display average price per item
+                    displayPrice = totalQty > 0 ? itemTotal / totalQty : promoPrice;
+                    regularPrice = fullPrice;
+                  } else {
+                    itemTotal = displayPrice * (item.quantity ?? 1);
+                  }
 
                   return (
                     <li
@@ -133,14 +151,40 @@ export function CartDrawer() {
                             )}
                           </div>
                           <div className="mt-1 flex items-center gap-2">
-                            {isUpsell && regularPrice > displayPrice && (
+                            {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
                               <span className="text-xs text-neutral-400 line-through">
                                 ${regularPrice.toFixed(2)}
                               </span>
                             )}
                             <p className="text-sm font-medium text-brand-red">
                               ${displayPrice.toFixed(2)}
+                              {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
+                                <span className="ml-1 text-xs text-neutral-500">
+                                  (mixed pricing)
+                                </span>
+                              )}
                             </p>
+                          </div>
+                          {/* Item Total with Calculation */}
+                          <div className="mt-2">
+                            <p className="text-xs font-semibold text-brand-dark">
+                              Total: ${itemTotal.toFixed(2)}
+                            </p>
+                            {!isUpsell && (
+                              <p className="mt-0.5 text-[10px] text-neutral-500">
+                                {item.quantity} × ${displayPrice.toFixed(2)} = ${itemTotal.toFixed(2)}
+                              </p>
+                            )}
+                            {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
+                              <p className="mt-1 text-[10px] text-neutral-500">
+                                {item.metadata?.promotionalQuantity ?? 0} @ ${(item.price ?? 0).toFixed(2)} + {item.metadata?.fullPriceQuantity} @ ${regularPrice.toFixed(2)}
+                              </p>
+                            )}
+                            {isUpsell && item.metadata?.fullPriceQuantity === 0 && (
+                              <p className="mt-0.5 text-[10px] text-neutral-500">
+                                {item.quantity} × ${displayPrice.toFixed(2)} = ${itemTotal.toFixed(2)}
+                              </p>
+                            )}
                           </div>
                         </div>
                       <div className="flex items-center justify-between">
@@ -198,12 +242,23 @@ export function CartDrawer() {
                 />
               )}
               {promotion?.discount > 0 && (
-                <SummaryRow
-                  label={promotion?.label ?? "Promo Applied"}
-                  value={`- $${promotion.discount.toFixed(2)}`}
-                  highlight
-                  message={promotion.description}
-                />
+                <div>
+                  <SummaryRow
+                    label={promotion?.label ?? "Promo Applied"}
+                    value={`- $${promotion.discount.toFixed(2)}`}
+                    highlight
+                    message={promotion.description}
+                  />
+                  {promotion?.breakdown && promotion.breakdown.length > 0 && (
+                    <div className="mt-1 space-y-0.5 pl-2 text-[10px] text-neutral-500">
+                      {promotion.breakdown.map((item, idx) => (
+                        <p key={idx}>
+                          {item.count} × {item.name} @ ${item.price.toFixed(2)} = ${item.total.toFixed(2)} (FREE)
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
               {totalDiscount > 0 && (
                 <SummaryRow

@@ -47,7 +47,7 @@ export function Hero({
 
   return (
     <Section background="transparent" className="relative p-0" noContainer>
-      <div className="relative h-[90vh] min-h-[480px] w-full overflow-hidden mb-10">
+      <div className="relative h-[90vh] min-h-[480px] w-full overflow-hidden mb-10 pt-20 md:pt-0">
         {backgroundImage ? (
           <Image
             src={backgroundImage}
@@ -65,23 +65,23 @@ export function Hero({
 
         <div className="absolute inset-0">
           <div
-            className={`mx-auto flex h-full w-full ${contentWidth} ${verticalClass} ${horizontal.justify} ${paddingClass} py-16 lg:py-20`}
+            className={`mx-auto flex h-full w-full ${contentWidth} ${verticalClass} ${horizontal.justify} ${paddingClass} py-12 sm:py-16 lg:py-20`}
           >
             <div
-              className={`w-full max-w-3xl space-y-7 text-white ${horizontal.self} ${horizontal.text}`}
+              className={`w-full max-w-3xl space-y-4 text-white sm:space-y-6 lg:space-y-7 ${horizontal.self} ${horizontal.text}`}
             >
               {eyebrow ? (
-                <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+                <p className="text-[10px] uppercase tracking-[0.4em] text-white/70 sm:text-xs">
                   {eyebrow}
                 </p>
               ) : null}
               {title ? (
-                <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl lg:text-6xl">
+                <h1 className="text-3xl font-bold uppercase tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
                   {title}
                 </h1>
               ) : null}
               {description ? (
-                <p className="whitespace-pre-line text-base leading-relaxed text-white/80 md:text-lg lg:text-xl">
+                <p className="whitespace-pre-line text-sm leading-relaxed text-white/80 sm:text-base md:text-lg lg:text-xl">
                   {description}
                 </p>
               ) : null}
@@ -114,7 +114,7 @@ export function Hero({
                 ) : null}
               </div>
               {subline ? (
-                <p className="text-xs uppercase tracking-widest text-white/70">
+                <p className="text-[10px] uppercase tracking-widest text-white/70 sm:text-xs">
                   {subline}
                 </p>
               ) : null}

@@ -40,14 +40,34 @@ export default function SaucedPage() {
               </Button>
             </div>
           </div>
-          <div className="relative aspect-4/3 w-full overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/5 shadow-2xl shadow-black/30">
-            <Image
-              src="/threesouces.jpeg"
-              alt="Gyro Cafe Sauced bottles"
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 420px, 90vw"
-            />
+          <div className="grid grid-cols-3 gap-4">
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/20 bg-white/5 shadow-xl">
+              <Image
+                src="/menu/GYRO SAUCES/MANGO.jpg"
+                alt="Mango Sauce"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 140px, 30vw"
+              />
+            </div>
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/20 bg-white/5 shadow-xl">
+              <Image
+                src="/menu/GYRO SAUCES/WHITE SAUCE.jpg"
+                alt="White Sauce"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 140px, 30vw"
+              />
+            </div>
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/20 bg-white/5 shadow-xl">
+              <Image
+                src="/menu/GYRO SAUCES/RED SAUCE.jpg"
+                alt="Hot Sauce"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 140px, 30vw"
+              />
+            </div>
           </div>
         </div>
       </Section>

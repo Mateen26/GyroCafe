@@ -18,6 +18,7 @@ import {
   createUpsellItem,
   calculateExcessUpsells,
   isEntree,
+  getTotalEntreeQuantity,
 } from "@/lib/upsell";
 import { upsellConfig } from "@/lib/promotionsConfig";
 
@@ -75,10 +76,53 @@ function cartReducer(state, action) {
         };
       }
 
+      const item = state.items.find((i) => i.id === id);
+      if (!item) return state;
+
+      // Handle upsell items specially - check capacity
+      if (item.metadata?.isUpsellItem === true) {
+        // This will be handled in the useEffect hook after state update
+        // For now, just update the quantity
+        return {
+          ...state,
+          items: state.items.map((item) =>
+            item.id === id ? { ...item, quantity } : item
+          ),
+        };
+      }
+
       return {
         ...state,
         items: state.items.map((item) =>
           item.id === id ? { ...item, quantity } : item
+        ),
+      };
+    }
+    case "UPDATE_UPSELL_QUANTITIES": {
+      const { id, promotionalQuantity, fullPriceQuantity } = action.payload;
+      const totalQty = promotionalQuantity + fullPriceQuantity;
+      
+      if (totalQty <= 0) {
+        return {
+          ...state,
+          items: state.items.filter((item) => item.id !== id),
+        };
+      }
+
+      return {
+        ...state,
+        items: state.items.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                quantity: totalQty,
+                metadata: {
+                  ...item.metadata,
+                  promotionalQuantity,
+                  fullPriceQuantity,
+                },
+              }
+            : item
         ),
       };
     }
@@ -100,6 +144,7 @@ function cartReducer(state, action) {
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const [showUpsellModal, setShowUpsellModal] = useState(false);
+  const [toastNotification, setToastNotification] = useState({ isOpen: false, message: "" });
   const previousItemsRef = useRef([]);
 
   useEffect(() => {
@@ -131,7 +176,7 @@ export function CartProvider({ children }) {
     );
   }, [state.items, state.fulfillmentType]);
 
-  // Handle upsell triggers and excess removal
+  // Handle upsell triggers, capacity limits, and excess removal
   useEffect(() => {
     // Only for pickup orders
     if (state.fulfillmentType !== "pickup" || !upsellConfig.active) {
@@ -139,33 +184,182 @@ export function CartProvider({ children }) {
       return;
     }
 
-    // Check for excess upsells and remove them
-    const excessRemovals = calculateExcessUpsells(state.items);
-    if (excessRemovals.length > 0) {
-      excessRemovals.forEach(({ id, quantityToRemove }) => {
-        const item = state.items.find((i) => i.id === id);
-        if (item) {
-          const newQuantity = (item.quantity ?? 1) - quantityToRemove;
-          if (newQuantity <= 0) {
-            dispatch({ type: "REMOVE_ITEM", payload: { id } });
-          } else {
-            dispatch({ 
-              type: "UPDATE_QUANTITY", 
-              payload: { id, quantity: newQuantity } 
-            });
+    const totalEntrees = getTotalEntreeQuantity(state.items);
+    const previousEntrees = getTotalEntreeQuantity(previousItemsRef.current);
+    const upsellItems = state.items.filter((item) => item.metadata?.isUpsellItem === true);
+    
+    // If no entrées, remove all upsell items
+    if (totalEntrees === 0 && upsellItems.length > 0) {
+      upsellItems.forEach((item) => {
+        dispatch({ type: "REMOVE_ITEM", payload: { id: item.id } });
+      });
+      previousItemsRef.current = state.items;
+      return;
+    }
+    
+    // Only process excess removal if entrée quantity decreased
+    // (Manual quantity updates are handled in updateQuantity callback)
+    if (totalEntrees < previousEntrees) {
+      // Process upsell items by type (fries and drinks separately)
+      const friesItems = upsellItems.filter((i) => i.metadata?.upsellType === "fries");
+      const drinkItems = upsellItems.filter((i) => i.metadata?.upsellType === "drink");
+      
+      // Process fries items - remove excess
+      const totalPromoFries = friesItems.reduce(
+        (sum, i) => sum + (i.metadata?.promotionalQuantity ?? i.quantity ?? 0),
+        0
+      );
+      const excessFries = Math.max(0, totalPromoFries - totalEntrees);
+      
+      if (excessFries > 0) {
+        let remaining = excessFries;
+        for (const item of friesItems.sort((a, b) => (b.metadata?.createdAt ?? 0) - (a.metadata?.createdAt ?? 0))) {
+          if (remaining <= 0) break;
+          const currentPromoQty = item.metadata?.promotionalQuantity ?? item.quantity ?? 0;
+          const currentFullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+          const toRemove = Math.min(remaining, currentPromoQty);
+          
+          if (toRemove > 0) {
+            const newPromoQty = currentPromoQty - toRemove;
+            const newTotalQty = newPromoQty + currentFullPriceQty;
+            
+            if (newTotalQty <= 0) {
+              dispatch({ type: "REMOVE_ITEM", payload: { id: item.id } });
+            } else {
+              dispatch({
+                type: "UPDATE_UPSELL_QUANTITIES",
+                payload: {
+                  id: item.id,
+                  promotionalQuantity: newPromoQty,
+                  fullPriceQuantity: currentFullPriceQty,
+                },
+              });
+            }
+            remaining -= toRemove;
           }
         }
-      });
-      // Show toast notification
-      if (typeof window !== "undefined") {
-        // Simple alert for now - can be replaced with toast component
-        console.log("Add-on items adjusted based on entrée quantity.");
       }
+      
+      // Process drink items - remove excess
+      const totalPromoDrinks = drinkItems.reduce(
+        (sum, i) => sum + (i.metadata?.promotionalQuantity ?? i.quantity ?? 0),
+        0
+      );
+      const excessDrinks = Math.max(0, totalPromoDrinks - totalEntrees);
+      
+      if (excessDrinks > 0) {
+        let remaining = excessDrinks;
+        for (const item of drinkItems.sort((a, b) => (b.metadata?.createdAt ?? 0) - (a.metadata?.createdAt ?? 0))) {
+          if (remaining <= 0) break;
+          const currentPromoQty = item.metadata?.promotionalQuantity ?? item.quantity ?? 0;
+          const currentFullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+          const toRemove = Math.min(remaining, currentPromoQty);
+          
+          if (toRemove > 0) {
+            const newPromoQty = currentPromoQty - toRemove;
+            const newTotalQty = newPromoQty + currentFullPriceQty;
+            
+            if (newTotalQty <= 0) {
+              dispatch({ type: "REMOVE_ITEM", payload: { id: item.id } });
+            } else {
+              dispatch({
+                type: "UPDATE_UPSELL_QUANTITIES",
+                payload: {
+                  id: item.id,
+                  promotionalQuantity: newPromoQty,
+                  fullPriceQuantity: currentFullPriceQty,
+                },
+              });
+            }
+            remaining -= toRemove;
+          }
+        }
+      }
+      
       previousItemsRef.current = state.items;
       return;
     }
 
-    // Check if upsell should trigger
+    // If entrée quantity increased, convert full-price upsells back to promotional
+    if (totalEntrees > previousEntrees) {
+      const newCapacity = totalEntrees;
+      
+      // Process fries items - convert full-price to promotional
+      const friesItems = upsellItems.filter((i) => i.metadata?.upsellType === "fries");
+      const currentPromotionalFries = friesItems.reduce(
+        (sum, i) => sum + (i.metadata?.promotionalQuantity ?? 0),
+        0
+      );
+      const availableFriesSlots = Math.max(0, newCapacity - currentPromotionalFries);
+      const totalFullPriceFries = friesItems.reduce(
+        (sum, i) => sum + (i.metadata?.fullPriceQuantity ?? 0),
+        0
+      );
+      const friesToConvert = Math.min(availableFriesSlots, totalFullPriceFries);
+      
+      if (friesToConvert > 0) {
+        let remaining = friesToConvert;
+        for (const item of friesItems.sort((a, b) => (a.metadata?.createdAt ?? 0) - (b.metadata?.createdAt ?? 0))) {
+          if (remaining <= 0) break;
+          const currentFullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+          if (currentFullPriceQty <= 0) continue;
+          
+          const toConvert = Math.min(remaining, currentFullPriceQty);
+          const newFullPriceQty = currentFullPriceQty - toConvert;
+          const newPromoQty = (item.metadata?.promotionalQuantity ?? 0) + toConvert;
+          
+          dispatch({
+            type: "UPDATE_UPSELL_QUANTITIES",
+            payload: {
+              id: item.id,
+              promotionalQuantity: newPromoQty,
+              fullPriceQuantity: newFullPriceQty,
+            },
+          });
+          
+          remaining -= toConvert;
+        }
+      }
+      
+      // Process drink items - convert full-price to promotional
+      const drinkItems = upsellItems.filter((i) => i.metadata?.upsellType === "drink");
+      const currentPromotionalDrinks = drinkItems.reduce(
+        (sum, i) => sum + (i.metadata?.promotionalQuantity ?? 0),
+        0
+      );
+      const availableDrinksSlots = Math.max(0, newCapacity - currentPromotionalDrinks);
+      const totalFullPriceDrinks = drinkItems.reduce(
+        (sum, i) => sum + (i.metadata?.fullPriceQuantity ?? 0),
+        0
+      );
+      const drinksToConvert = Math.min(availableDrinksSlots, totalFullPriceDrinks);
+      
+      if (drinksToConvert > 0) {
+        let remaining = drinksToConvert;
+        for (const item of drinkItems.sort((a, b) => (a.metadata?.createdAt ?? 0) - (b.metadata?.createdAt ?? 0))) {
+          if (remaining <= 0) break;
+          const currentFullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+          if (currentFullPriceQty <= 0) continue;
+          
+          const toConvert = Math.min(remaining, currentFullPriceQty);
+          const newFullPriceQty = currentFullPriceQty - toConvert;
+          const newPromoQty = (item.metadata?.promotionalQuantity ?? 0) + toConvert;
+          
+          dispatch({
+            type: "UPDATE_UPSELL_QUANTITIES",
+            payload: {
+              id: item.id,
+              promotionalQuantity: newPromoQty,
+              fullPriceQuantity: newFullPriceQty,
+            },
+          });
+          
+          remaining -= toConvert;
+        }
+      }
+    }
+
+    // Check if upsell should trigger (when entrée is added)
     const capacity = shouldTriggerUpsell(state.items, previousItemsRef.current);
     if (capacity > 0) {
       setShowUpsellModal(true);
@@ -176,10 +370,18 @@ export function CartProvider({ children }) {
 
   const subtotal = useMemo(
     () =>
-      state.items.reduce(
-        (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 1),
-        0
-      ),
+      state.items.reduce((sum, item) => {
+        // For upsell items, calculate promotional + full-price portions
+        if (item.metadata?.isUpsellItem === true) {
+          const promoPrice = item.price ?? 0;
+          const fullPrice = item.metadata?.upsellType === "fries" ? 4.5 : 2.5;
+          const promoQty = item.metadata?.promotionalQuantity ?? (item.quantity ?? 1);
+          const fullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+          return sum + (promoPrice * promoQty) + (fullPrice * fullPriceQty);
+        }
+        // Regular items
+        return sum + (item.price ?? 0) * (item.quantity ?? 1);
+      }, 0),
     [state.items]
   );
 
@@ -220,8 +422,76 @@ export function CartProvider({ children }) {
   }, []);
 
   const updateQuantity = useCallback((id, quantity) => {
-    dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
-  }, []);
+    const item = state.items.find((i) => i.id === id);
+    
+    // Special handling for upsell items - check capacity
+    if (item?.metadata?.isUpsellItem === true && state.fulfillmentType === "pickup" && upsellConfig.active) {
+      const totalEntrees = getTotalEntreeQuantity(state.items);
+      const currentQty = item.quantity ?? 1;
+      const currentPromoQty = item.metadata?.promotionalQuantity ?? currentQty;
+      const currentFullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+      
+      // Calculate total promotional upsells for this type
+      const sameTypeItems = state.items.filter(
+        (i) => i.metadata?.isUpsellItem === true && 
+        i.metadata?.upsellType === item.metadata?.upsellType &&
+        i.id !== id
+      );
+      const otherPromoQty = sameTypeItems.reduce(
+        (sum, i) => sum + (i.metadata?.promotionalQuantity ?? i.quantity ?? 0),
+        0
+      );
+      
+      // Maximum promotional quantity for this item
+      const maxPromoForThisItem = Math.max(0, totalEntrees - otherPromoQty);
+      
+      // Calculate new quantities
+      let newPromoQty, newFullPriceQty;
+      const quantityChange = quantity - currentQty;
+      
+      if (quantityChange > 0) {
+        // Increasing quantity
+        const availablePromo = Math.max(0, maxPromoForThisItem - currentPromoQty);
+        const promoIncrease = Math.min(quantityChange, availablePromo);
+        const fullPriceIncrease = quantityChange - promoIncrease;
+        
+        newPromoQty = currentPromoQty + promoIncrease;
+        newFullPriceQty = currentFullPriceQty + fullPriceIncrease;
+        
+        // Show notification if adding full-price items
+        if (fullPriceIncrease > 0) {
+          const productName = item.metadata?.upsellType === "fries" ? "fries" : "drinks";
+          const fullPrice = item.metadata?.upsellType === "fries" ? "$4.00" : "$2.50";
+          setToastNotification({
+            isOpen: true,
+            message: `Maximum promotional ${productName} reached (${maxPromoForThisItem} at promotional price). Additional ${productName} will be charged at regular price (${fullPrice} each).`,
+            type: "warning",
+          });
+        }
+      } else {
+        // Decreasing quantity - remove from full-price first, then promotional
+        const decrease = Math.abs(quantityChange);
+        const fullPriceDecrease = Math.min(decrease, currentFullPriceQty);
+        const promoDecrease = decrease - fullPriceDecrease;
+        
+        newFullPriceQty = Math.max(0, currentFullPriceQty - fullPriceDecrease);
+        newPromoQty = Math.max(0, currentPromoQty - promoDecrease);
+      }
+      
+      // Update with new quantities
+      dispatch({
+        type: "UPDATE_UPSELL_QUANTITIES",
+        payload: {
+          id,
+          promotionalQuantity: newPromoQty,
+          fullPriceQuantity: newFullPriceQty,
+        },
+      });
+    } else {
+      // Regular item update
+      dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
+    }
+  }, [state.items, state.fulfillmentType]);
 
   const clearCart = useCallback(() => {
     dispatch({ type: "CLEAR_CART" });
@@ -282,18 +552,20 @@ export function CartProvider({ children }) {
       bogoPitaPromo,
       totalDiscount: Number(totalDiscount.toFixed(2)),
       total: Number(total.toFixed(2)),
-      upsellCapacity,
-      showUpsellModal,
-      addItem,
-      removeItem,
-      updateQuantity,
-      clearCart,
-      openCart,
-      closeCart,
-      toggleCart,
-      setFulfillmentType,
-      setShowUpsellModal,
-      handleUpsellSelect,
+          upsellCapacity,
+          showUpsellModal,
+          toastNotification,
+          addItem,
+          removeItem,
+          updateQuantity,
+          clearCart,
+          openCart,
+          closeCart,
+          toggleCart,
+          setFulfillmentType,
+          setShowUpsellModal,
+          setToastNotification,
+          handleUpsellSelect,
     }),
     [
       state.items,
@@ -307,6 +579,7 @@ export function CartProvider({ children }) {
       total,
       upsellCapacity,
       showUpsellModal,
+      toastNotification,
       addItem,
       removeItem,
       updateQuantity,
@@ -315,6 +588,8 @@ export function CartProvider({ children }) {
       closeCart,
       toggleCart,
       setFulfillmentType,
+      setShowUpsellModal,
+      setToastNotification,
       handleUpsellSelect,
     ]
   );

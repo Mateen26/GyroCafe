@@ -17,7 +17,7 @@ export function isEntree(item) {
  */
 export function getTotalEntreeQuantity(cartItems) {
   return cartItems
-    .filter((item) => isEntree(item))
+    .filter((item) => isEntree(item) && !item.metadata?.isUpsellItem)
     .reduce((sum, item) => sum + (item.quantity ?? 1), 0);
 }
 
@@ -31,13 +31,38 @@ export function getTotalUpsellQuantity(cartItems) {
 }
 
 /**
- * Calculate upsell capacity (how many more upsells can be added)
- * Formula: totalEntrees - totalUpsells
+ * Calculate upsell capacity (how many more upsells can be added at promotional price)
+ * Formula: totalEntrees - totalPromotionalUpsells
  */
 export function calculateUpsellCapacity(cartItems) {
   const totalEntrees = getTotalEntreeQuantity(cartItems);
-  const totalUpsells = getTotalUpsellQuantity(cartItems);
-  return Math.max(0, totalEntrees - totalUpsells);
+  const totalPromotionalUpsells = getTotalPromotionalUpsellQuantity(cartItems);
+  return Math.max(0, totalEntrees - totalPromotionalUpsells);
+}
+
+/**
+ * Calculate total promotional upsell quantity (only items at promotional price)
+ */
+export function getTotalPromotionalUpsellQuantity(cartItems) {
+  return cartItems
+    .filter((item) => item.metadata?.isUpsellItem === true)
+    .reduce((sum, item) => {
+      // Only count promotional quantity
+      const promoQty = item.metadata?.promotionalQuantity ?? item.quantity ?? 0;
+      return sum + promoQty;
+    }, 0);
+}
+
+/**
+ * Calculate total full-price upsell quantity
+ */
+export function getTotalFullPriceUpsellQuantity(cartItems) {
+  return cartItems
+    .filter((item) => item.metadata?.isUpsellItem === true)
+    .reduce((sum, item) => {
+      const fullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+      return sum + fullPriceQty;
+    }, 0);
 }
 
 /**
@@ -95,44 +120,73 @@ export function createUpsellItem(type, quantity = 1, menuItems = []) {
       isUpsellItem: true,
       upsellType: type,
       originalProductId: product.id,
+      promotionalQuantity: quantity,
+      fullPriceQuantity: 0,
+      createdAt: Date.now(),
     },
   };
 }
 
 /**
- * Remove excess upsell items when entrée quantity decreases
- * Returns array of items to remove (id and quantity to remove)
+ * Calculate excess promotional upsells that need to be removed or converted to full price
+ * Returns array of items to update (id, newPromotionalQty, newFullPriceQty, removeItem flag)
  */
 export function calculateExcessUpsells(cartItems) {
   const capacity = calculateUpsellCapacity(cartItems);
+  const totalPromotional = getTotalPromotionalUpsellQuantity(cartItems);
   
-  if (capacity >= 0) {
+  if (capacity >= 0 && totalPromotional <= capacity) {
     return []; // No excess
   }
 
-  const excess = Math.abs(capacity);
+  const excess = Math.max(0, totalPromotional - capacity);
+  if (excess === 0) return [];
+
   const upsellItems = cartItems
     .filter((item) => item.metadata?.isUpsellItem === true)
-    .map((item, index) => ({ ...item, originalIndex: cartItems.indexOf(item) }))
+    .map((item) => ({
+      ...item,
+      currentPromoQty: item.metadata?.promotionalQuantity ?? item.quantity ?? 0,
+    }))
     .sort((a, b) => {
-      // Sort by creation order (or by price descending as fallback)
-      return (b.price ?? 0) - (a.price ?? 0);
+      // Remove from newest first (items added later)
+      return (b.metadata?.createdAt ?? 0) - (a.metadata?.createdAt ?? 0);
     });
 
-  const removals = [];
+  const updates = [];
   let remaining = excess;
 
   for (const item of upsellItems) {
     if (remaining <= 0) break;
 
-    const toRemove = Math.min(item.quantity ?? 1, remaining);
-    removals.push({
-      id: item.id,
-      quantityToRemove: toRemove,
-    });
+    const promoQty = item.currentPromoQty;
+    if (promoQty <= 0) continue;
+
+    const toRemove = Math.min(promoQty, remaining);
+    const newPromoQty = promoQty - toRemove;
+    const currentFullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+    const newFullPriceQty = currentFullPriceQty + toRemove;
+    const newTotalQty = newPromoQty + newFullPriceQty;
+
+    if (newTotalQty <= 0) {
+      // Remove item completely
+      updates.push({
+        id: item.id,
+        removeItem: true,
+      });
+    } else {
+      // Update quantities
+      updates.push({
+        id: item.id,
+        newPromotionalQty: newPromoQty,
+        newFullPriceQty: newFullPriceQty,
+        removeItem: false,
+      });
+    }
+
     remaining -= toRemove;
   }
 
-  return removals;
+  return updates;
 }
 

@@ -132,9 +132,34 @@ export function calculatePromotion(cartItems, config = promotionConfig) {
   if (config.type === "bogo") {
     const freeItemCount = Math.floor(eligible.length / 2);
     const sortedByPrice = [...eligible].sort((a, b) => a.price - b.price);
-    discount = sortedByPrice
-      .slice(0, freeItemCount)
-      .reduce((sum, item) => sum + item.price, 0);
+    const freeItems = sortedByPrice.slice(0, freeItemCount);
+    discount = freeItems.reduce((sum, item) => sum + item.price, 0);
+    
+    // Group free items by name and price for breakdown
+    const freeItemsBreakdown = freeItems.reduce((acc, item) => {
+      const key = `${item.name}-${item.price}`;
+      if (!acc[key]) {
+        acc[key] = { name: item.name, price: item.price, count: 0 };
+      }
+      acc[key].count++;
+      return acc;
+    }, {});
+    
+    return {
+      discount: Number(discount.toFixed(2)),
+      message: `${config.headline}: -${formatCurrency(discount)}`,
+      label: config.label,
+      type: config.type,
+      description: config.description,
+      breakdown: Object.values(freeItemsBreakdown).map(item => ({
+        name: item.name,
+        price: item.price,
+        count: item.count,
+        total: item.price * item.count,
+      })),
+      freeItemCount,
+      totalEligibleItems: eligible.length,
+    };
   }
 
   if (config.type === "second_half_off") {
