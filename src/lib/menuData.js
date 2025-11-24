@@ -38,7 +38,12 @@ export const menuCategories = [
   {
     id: "desserts",
     name: "Desserts & Sweets",
-    description: "Baklava, milkshakes, and sweet bites that finish the meal right.",
+    description: "Baklava and sweet bites that finish the meal right.",
+  },
+  {
+    id: "milkshakes",
+    name: "Milkshakes",
+    description: "Creamy, hand-blended milkshakes in delicious flavors.",
   },
   {
     id: "drinks",
@@ -636,14 +641,46 @@ export const menuItems = [
     description: "Layers of flaky phyllo, pistachio, and honey syrup.",
     tags: ["halal", "sweet", "fan favorite"],
   },
+
+  // MILKSHAKES
   {
     id: "nutella-milkshake",
     name: "Nutella Milkshake",
-    category: "desserts",
+    category: "milkshakes",
     price: 8,
     image: "/menu/GYRO CAFE HOUSE SPECIALS/nutella ms.webp",
     description:
       "Creamy milkshake blended with rich Nutella.",
+    tags: ["sweet"],
+  },
+  {
+    id: "vanilla-milkshake",
+    name: "Vanilla Milkshake",
+    category: "milkshakes",
+    price: 7,
+    image: "/menu/GYRO MILKSHAKES/vanilla-milkshake.webp",
+    description:
+      "Classic creamy vanilla milkshake, smooth and refreshing.",
+    tags: ["sweet"],
+  },
+  {
+    id: "mango-milkshake",
+    name: "Mango Milkshake",
+    category: "milkshakes",
+    price: 8,
+    image: "/menu/GYRO MILKSHAKES/mango-milkshake.webp",
+    description:
+      "Tropical mango milkshake with a burst of fresh mango flavor.",
+    tags: ["sweet"],
+  },
+  {
+    id: "cookies-n-cream-milkshake",
+    name: "Cookies N Cream Milkshake",
+    category: "milkshakes",
+    price: 8,
+    image: "/menu/GYRO MILKSHAKES/cookies-n-cream-milkshake.webp",
+    description:
+      "Rich vanilla milkshake loaded with crushed chocolate cookies.",
     tags: ["sweet"],
   },
 
