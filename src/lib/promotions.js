@@ -10,7 +10,7 @@ const defaultEligibleCategories = [
 ];
 
 export const promotionConfig = {
-  active: true,
+  active: false, // Disabled - using specific pita and gyro promotions instead
   type: "bogo", // "bogo", "second_half_off", or null
   eligibleCategories: defaultEligibleCategories,
   label: "Pickup Promo",
@@ -32,17 +32,55 @@ const BOGO_PITA_IDS = [
 
 /**
  * Check if an item qualifies for gyro promotion
- * Applies to items with "gyro" in the name (excluding pita items which get pita promotion)
+ * Applies to: chicken gyro, lamb gyro, mix gyro, falafel, fish, hummus, kofta (platters only)
+ * Excludes pita items (they get pita promotion) and items with modifiers like "w/ Fries"
  */
 function isGyroItem(item) {
   const name = (item.name || "").toLowerCase();
   const id = (item.id || "").toLowerCase();
+  const category = (item.category || "").toLowerCase();
+  
+  // Must be a platter
+  if (category !== "platters") {
+    return false;
+  }
+  
   // Exclude pita items (they get pita promotion)
   if (id.includes("pita") || name.includes("pita")) {
     return false;
   }
-  // Check if name contains "gyro"
-  return name.includes("gyro");
+  
+  // Exclude items with modifiers like "w/ Fries" or "w/ fries"
+  if (name.includes("w/") || name.includes("with fries") || name.includes("with fries")) {
+    return false;
+  }
+  
+  // Check for gyro items (chicken gyro, lamb gyro, mix gyro)
+  if (name.includes("gyro")) {
+    return true;
+  }
+  
+  // Check for falafel items
+  if (id.includes("falafel") || name.includes("falafel")) {
+    return true;
+  }
+  
+  // Check for fish items
+  if (id.includes("fish") || name.includes("fish")) {
+    return true;
+  }
+  
+  // Check for hummus items
+  if (id.includes("hummus") || name.includes("hummus")) {
+    return true;
+  }
+  
+  // Check for kofta items
+  if (id.includes("kofta") || name.includes("kofta")) {
+    return true;
+  }
+  
+  return false;
 }
 
 /**
@@ -59,11 +97,7 @@ export function calculateBogoGyroPromo(cartItems, fulfillmentType = "pickup") {
   // Filter eligible gyro items (excluding pita items)
   const eligibleGyros = cartItems.filter((item) => isGyroItem(item));
 
-  if (eligibleGyros.length < 2) {
-    return { discount: 0, items: [] };
-  }
-
-  // Expand items by quantity
+  // Expand items by quantity to check total eligible quantity
   const expanded = eligibleGyros.flatMap((item) =>
     Array.from({ length: item.quantity ?? 1 }, () => ({
       ...item,
@@ -71,6 +105,11 @@ export function calculateBogoGyroPromo(cartItems, fulfillmentType = "pickup") {
       originalQuantity: item.quantity ?? 1,
     }))
   );
+
+  // Need at least 2 eligible items (by quantity, not unique items)
+  if (expanded.length < 2) {
+    return { discount: 0, items: [] };
+  }
 
   // Calculate how many get discounted (every 2nd one)
   const discountedCount = Math.floor(expanded.length / 2);
@@ -128,11 +167,7 @@ export function calculateBogoPitaPromo(cartItems, fulfillmentType = "pickup") {
     (item) => BOGO_PITA_IDS.includes(item.id)
   );
 
-  if (eligiblePitas.length < 2) {
-    return { discount: 0, items: [] };
-  }
-
-  // Expand items by quantity
+  // Expand items by quantity to check total eligible quantity
   const expanded = eligiblePitas.flatMap((item) =>
     Array.from({ length: item.quantity ?? 1 }, () => ({
       ...item,
@@ -140,6 +175,11 @@ export function calculateBogoPitaPromo(cartItems, fulfillmentType = "pickup") {
       originalQuantity: item.quantity ?? 1,
     }))
   );
+
+  // Need at least 2 eligible items (by quantity, not unique items)
+  if (expanded.length < 2) {
+    return { discount: 0, items: [] };
+  }
 
   // Calculate how many get discounted (every 2nd one)
   const discountedCount = Math.floor(expanded.length / 2);

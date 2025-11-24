@@ -288,6 +288,11 @@ export function CartDrawer() {
                                 50% Off
                               </span>
                             )}
+                            {item.metadata?.isUpgraded === true && (
+                              <span className="rounded-full bg-brand-red px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                                LARGE
+                              </span>
+                            )}
                           </div>
                           <div className="mt-1 flex items-center gap-2">
                             {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
@@ -382,7 +387,7 @@ export function CartDrawer() {
               )}
               {bogoGyroPromo?.discount > 0 && (
                 <SummaryRow
-                  label="BOGO 50% Off Gyros"
+                  label="Pickup promo (BOGO 50% OFF)"
                   value={`- $${bogoGyroPromo.discount.toFixed(2)}`}
                   highlight
                   message="Buy one gyro, get the second 50% off"

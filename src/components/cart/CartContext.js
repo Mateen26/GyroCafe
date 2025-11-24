@@ -21,6 +21,7 @@ import {
   getTotalEntreeQuantity,
 } from "@/lib/upsell";
 import { upsellConfig } from "@/lib/promotionsConfig";
+import { hasUpgradeOption, getUpgradeInfo } from "@/lib/platterUpgrades";
 
 const STORAGE_KEY = "gyro-cafe-cart";
 
@@ -38,14 +39,27 @@ function cartReducer(state, action) {
       return { ...state, ...action.payload };
     case "ADD_ITEM": {
       const { item } = action.payload;
+      console.log("[REDUCER ADD_ITEM] Received:", {
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        isUpgraded: item.metadata?.isUpgraded,
+        originalId: item.metadata?.originalId,
+      });
+      
       const items = [...state.items];
+      console.log("[REDUCER ADD_ITEM] Current cart items:", items.map(i => ({ id: i.id, name: i.name, quantity: i.quantity })));
+      
       const existingIndex = items.findIndex(
         (cartItem) => cartItem.id === item.id && 
         // For upsell items, match by original product ID too
         (!item.metadata?.isUpsellItem || cartItem.metadata?.isUpsellItem)
       );
 
+      console.log("[REDUCER ADD_ITEM] Existing index:", existingIndex);
+
       if (existingIndex > -1) {
+        console.log("[REDUCER ADD_ITEM] Item exists, incrementing quantity");
         items[existingIndex] = {
           ...items[existingIndex],
           quantity:
@@ -54,12 +68,15 @@ function cartReducer(state, action) {
           metadata: item.metadata ?? items[existingIndex].metadata,
         };
       } else {
+        console.log("[REDUCER ADD_ITEM] Item is new, adding to cart");
         items.push({ 
           ...item, 
           quantity: item.quantity ?? 1,
           metadata: item.metadata ?? {},
         });
       }
+      
+      console.log("[REDUCER ADD_ITEM] Final cart items:", items.map(i => ({ id: i.id, name: i.name, quantity: i.quantity })));
       return { ...state, items, isOpen: true };
     }
     case "REMOVE_ITEM":
@@ -144,8 +161,12 @@ function cartReducer(state, action) {
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const [showUpsellModal, setShowUpsellModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [pendingUpgradeItem, setPendingUpgradeItem] = useState(null);
   const [toastNotification, setToastNotification] = useState({ isOpen: false, message: "" });
   const previousItemsRef = useRef([]);
+  const isProcessingUpgradeRef = useRef(false); // Track if we're currently processing an upgrade
+  const pendingUpgradeItemIdRef = useRef(null); // Track the ID of the item pending upgrade
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -360,13 +381,16 @@ export function CartProvider({ children }) {
     }
 
     // Check if upsell should trigger (when entrée is added)
-    const capacity = shouldTriggerUpsell(state.items, previousItemsRef.current);
-    if (capacity > 0) {
-      setShowUpsellModal(true);
+    // Only check if upgrade modal is not showing
+    if (!showUpgradeModal) {
+      const capacity = shouldTriggerUpsell(state.items, previousItemsRef.current);
+      if (capacity > 0) {
+        setShowUpsellModal(true);
+      }
     }
 
     previousItemsRef.current = state.items;
-  }, [state.items, state.fulfillmentType]);
+  }, [state.items, state.fulfillmentType, showUpgradeModal]);
 
   const subtotal = useMemo(
     () =>
@@ -420,8 +444,69 @@ export function CartProvider({ children }) {
   );
 
   const addItem = useCallback((item) => {
+    console.log("[addItem] Called with item:", {
+      id: item.id,
+      name: item.name,
+      showUpgradeModal,
+      pendingUpgradeItem: pendingUpgradeItem?.id,
+      isProcessingUpgrade: isProcessingUpgradeRef.current,
+      pendingUpgradeItemIdRef: pendingUpgradeItemIdRef.current,
+    });
+
+    // Safety guard: Don't add items if upgrade modal is currently showing or upgrade is being processed
+    // Also prevent adding the item if its ID matches a pending upgrade item ID
+    if (showUpgradeModal || pendingUpgradeItem || isProcessingUpgradeRef.current) {
+      console.log("[addItem] BLOCKED: Modal is open or upgrade is processing");
+      return;
+    }
+    
+    // Critical: If this item ID matches a pending upgrade item ID, don't add it
+    // This prevents the original item from being added when upgrading
+    if (item.id === pendingUpgradeItemIdRef.current) {
+      console.log("[addItem] BLOCKED: Item ID matches pending upgrade item ID:", item.id);
+      return;
+    }
+
+    // Check if this item has an upgrade option
+    if (hasUpgradeOption(item.id)) {
+      const upgradeInfo = getUpgradeInfo(item.id);
+      if (upgradeInfo) {
+        console.log("[addItem] Item has upgrade option:", {
+          originalId: item.id,
+          largeId: upgradeInfo.largeId,
+        });
+        
+        // Track the original item ID to prevent it from being added
+        // Don't set isProcessingUpgradeRef here - that's only for handleUpgradeSelect
+        pendingUpgradeItemIdRef.current = item.id;
+        
+        console.log("[addItem] Set pending upgrade item ID ref:", {
+          pendingUpgradeItemIdRef: pendingUpgradeItemIdRef.current,
+        });
+        
+        // Create a clean copy of the item without any extra properties
+        // Store only the essential properties needed for the upgrade modal
+        const cleanItem = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          category: item.category,
+          metadata: item.metadata || {},
+        };
+        // Set pending upgrade item and show upgrade modal
+        setPendingUpgradeItem({ ...cleanItem, upgradeInfo });
+        setShowUpgradeModal(true);
+        console.log("[addItem] Set pending upgrade item and showed modal, returning without dispatching");
+        // Don't dispatch ADD_ITEM yet - wait for upgrade decision
+        return;
+      }
+    }
+    
+    // No upgrade option, add item normally
+    console.log("[addItem] No upgrade option, dispatching ADD_ITEM for:", item.id);
     dispatch({ type: "ADD_ITEM", payload: { item } });
-  }, []);
+  }, [showUpgradeModal, pendingUpgradeItem]);
 
   const removeItem = useCallback((id) => {
     dispatch({ type: "REMOVE_ITEM", payload: { id } });
@@ -519,6 +604,118 @@ export function CartProvider({ children }) {
     dispatch({ type: "SET_FULFILLMENT_TYPE", payload: type });
   }, []);
 
+  const handleUpgradeSelect = useCallback((accepted) => {
+    console.log("[handleUpgradeSelect] Called with accepted:", accepted);
+    
+    if (!pendingUpgradeItem) {
+      console.log("[handleUpgradeSelect] ERROR: No pending upgrade item!");
+      return;
+    }
+
+    // Prevent multiple calls - if already processing, ignore
+    if (isProcessingUpgradeRef.current) {
+      console.log("[handleUpgradeSelect] BLOCKED: Already processing upgrade");
+      return;
+    }
+
+    // Mark that we're processing the upgrade decision IMMEDIATELY
+    isProcessingUpgradeRef.current = true;
+
+    // Extract values BEFORE clearing state to avoid any reference issues
+    const originalId = pendingUpgradeItem.id;
+    const upgradeInfo = pendingUpgradeItem.upgradeInfo;
+    
+    console.log("[handleUpgradeSelect] Extracted values:", {
+      originalId,
+      largeId: upgradeInfo?.largeId,
+      pendingUpgradeItemIdRef: pendingUpgradeItemIdRef.current,
+    });
+    
+    // Create the item to add BEFORE clearing pending state
+    let itemToAdd;
+    if (accepted) {
+      // Upgrade to LARGE: create completely new item with large ID
+      // Use upgradeInfo.largeId which is guaranteed to be different from originalId
+      itemToAdd = {
+        id: upgradeInfo.largeId, // Different ID from original - CRITICAL: this must be different
+        name: pendingUpgradeItem.name.replace("SMALL", "LARGE").replace("Small", "LARGE"),
+        price: upgradeInfo.largePrice,
+        image: pendingUpgradeItem.image,
+        category: pendingUpgradeItem.category,
+        quantity: 1,
+        metadata: {
+          isUpgraded: true,
+          originalPrice: pendingUpgradeItem.price,
+          upgradedPrice: upgradeInfo.largePrice,
+          originalId: originalId, // Keep track of original ID for reference only
+        },
+      };
+      
+      console.log("[handleUpgradeSelect] UPGRADING: Created LARGE item:", {
+        id: itemToAdd.id,
+        name: itemToAdd.name,
+        price: itemToAdd.price,
+        originalId,
+      });
+      
+      // When upgrading, keep the ref set to prevent the original SMALL item from being added
+      // Clear it after a delay to allow state updates to complete
+      setTimeout(() => {
+        console.log("[handleUpgradeSelect] Clearing pendingUpgradeItemIdRef after upgrade");
+        pendingUpgradeItemIdRef.current = null;
+      }, 200);
+    } else {
+      // Keep SMALL: add original item with original ID
+      itemToAdd = {
+        id: originalId,
+        name: pendingUpgradeItem.name,
+        price: pendingUpgradeItem.price,
+        image: pendingUpgradeItem.image,
+        category: pendingUpgradeItem.category,
+        quantity: 1,
+        metadata: pendingUpgradeItem.metadata || {},
+      };
+      
+      console.log("[handleUpgradeSelect] DECLINING: Created SMALL item:", {
+        id: itemToAdd.id,
+        name: itemToAdd.name,
+        price: itemToAdd.price,
+      });
+      
+      // When declining, clear the ref immediately so the SMALL item can be added
+      console.log("[handleUpgradeSelect] Clearing pendingUpgradeItemIdRef immediately (declined)");
+      pendingUpgradeItemIdRef.current = null;
+    }
+
+    // Clear pending upgrade state FIRST to prevent any race conditions
+    console.log("[handleUpgradeSelect] Clearing pending state");
+    setPendingUpgradeItem(null);
+    setShowUpgradeModal(false);
+
+    // Now dispatch the item (only one item will be added)
+    // IMPORTANT: When upgrading, we dispatch with largeId, which is different from originalId
+    // The ref prevents the original SMALL item from being added
+    // When declining, we dispatch with originalId, and the ref is cleared so it can be added
+    console.log("[handleUpgradeSelect] Dispatching ADD_ITEM with:", {
+      id: itemToAdd.id,
+      name: itemToAdd.name,
+      quantity: itemToAdd.quantity,
+    });
+    dispatch({ type: "ADD_ITEM", payload: { item: itemToAdd } });
+
+    // Reset the processing flag after a short delay to allow state updates to complete
+    setTimeout(() => {
+      console.log("[handleUpgradeSelect] Resetting processing flag");
+      isProcessingUpgradeRef.current = false;
+      
+      // After upgrade modal closes, check for upsell trigger
+      const capacity = shouldTriggerUpsell(state.items, previousItemsRef.current);
+      if (capacity > 0) {
+        setShowUpsellModal(true);
+      }
+    }, 150);
+  }, [pendingUpgradeItem, state.items]);
+
   const handleUpsellSelect = useCallback(async (type) => {
     const capacity = calculateUpsellCapacity(state.items);
     if (capacity <= 0) return;
@@ -561,6 +758,8 @@ export function CartProvider({ children }) {
       total: Number(total.toFixed(2)),
           upsellCapacity,
           showUpsellModal,
+          showUpgradeModal,
+          pendingUpgradeItem,
           toastNotification,
           addItem,
           removeItem,
@@ -571,8 +770,11 @@ export function CartProvider({ children }) {
           toggleCart,
           setFulfillmentType,
           setShowUpsellModal,
+          setShowUpgradeModal,
+          setPendingUpgradeItem,
           setToastNotification,
           handleUpsellSelect,
+          handleUpgradeSelect,
     }),
     [
       state.items,
@@ -587,6 +789,8 @@ export function CartProvider({ children }) {
       total,
       upsellCapacity,
       showUpsellModal,
+      showUpgradeModal,
+      pendingUpgradeItem,
       toastNotification,
       addItem,
       removeItem,
@@ -597,8 +801,11 @@ export function CartProvider({ children }) {
       toggleCart,
       setFulfillmentType,
       setShowUpsellModal,
+      setShowUpgradeModal,
+      setPendingUpgradeItem,
       setToastNotification,
       handleUpsellSelect,
+      handleUpgradeSelect,
     ]
   );
 
