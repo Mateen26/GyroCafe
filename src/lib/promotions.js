@@ -31,6 +31,89 @@ const BOGO_PITA_IDS = [
 ];
 
 /**
+ * Check if an item qualifies for gyro promotion
+ * Applies to items with "gyro" in the name (excluding pita items which get pita promotion)
+ */
+function isGyroItem(item) {
+  const name = (item.name || "").toLowerCase();
+  const id = (item.id || "").toLowerCase();
+  // Exclude pita items (they get pita promotion)
+  if (id.includes("pita") || name.includes("pita")) {
+    return false;
+  }
+  // Check if name contains "gyro"
+  return name.includes("gyro");
+}
+
+/**
+ * Calculate BOGO 50% off gyro items promo
+ * For every 2 eligible gyro items, the 2nd one gets 50% off
+ * Applies to: chicken gyro, lamb gyro, mix gyro, falafel gyro, fish gyro, hummus gyro
+ */
+export function calculateBogoGyroPromo(cartItems, fulfillmentType = "pickup") {
+  // Only active for pickup orders
+  if (fulfillmentType !== "pickup") {
+    return { discount: 0, items: [] };
+  }
+
+  // Filter eligible gyro items (excluding pita items)
+  const eligibleGyros = cartItems.filter((item) => isGyroItem(item));
+
+  if (eligibleGyros.length < 2) {
+    return { discount: 0, items: [] };
+  }
+
+  // Expand items by quantity
+  const expanded = eligibleGyros.flatMap((item) =>
+    Array.from({ length: item.quantity ?? 1 }, () => ({
+      ...item,
+      quantity: 1,
+      originalQuantity: item.quantity ?? 1,
+    }))
+  );
+
+  // Calculate how many get discounted (every 2nd one)
+  const discountedCount = Math.floor(expanded.length / 2);
+
+  if (discountedCount === 0) {
+    return { discount: 0, items: [] };
+  }
+
+  // Sort by price descending (discount cheaper ones last)
+  const sorted = [...expanded].sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+
+  // Group by original item ID to track which items get discounted
+  const itemDiscounts = {};
+  let remaining = discountedCount;
+
+  for (let i = sorted.length - 1; i >= 0 && remaining > 0; i--) {
+    const item = sorted[i];
+    const key = item.id;
+
+    if (!itemDiscounts[key]) {
+      itemDiscounts[key] = 0;
+    }
+
+    itemDiscounts[key]++;
+    remaining--;
+  }
+
+  // Calculate total discount
+  let totalDiscount = 0;
+  for (const [itemId, discountQty] of Object.entries(itemDiscounts)) {
+    const originalItem = eligibleGyros.find((g) => g.id === itemId);
+    if (originalItem) {
+      totalDiscount += (originalItem.price ?? 0) * 0.5 * discountQty;
+    }
+  }
+
+  return {
+    discount: Number(totalDiscount.toFixed(2)),
+    items: Object.entries(itemDiscounts).map(([id, qty]) => ({ id, discountQty: qty })),
+  };
+}
+
+/**
  * Calculate BOGO 50% off pita sandwiches promo
  * For every 2 eligible pitas, 1 gets 50% off
  */

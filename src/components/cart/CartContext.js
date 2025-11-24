@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 
-import { calculatePromotion, promotionConfig, calculateBogoPitaPromo } from "@/lib/promotions";
+import { calculatePromotion, promotionConfig, calculateBogoPitaPromo, calculateBogoGyroPromo } from "@/lib/promotions";
 import {
   shouldTriggerUpsell,
   calculateUpsellCapacity,
@@ -391,15 +391,21 @@ export function CartProvider({ children }) {
     [state.items, state.fulfillmentType]
   );
 
+  // Calculate BOGO gyro promo
+  const bogoGyroPromo = useMemo(
+    () => calculateBogoGyroPromo(state.items, state.fulfillmentType),
+    [state.items, state.fulfillmentType]
+  );
+
   const promotion = useMemo(
     () => calculatePromotion(state.items, promotionConfig),
     [state.items]
   );
 
-  // Total discount = BOGO pita + other promotions
+  // Total discount = BOGO pita + BOGO gyro + other promotions
   const totalDiscount = useMemo(
-    () => (promotion.discount ?? 0) + (bogoPitaPromo.discount ?? 0),
-    [promotion.discount, bogoPitaPromo.discount]
+    () => (promotion.discount ?? 0) + (bogoPitaPromo.discount ?? 0) + (bogoGyroPromo.discount ?? 0),
+    [promotion.discount, bogoPitaPromo.discount, bogoGyroPromo.discount]
   );
 
   const total = useMemo(
@@ -550,6 +556,7 @@ export function CartProvider({ children }) {
       subtotal: Number(subtotal.toFixed(2)),
       promotion,
       bogoPitaPromo,
+      bogoGyroPromo,
       totalDiscount: Number(totalDiscount.toFixed(2)),
       total: Number(total.toFixed(2)),
           upsellCapacity,
@@ -575,6 +582,7 @@ export function CartProvider({ children }) {
       subtotal,
       promotion,
       bogoPitaPromo,
+      bogoGyroPromo,
       totalDiscount,
       total,
       upsellCapacity,

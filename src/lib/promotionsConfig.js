@@ -8,7 +8,7 @@ export const activePromotions = [
     type: "bogo",
     badge: "Pickup Exclusive",
     headline: "BOGO 50% Off Pita Sandwiches",
-    description: "Buy any pita sandwich, get the second 50% off. Pickup Only.",
+    description: "Buy Any Select Pita Sandwich and get your second sandwich 50% off. Pick-up Only.",
     details: "Buy any 1 eligible pita → Get any 2nd eligible pita 50% off. Discount applies automatically in cart. Pickup orders only.",
     image: "/promotions/promoone1.jpeg",
     cta: {

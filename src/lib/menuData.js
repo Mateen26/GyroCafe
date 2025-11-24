@@ -61,7 +61,7 @@ export const menuItems = [
     price: 12.0,
     image: "/menu/GYRO PLATTERS/Chicken Gyro Platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -71,7 +71,7 @@ export const menuItems = [
     price: 15.0,
     image: "/menu/GYRO PLATTERS/Chicken Gyro Platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -81,7 +81,7 @@ export const menuItems = [
     price: 12.0,
     image: "/menu/GYRO PLATTERS/lamb gyro platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -91,7 +91,7 @@ export const menuItems = [
     price: 15.0,
     image: "/menu/GYRO PLATTERS/lamb gyro platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -101,7 +101,7 @@ export const menuItems = [
     price: 12.0,
     image: "/menu/GYRO PLATTERS/mix gyro platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -111,7 +111,7 @@ export const menuItems = [
     price: 15.0,
     image: "/menu/GYRO PLATTERS/mix gyro platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -181,7 +181,7 @@ export const menuItems = [
     price: 11.0,
     image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
   },
   {
@@ -191,7 +191,7 @@ export const menuItems = [
     price: 14.0,
     image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
   },
   {
@@ -211,7 +211,7 @@ export const menuItems = [
     price: 13.0,
     image: "/menu/GYRO PLATTERS/chicken shsih plater small.jpg",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -221,7 +221,7 @@ export const menuItems = [
     price: 16.0,
     image: "/menu/GYRO PLATTERS/chicken shsih plater small.jpg",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -281,7 +281,7 @@ export const menuItems = [
     price: 13.0,
     image: "/menu/GYRO PLATTERS/Fish Platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
   },
   {
@@ -291,7 +291,7 @@ export const menuItems = [
     price: 16.0,
     image: "/menu/GYRO PLATTERS/Fish Platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice topped with white sauce and hot sauce.",
+      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
   },
   {
@@ -311,7 +311,7 @@ export const menuItems = [
     price: 11.0,
     image: "/menu/GYRO PLATTERS/Falafel Platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -321,7 +321,7 @@ export const menuItems = [
     price: 13.0,
     image: "/menu/GYRO PLATTERS/Falafel Platter.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
 
@@ -333,7 +333,7 @@ export const menuItems = [
     price: 10.0,
     image: "/menu/GYRO PITA SANDWICHES/chicken gyro pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -343,7 +343,7 @@ export const menuItems = [
     price: 10.0,
     image: "/menu/GYRO PITA SANDWICHES/lamb gyro pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -353,7 +353,7 @@ export const menuItems = [
     price: 10.0,
     image: "/menu/GYRO PITA SANDWICHES/mix gyro pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -363,7 +363,7 @@ export const menuItems = [
     price: 9.5,
     image: "/menu/GYRO PITA SANDWICHES/falafel pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket with hummus spread topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -373,7 +373,7 @@ export const menuItems = [
     price: 7.0,
     image: "/menu/GYRO PITA SANDWICHES/kofta kebab pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
   },
   {
@@ -383,7 +383,7 @@ export const menuItems = [
     price: 11.0,
     image: "/menu/GYRO PITA SANDWICHES/chicken shish kebab pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket topped with white sauce and hot sauce.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -403,7 +403,7 @@ export const menuItems = [
     price: 10.0,
     image: "/menu/GYRO PITA SANDWICHES/fish pita.png",
     description:
-      "Served with lettuce, cucumbers, tomatoes, cabbage, and onions in a toasted pita pocket.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
   },
 
@@ -415,7 +415,7 @@ export const menuItems = [
     price: 12.0,
     image: "/menu/GYRO NAANWICHES/Chicken Gyro Naanwich.png",
     description:
-      "Chicken gyro wrapped in fresh home made Nan Bread. Served with Mixed Vegetables and white and Hot sauce",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -425,7 +425,7 @@ export const menuItems = [
     price: 12.0,
     image: "/menu/GYRO NAANWICHES/lamb gyro naanwich.png",
     description:
-      "Lamb Gyro Wrapped in fresh Nan Bread, served with mixed salad and white and hot sauce",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -435,7 +435,7 @@ export const menuItems = [
     price: 12.0,
     image: "/menu/GYRO NAANWICHES/mix gyro naanwich.png",
     description:
-      "Chicken and Lamb Gyro meat wrapped in home made NAN Bread, served with salad and white and hot sauce",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["fan favorite"],
   },
   {
@@ -445,7 +445,7 @@ export const menuItems = [
     price: 11,
     image: "/menu/GYRO NAANWICHES/Falafel Naanwich.png",
     description:
-      "Falafel, crunchy slaw, and mango sauce pressed into warm naan.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["halal", "vegetarian"],
   },
   {
@@ -455,7 +455,7 @@ export const menuItems = [
     price: 11.5,
     image: "/menu/GYRO NAANWICHES/Fish Naanwich.png",
     description:
-      "Grilled fish pressed in naan with fresh vegetables and sauces.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["halal", "pescatarian"],
   },
   {
@@ -465,7 +465,7 @@ export const menuItems = [
     price: 13,
     image: "/menu/GYRO NAANWICHES/beef adana kebab nanwich.jpg",
     description:
-      "Spiced beef adana kebab pressed in naan with cheese and sauces.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["halal"],
   },
   {
@@ -475,7 +475,7 @@ export const menuItems = [
     price: 10,
     image: "/menu/GYRO NAANWICHES/Potatoe patty naanwich.png",
     description:
-      "Crispy potato patty pressed in naan with vegetables and sauces.",
+      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: ["halal", "vegetarian"],
   },
 
@@ -510,28 +510,8 @@ export const menuItems = [
       "Served with lettuce, cucumbers, tomatoes, cabbage, and onions with basmati brown rice",
     tags: [],
   },
-  {
-    id: "beef-adana-stick",
-    name: "Beef Adana (Stick Only)",
-    category: "curry",
-    price: 8,
-    image: "/menu/GYRO CURRY IN A HURRY/BEEF ADANA (STIKC ONLY).jpg",
-    description:
-      "Spiced beef adana kebab on a stick, perfect as a side or snack.",
-    tags: ["halal"],
-  },
 
   // APPETIZERS & SIDES
-  {
-    id: "appetizers-sampler",
-    name: "Appetizers Sampler",
-    category: "appetizers",
-    price: 8.5,
-    image: "/menu/GYRO APPETIZERS-SIDES/appeitzer tile.jpeg",
-    description:
-      "Crispy bites of samosas, grape leaves, and falafel with dipping sauces.",
-    tags: ["shareable", "halal"],
-  },
   {
     id: "falafel-appetizer",
     name: "Falafel",
@@ -661,6 +641,16 @@ export const menuItems = [
       "Add extra gyro meat to any order.",
     tags: ["halal"],
   },
+  {
+    id: "beef-adana-stick",
+    name: "Beef Adana (Stick Only)",
+    category: "appetizers",
+    price: 8,
+    image: "/menu/GYRO CURRY IN A HURRY/BEEF ADANA (STIKC ONLY).jpg",
+    description:
+      "Spiced beef adana kebab on a stick, perfect as a side or snack.",
+    tags: ["halal"],
+  },
 
   // HOUSE SPECIALS
   {
@@ -693,26 +683,6 @@ export const menuItems = [
       "Crispy tater tots loaded with gyro meat, cheese, and sauces.",
     tags: ["halal", "shareable"],
   },
-  {
-    id: "nutella-milkshake",
-    name: "Nutella Milkshake",
-    category: "house-specials",
-    price: 8,
-    image: "/menu/GYRO CAFE HOUSE SPECIALS/nutella ms.webp",
-    description:
-      "Creamy milkshake blended with rich Nutella.",
-    tags: ["sweet"],
-  },
-  {
-    id: "shepherd-salad-special",
-    name: "Shepherd Salad",
-    category: "house-specials",
-    price: 10,
-    image: "/menu/GYRO CAFE HOUSE SPECIALS/sheppard salad.webp",
-    description:
-      "Fresh chopped vegetables with herbs, olive oil, and lemon.",
-    tags: ["halal", "vegetarian"],
-  },
 
   // SALADS
   {
@@ -744,16 +714,17 @@ export const menuItems = [
     price: 6.5,
     image: "/menu/GYRO DESSERTS/pistachio baklava.png",
     description: "Layers of flaky phyllo, pistachio, and honey syrup.",
-    tags: ["halal", "sweet"],
+    tags: ["halal", "sweet", "fan favorite"],
   },
   {
-    id: "baklava-2",
-    name: "Baklava",
+    id: "nutella-milkshake",
+    name: "Nutella Milkshake",
     category: "desserts",
-    price: 6.5,
-    image: "/menu/GYRO DESSERTS/pistachio baklava (2).png",
-    description: "Traditional baklava with layers of phyllo and honey.",
-    tags: ["halal", "sweet"],
+    price: 8,
+    image: "/menu/GYRO CAFE HOUSE SPECIALS/nutella ms.webp",
+    description:
+      "Creamy milkshake blended with rich Nutella.",
+    tags: ["sweet"],
   },
 
   // DRINKS
@@ -1005,12 +976,12 @@ export const socialFeedItems = [
   // Or use video field with Instagram URL: { id: "...", video: "https://www.instagram.com/p/ABC123/", caption: "..." }
   {
     id: "video-1",
-    video: "/videos/1BIG ORDER.MOV",
+    video: "/videos/2GYROS THE CAFE WAY.MOV",
     caption: "Fresh gyro meat spinning on the grill — the heart of every platter.",
   },
   {
     id: "video-2",
-    video: "/videos/2GYROS THE CAFE WAY.MOV",
+    video: "/videos/1BIG ORDER.MOV",
     caption: "Behind the scenes: Our signature sauces being mixed fresh daily.",
   },
   {
@@ -1038,7 +1009,57 @@ export const socialFeedItems = [
     id: "video-9",
     video: "/videos/9.MOV",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
-  }
+  },
+  {
+    id: "video-10",
+    video: "/videos/10.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-11",
+    video: "/videos/11.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-12",
+    video: "/videos/12.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-13",
+    video: "/videos/13.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-14",
+    video: "/videos/14.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-15",
+    video: "/videos/15.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },    
+  {
+    id: "video-16",
+    video: "/videos/16.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-17",
+    video: "/videos/17.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-18",
+    video: "/videos/18.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
+  {
+    id: "video-19",
+    video: "/videos/19.MOV",
+    caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
+  },
 ];
 
 // Featured videos (top 3) for the featured slider section
