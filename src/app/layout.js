@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/components/cart/CartContext";
 import { UpsellModalWrapper } from "@/components/UpsellModalWrapper";
+import { UpgradeModalWrapper } from "@/components/UpgradeModalWrapper";
 import { siteConfig } from "@/lib/config";
 
 import "./globals.css";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
           <Header />
           <CartDrawer />
           <UpsellModalWrapper />
+          <UpgradeModalWrapper />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </CartProvider>

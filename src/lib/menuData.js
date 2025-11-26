@@ -38,7 +38,12 @@ export const menuCategories = [
   {
     id: "desserts",
     name: "Desserts & Sweets",
-    description: "Baklava, milkshakes, and sweet bites that finish the meal right.",
+    description: "Baklava and sweet bites that finish the meal right.",
+  },
+  {
+    id: "milkshakes",
+    name: "Milkshakes",
+    description: "Creamy, hand-blended milkshakes in delicious flavors.",
   },
   {
     id: "drinks",
@@ -65,16 +70,6 @@ export const menuItems = [
     tags: ["fan favorite"],
   },
   {
-    id: "chicken-gyro-platter-large",
-    name: "Chicken Gyro Platter LARGE",
-    category: "platters",
-    price: 15.0,
-    image: "/menu/GYRO PLATTERS/Chicken Gyro Platter.png",
-    description:
-      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: ["fan favorite"],
-  },
-  {
     id: "lamb-gyro-platter",
     name: "Lamb Gyro Platter SMALL",
     category: "platters",
@@ -85,30 +80,10 @@ export const menuItems = [
     tags: ["fan favorite"],
   },
   {
-    id: "lamb-gyro-platter-large",
-    name: "Lamb Gyro Platter LARGE",
-    category: "platters",
-    price: 15.0,
-    image: "/menu/GYRO PLATTERS/lamb gyro platter.png",
-    description:
-      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: ["fan favorite"],
-  },
-  {
     id: "mixed-grill-platter",
     name: "Mixed Gyro Platter SMALL",
     category: "platters",
     price: 12.0,
-    image: "/menu/GYRO PLATTERS/mix gyro platter.png",
-    description:
-      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: ["fan favorite"],
-  },
-  {
-    id: "mixed-grill-platter-large",
-    name: "Mix Gyro Platter LARGE",
-    category: "platters",
-    price: 15.0,
     image: "/menu/GYRO PLATTERS/mix gyro platter.png",
     description:
       "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
@@ -165,30 +140,10 @@ export const menuItems = [
     tags: [],
   },
   {
-    id: "beef-adana-platter-large",
-    name: "Beef Adana Kebab Platter LARGE",
-    category: "platters",
-    price: 22.0,
-    image: "/menu/GYRO PLATTERS/Beef adana platter large.jpg",
-    description:
-      "Beef Adana Kebab Platter Large seasoned to perfection served over brown basmati rice with lettuce, cucumber, tomatoes, onions, and cabbage.",
-    tags: [],
-  },
-  {
     id: "kofta-kebab-platter-small",
     name: "Kofta Kebab Platter SMALL",
     category: "platters",
     price: 11.0,
-    image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
-    description:
-      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: [],
-  },
-  {
-    id: "kofta-kebab-platter-large",
-    name: "Kofta Kebab Platter LARGE",
-    category: "platters",
-    price: 14.0,
     image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
     description:
       "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
@@ -209,16 +164,6 @@ export const menuItems = [
     name: "Chicken Shish Kebab Platter SMALL",
     category: "platters",
     price: 13.0,
-    image: "/menu/GYRO PLATTERS/chicken shsih plater small.jpg",
-    description:
-      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: ["fan favorite"],
-  },
-  {
-    id: "chicken-shish-platter-large",
-    name: "Chicken Shish Kebab Platter LARGE",
-    category: "platters",
-    price: 16.0,
     image: "/menu/GYRO PLATTERS/chicken shsih plater small.jpg",
     description:
       "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
@@ -285,16 +230,6 @@ export const menuItems = [
     tags: [],
   },
   {
-    id: "fish-platter-large",
-    name: "Fish Platter LARGE",
-    category: "platters",
-    price: 16.0,
-    image: "/menu/GYRO PLATTERS/Fish Platter.png",
-    description:
-      "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: [],
-  },
-  {
     id: "hummus-platter",
     name: "Hummus Platter",
     category: "platters",
@@ -309,16 +244,6 @@ export const menuItems = [
     name: "Falafel Platter SMALL",
     category: "platters",
     price: 11.0,
-    image: "/menu/GYRO PLATTERS/Falafel Platter.png",
-    description:
-      "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
-    tags: ["fan favorite"],
-  },
-  {
-    id: "falafel-platter-large",
-    name: "Falafel Platter LARGE",
-    category: "platters",
-    price: 13.0,
     image: "/menu/GYRO PLATTERS/Falafel Platter.png",
     description:
       "Served with lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
@@ -716,14 +641,46 @@ export const menuItems = [
     description: "Layers of flaky phyllo, pistachio, and honey syrup.",
     tags: ["halal", "sweet", "fan favorite"],
   },
+
+  // MILKSHAKES
   {
     id: "nutella-milkshake",
     name: "Nutella Milkshake",
-    category: "desserts",
+    category: "milkshakes",
     price: 8,
     image: "/menu/GYRO CAFE HOUSE SPECIALS/nutella ms.webp",
     description:
       "Creamy milkshake blended with rich Nutella.",
+    tags: ["sweet"],
+  },
+  {
+    id: "vanilla-milkshake",
+    name: "Vanilla Milkshake",
+    category: "milkshakes",
+    price: 7,
+    image: "/menu/GYRO MILKSHAKES/vanilla-milkshake.webp",
+    description:
+      "Classic creamy vanilla milkshake, smooth and refreshing.",
+    tags: ["sweet"],
+  },
+  {
+    id: "mango-milkshake",
+    name: "Mango Milkshake",
+    category: "milkshakes",
+    price: 8,
+    image: "/menu/GYRO MILKSHAKES/mango-milkshake.webp",
+    description:
+      "Tropical mango milkshake with a burst of fresh mango flavor.",
+    tags: ["sweet"],
+  },
+  {
+    id: "cookies-n-cream-milkshake",
+    name: "Cookies N Cream Milkshake",
+    category: "milkshakes",
+    price: 8,
+    image: "/menu/GYRO MILKSHAKES/cookies-n-cream-milkshake.webp",
+    description:
+      "Rich vanilla milkshake loaded with crushed chocolate cookies.",
     tags: ["sweet"],
   },
 
@@ -878,7 +835,7 @@ export const menuItems = [
     id: "sauced-mango",
     name: "SAÜCED Mango Bottle",
     category: "sauced",
-    price: 8.5,
+    price: 7,
     image: "/menu/GYRO SAUCES/MANGO.jpg",
     description:
       "Sweet-heat mango sauce bottled from the original Gyro Cafe recipe.",
@@ -888,7 +845,7 @@ export const menuItems = [
     id: "sauced-white",
     name: "SAÜCED White Bottle",
     category: "sauced",
-    price: 8.5,
+    price: 6,
     image: "/menu/GYRO SAUCES/WHITE SAUCE.jpg",
     description: "Creamy garlic-white sauce with a hint of citrus.",
     tags: ["sauced"],
@@ -897,7 +854,7 @@ export const menuItems = [
     id: "sauced-hot",
     name: "SAÜCED Hot Bottle",
     category: "sauced",
-    price: 8.5,
+    price: 6,
     image: "/menu/GYRO SAUCES/RED SAUCE.jpg",
     description:
       "Fiery hot sauce crafted to kick up platters, wraps, and everything in between.",
