@@ -19,7 +19,7 @@ export const promotionConfig = {
 };
 
 // BOGO 50% Off Pita Sandwiches Promo
-const BOGO_PITA_IDS = [
+export const BOGO_PITA_IDS = [
   "chicken-gyro-pita",
   "lamb-gyro-pita",
   "mix-gyro-pita",
@@ -154,7 +154,8 @@ export function calculateBogoGyroPromo(cartItems, fulfillmentType = "pickup") {
 
 /**
  * Calculate BOGO 50% off pita sandwiches promo
- * For every 2 eligible pitas, 1 gets 50% off
+ * For every 2 eligible pitas, the 2nd one (by order added) gets 50% off
+ * This uses order-based discounting, not price-based, to ensure consistent behavior
  */
 export function calculateBogoPitaPromo(cartItems, fulfillmentType = "pickup") {
   // Only active for pickup orders
@@ -162,12 +163,13 @@ export function calculateBogoPitaPromo(cartItems, fulfillmentType = "pickup") {
     return { discount: 0, items: [] };
   }
 
-  // Filter eligible pitas (don't filter by isBogoDiscounted since we calculate discount at cart level)
+  // Filter eligible pitas (preserve cart order)
   const eligiblePitas = cartItems.filter(
     (item) => BOGO_PITA_IDS.includes(item.id)
   );
 
-  // Expand items by quantity to check total eligible quantity
+  // Expand items by quantity while preserving order
+  // Each item is expanded in the order it appears in the cart
   const expanded = eligiblePitas.flatMap((item) =>
     Array.from({ length: item.quantity ?? 1 }, () => ({
       ...item,
@@ -181,25 +183,20 @@ export function calculateBogoPitaPromo(cartItems, fulfillmentType = "pickup") {
     return { discount: 0, items: [] };
   }
 
-  // Calculate how many get discounted (every 2nd one)
+  // Calculate how many get discounted (every 2nd one: 2nd, 4th, 6th, etc.)
   const discountedCount = Math.floor(expanded.length / 2);
 
   if (discountedCount === 0) {
     return { discount: 0, items: [] };
   }
 
-  // Sort by price descending (discount cheaper ones last)
-  const sorted = [...expanded].sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
-
-  // Mark items for discount
-  const itemsToDiscount = [];
-  let remaining = discountedCount;
-
   // Group by original item ID to track which items get discounted
   const itemDiscounts = {};
 
-  for (let i = sorted.length - 1; i >= 0 && remaining > 0; i--) {
-    const item = sorted[i];
+  // Process items in order: every 2nd item (index 1, 3, 5, etc.) gets discounted
+  // This ensures the 2nd item added gets 50% off, not based on price
+  for (let i = 1; i < expanded.length; i += 2) {
+    const item = expanded[i];
     const key = item.id;
 
     if (!itemDiscounts[key]) {
@@ -207,7 +204,6 @@ export function calculateBogoPitaPromo(cartItems, fulfillmentType = "pickup") {
     }
 
     itemDiscounts[key]++;
-    remaining--;
   }
 
   // Calculate total discount

@@ -50,19 +50,70 @@ export default function OrderPickupView() {
       };
 
       if (form.paymentMethod === "pay_online") {
-        const response = await fetch("/api/checkout", {
+        // Step 1: Generate token via API route (avoids CORS issues)
+        const tokenResponse = await fetch("/api/payment/generate-token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-          throw new Error("Unable to start secure checkout. Please try again.");
+        if (!tokenResponse.ok) {
+          const errorData = await tokenResponse.json().catch(() => ({}));
+          throw new Error(
+            errorData.error || "Unable to initialize payment. Please try again."
+          );
         }
 
-        const data = await response.json();
-        if (data?.url) {
-          window.location.href = data.url;
+        const tokenData = await tokenResponse.json();
+        if (!tokenData?.token) {
+          throw new Error("Payment token unavailable. Please try again.");
+        }
+
+        // Step 2: Create checkout session via API route
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const checkoutPayload = {
+          item: `Gyro Cafe Order - ${items.length} item${items.length > 1 ? "s" : ""}`,
+          amount: total,
+          status: "pending",
+          token: tokenData.token,
+          success_url: `${origin}/order-pickup/thank-you`,
+          cancel_url: `${origin}/order-pickup?canceled=1`,
+          orderItems: items.map((item) => ({
+            itemId: item.id,
+            quantity: item.quantity ?? 1,
+            unit: "pieces",
+            unitPrice: item.price,
+          })),
+        };
+
+        const checkoutResponse = await fetch("/api/payment/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(checkoutPayload),
+        });
+
+        if (!checkoutResponse.ok) {
+          const errorData = await checkoutResponse.json().catch(() => ({}));
+          throw new Error(
+            errorData.error || "Unable to start secure checkout. Please try again."
+          );
+        }
+
+        const checkoutData = await checkoutResponse.json();
+        if (checkoutData?.url) {
+          // Store order details in sessionStorage for thank-you page
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(
+              "pendingOrder",
+              JSON.stringify({
+                name: form.name,
+                pickupTime: form.pickupTime,
+                email: form.email,
+                phone: form.phone,
+                total,
+              })
+            );
+          }
+          window.location.href = checkoutData.url;
           return;
         }
         throw new Error("Checkout session unavailable. Contact support.");
