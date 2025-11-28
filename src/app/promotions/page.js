@@ -72,14 +72,13 @@ function PromoCard({ promo }) {
           </div>
 
           {/* Inner Title */}
-          <h3 className="text-lg font-bold uppercase tracking-tight text-brand-dark sm:text-xl">
+          {/* <h3 className="text-lg font-bold uppercase tracking-tight text-brand-dark sm:text-xl">
             {promo.headline}
           </h3>
 
-          {/* Inner Description */}
           <p className="text-xs leading-relaxed text-neutral-700 sm:text-sm">
             {promo.description}
-          </p>
+          </p> */}
 
           {/* Inner Button */}
           <Link href={promo.cta.href}>
@@ -104,9 +103,9 @@ function PromoCard({ promo }) {
       </div>
 
       {/* Fine Print */}
-      <p className="text-[10px] leading-relaxed text-neutral-600 sm:text-xs">
+      {/* <p className="text-[10px] leading-relaxed text-neutral-600 sm:text-xs">
         {promo.details}
-      </p>
+      </p> */}
 
       {/* Full-width CTA Button */}
       <Link href={promo.cta.href}>

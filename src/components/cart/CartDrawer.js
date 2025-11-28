@@ -6,6 +6,7 @@ import { HiMiniXMark } from "react-icons/hi2";
 import { HiMinus, HiPlus, HiOutlineTrash } from "react-icons/hi";
 
 import { siteConfig } from "@/lib/config";
+import { BOGO_PITA_IDS } from "@/lib/promotions";
 import { useCart } from "./CartContext";
 
 export function CartDrawer() {
@@ -15,7 +16,6 @@ export function CartDrawer() {
     subtotal,
     promotion,
     bogoPitaPromo,
-    bogoGyroPromo,
     totalDiscount,
     total,
     cartCount,
@@ -85,13 +85,15 @@ export function CartDrawer() {
                   const isUpsell = item.metadata?.isUpsellItem === true;
                   const isBogoDiscounted = item.metadata?.isBogoDiscounted === true;
                   
+                  // Check if this item is eligible for pita BOGO promotion
+                  const isEligiblePita = BOGO_PITA_IDS.includes(item.id);
+                  
                   // Check if this pita item gets BOGO discount
                   const pitaDiscountInfo = bogoPitaPromo?.items?.find((d) => d.id === item.id);
                   const pitaDiscountQty = pitaDiscountInfo?.discountQty ?? 0;
-                  const isPitaItem = bogoPitaPromo && bogoPitaPromo.items?.some((d) => d.id === item.id);
                   
-                  // For pita items with BOGO, create separate line items
-                  if (isPitaItem && pitaDiscountQty > 0 && !isUpsell) {
+                  // For eligible pita items with BOGO promotion active, create separate line items
+                  if (isEligiblePita && bogoPitaPromo && bogoPitaPromo.discount > 0 && !isUpsell) {
                     const fullPriceQty = (item.quantity ?? 1) - pitaDiscountQty;
                     const discountedQty = pitaDiscountQty;
                     const itemPrice = item.price ?? 0;
@@ -123,6 +125,9 @@ export function CartDrawer() {
                         originalPrice: itemPrice,
                       });
                     }
+                    
+                    // Store original item quantity for quantity controls
+                    const originalItemQuantity = item.quantity ?? 1;
                     
                     return lineItems.map((lineItem, idx) => {
                       return (
@@ -186,7 +191,7 @@ export function CartDrawer() {
                                 <button
                                   type="button"
                                   onClick={() =>
-                                    updateQuantity(lineItem.id, (lineItem.quantity ?? 1) - 1)
+                                    updateQuantity(item.id, Math.max(0, originalItemQuantity - 1))
                                   }
                                   className="h-8 w-8 text-neutral-700 transition hover:text-brand-red"
                                   aria-label={`Decrease ${lineItem.name}`}
@@ -199,7 +204,7 @@ export function CartDrawer() {
                                 <button
                                   type="button"
                                   onClick={() =>
-                                    updateQuantity(lineItem.id, (lineItem.quantity ?? 1) + 1)
+                                    updateQuantity(item.id, originalItemQuantity + 1)
                                   }
                                   className="h-8 w-8 text-neutral-700 transition hover:text-brand-red"
                                   aria-label={`Increase ${lineItem.name}`}
@@ -209,7 +214,7 @@ export function CartDrawer() {
                               </div>
                               <button
                                 type="button"
-                                onClick={() => removeItem(lineItem.id)}
+                                onClick={() => removeItem(item.id)}
                                 className="text-neutral-400 transition hover:text-brand-red"
                                 aria-label={`Remove ${lineItem.name}`}
                               >
@@ -383,14 +388,6 @@ export function CartDrawer() {
                   value={`- $${bogoPitaPromo.discount.toFixed(2)}`}
                   highlight
                   message="Buy any pita, get the second 50% off"
-                />
-              )}
-              {bogoGyroPromo?.discount > 0 && (
-                <SummaryRow
-                  label="Pickup promo (BOGO 50% OFF)"
-                  value={`- $${bogoGyroPromo.discount.toFixed(2)}`}
-                  highlight
-                  message="Buy one gyro, get the second 50% off"
                 />
               )}
               {promotion?.discount > 0 && (
