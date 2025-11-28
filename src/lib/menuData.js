@@ -61,7 +61,7 @@ export const menuItems = [
   // PLATTERS
   {
     id: "chicken-gyro-platter",
-    name: "Chicken Gyro Platter SMALL",
+    name: "Chicken Gyro Platter",
     category: "platters",
     price: 12.0,
     image: "/menu/GYRO PLATTERS/Chicken Gyro Platter.png",
@@ -71,7 +71,7 @@ export const menuItems = [
   },
   {
     id: "lamb-gyro-platter",
-    name: "Lamb Gyro Platter SMALL",
+    name: "Lamb Gyro Platter",
     category: "platters",
     price: 12.0,
     image: "/menu/GYRO PLATTERS/lamb gyro platter.png",
@@ -81,7 +81,7 @@ export const menuItems = [
   },
   {
     id: "mixed-grill-platter",
-    name: "Mixed Gyro Platter SMALL",
+    name: "Mixed Gyro Platter",
     category: "platters",
     price: 12.0,
     image: "/menu/GYRO PLATTERS/mix gyro platter.png",
@@ -141,7 +141,7 @@ export const menuItems = [
   },
   {
     id: "kofta-kebab-platter-small",
-    name: "Kofta Kebab Platter SMALL",
+    name: "Kofta Kebab Platter",
     category: "platters",
     price: 11.0,
     image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
@@ -151,7 +151,7 @@ export const menuItems = [
   },
   {
     id: "beef-kofta-platter-small",
-    name: "Beef Kofta Kebab Platter (Small)",
+    name: "Beef Kofta Kebab Platter",
     category: "platters",
     price: 15,
     image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
@@ -161,7 +161,7 @@ export const menuItems = [
   },
   {
     id: "chicken-shish-platter-small",
-    name: "Chicken Shish Kebab Platter SMALL",
+    name: "Chicken Shish Kebab Platter",
     category: "platters",
     price: 13.0,
     image: "/menu/GYRO PLATTERS/chicken shsih plater small.jpg",
@@ -221,7 +221,7 @@ export const menuItems = [
   },
   {
     id: "fish-platter",
-    name: "Fish Platter SMALL",
+    name: "Fish Platter",
     category: "platters",
     price: 13.0,
     image: "/menu/GYRO PLATTERS/Fish Platter.png",
@@ -241,7 +241,7 @@ export const menuItems = [
   },
   {
     id: "falafel-platter",
-    name: "Falafel Platter SMALL",
+    name: "Falafel Platter",
     category: "platters",
     price: 11.0,
     image: "/menu/GYRO PLATTERS/Falafel Platter.png",
