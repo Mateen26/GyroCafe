@@ -129,7 +129,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <FeaturedVideoSlider items={featuredVideos} />
+      <FeaturedVideoSlider items={featuredVideos} collageItems={remainingVideos} />
 
       <VideoSliderSection items={remainingVideos} />
 
