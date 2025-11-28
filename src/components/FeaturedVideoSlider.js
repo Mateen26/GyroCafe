@@ -44,7 +44,7 @@ export function FeaturedVideoSlider({ items = [] }) {
   if (!items.length) return null;
 
   return (
-    <section className="bg-black py-20 mt-10 sm:mt-40">
+    <section className="bg-black py-20">
       <div className="mx-auto max-w-[150rem] px-4 sm:px-6 lg:px-16">
         <div className="relative">
           {/* Slider Container */}

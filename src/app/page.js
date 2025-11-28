@@ -114,6 +114,21 @@ export default function Home() {
 
       <SaucedBanner />
 
+      {/* Live from Our Feed Banner */}
+      <Section background="red" className="py-16 md:py-20">
+        <div className="text-center space-y-3">
+          <p className="text-lg uppercase tracking-[0.4em] text-white/70">
+            Gyro Cafe on the Feed
+          </p>
+          <h2 className="text-5xl font-bold uppercase tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl">
+            Fresh from Our Grill · Live from @GyroCafeBK
+          </h2>
+          <p className="text-base leading-relaxed text-white/80 md:text-lg max-w-3xl mx-auto">
+            Follow along for nightly specials, fresh drops, and behind-the-grill moments.
+          </p>
+        </div>
+      </Section>
+
       <FeaturedVideoSlider items={featuredVideos} />
 
       <VideoSliderSection items={remainingVideos} />
