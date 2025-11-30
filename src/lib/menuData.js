@@ -942,6 +942,11 @@ export const socialFeedItems = [
   // Or use video field with Instagram URL: { id: "...", video: "https://www.instagram.com/p/ABC123/", caption: "..." }
   {
     id: "video-1",
+    video: "/videos/3MUHEED ONLY IN NYC.MOV",
+    caption: "Loaded fries getting the full treatment — gyro meat, white sauce, hot sauce.",
+  },
+  {
+    id: "video-3",
     video: "/videos/2GYROS THE CAFE WAY.MOV",
     caption: "Fresh gyro meat spinning on the grill — the heart of every platter.",
   },
@@ -950,11 +955,7 @@ export const socialFeedItems = [
     video: "/videos/1BIG ORDER.MOV",
     caption: "Behind the scenes: Our signature sauces being mixed fresh daily.",
   },
-  {
-    id: "video-3",
-    video: "/videos/3MUHEED ONLY IN NYC.MOV",
-    caption: "Loaded fries getting the full treatment — gyro meat, white sauce, hot sauce.",
-  },
+  
   {
     id: "video-4",
     video: "/videos/4.MOV",
