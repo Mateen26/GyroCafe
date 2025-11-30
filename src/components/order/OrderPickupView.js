@@ -21,9 +21,12 @@ export default function OrderPickupView() {
   const router = useRouter();
   const {
     items,
-    subtotal,
+    itemTotal,
+    subtotalAfterDiscounts,
+    tax,
     total,
     promotion,
+    bogoPitaPromo,
     cartCount,
     clearCart,
     openCart,
@@ -46,7 +49,14 @@ export default function OrderPickupView() {
           quantity: item.quantity,
           category: item.category,
         })),
-        totals: { subtotal, total, promotion },
+        totals: { 
+          itemTotal, 
+          subtotalAfterDiscounts, 
+          tax, 
+          total, 
+          promotion,
+          bogoPitaPromo 
+        },
       };
 
       if (form.paymentMethod === "pay_online") {
@@ -197,9 +207,12 @@ export default function OrderPickupView() {
                 </div>
               ) : null}
               <CheckoutForm
-                subtotal={subtotal}
+                itemTotal={itemTotal}
+                subtotalAfterDiscounts={subtotalAfterDiscounts}
+                tax={tax}
                 total={total}
                 promotion={promotion}
+                bogoPitaPromo={bogoPitaPromo}
                 isSubmitting={isSubmitting}
                 onSubmit={handleSubmit}
               />

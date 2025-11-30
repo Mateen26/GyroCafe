@@ -24,6 +24,7 @@ import { upsellConfig } from "@/lib/promotionsConfig";
 import { hasUpgradeOption, getUpgradeInfo } from "@/lib/platterUpgrades";
 
 const STORAGE_KEY = "gyro-cafe-cart";
+const TAX_RATE = 0.08875; // 8.875%
 
 const CartContext = createContext(null);
 
@@ -376,7 +377,8 @@ export function CartProvider({ children }) {
     previousItemsRef.current = state.items;
   }, [state.items, state.fulfillmentType, showUpgradeModal]);
 
-  const subtotal = useMemo(
+  // Item Total: sum of all items before discounts
+  const itemTotal = useMemo(
     () =>
       state.items.reduce((sum, item) => {
         // For upsell items, calculate promotional + full-price portions
@@ -410,9 +412,22 @@ export function CartProvider({ children }) {
     [promotion.discount, bogoPitaPromo.discount]
   );
 
+  // Subtotal after discounts (before tax)
+  const subtotalAfterDiscounts = useMemo(
+    () => Math.max(itemTotal - totalDiscount, 0),
+    [itemTotal, totalDiscount]
+  );
+
+  // Tax calculation (8.875%)
+  const tax = useMemo(
+    () => subtotalAfterDiscounts * TAX_RATE,
+    [subtotalAfterDiscounts]
+  );
+
+  // Total including tax
   const total = useMemo(
-    () => Math.max(subtotal - totalDiscount, 0),
-    [subtotal, totalDiscount]
+    () => subtotalAfterDiscounts + tax,
+    [subtotalAfterDiscounts, tax]
   );
 
   const cartCount = useMemo(
@@ -674,7 +689,10 @@ export function CartProvider({ children }) {
       isOpen: state.isOpen,
       fulfillmentType: state.fulfillmentType,
       cartCount,
-      subtotal: Number(subtotal.toFixed(2)),
+      itemTotal: Number(itemTotal.toFixed(2)),
+      subtotal: Number(subtotalAfterDiscounts.toFixed(2)), // Keep for backward compatibility
+      subtotalAfterDiscounts: Number(subtotalAfterDiscounts.toFixed(2)),
+      tax: Number(tax.toFixed(2)),
       promotion,
       bogoPitaPromo,
       totalDiscount: Number(totalDiscount.toFixed(2)),
@@ -704,7 +722,9 @@ export function CartProvider({ children }) {
       state.isOpen,
       state.fulfillmentType,
       cartCount,
-      subtotal,
+      itemTotal,
+      subtotalAfterDiscounts,
+      tax,
       promotion,
       bogoPitaPromo,
       totalDiscount,

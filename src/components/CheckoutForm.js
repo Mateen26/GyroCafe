@@ -20,8 +20,11 @@ export function CheckoutForm({
   onSubmit,
   isSubmitting = false,
   total,
-  subtotal,
+  itemTotal,
+  subtotalAfterDiscounts,
+  tax,
   promotion,
+  bogoPitaPromo,
 }) {
   const [form, setForm] = useState({ ...initialForm, ...defaultValues });
   const [errors, setErrors] = useState({});
@@ -130,7 +133,14 @@ export function CheckoutForm({
           Order Summary
         </h3>
         <div className="mt-4 space-y-2 text-sm text-neutral-600">
-          <SummaryLine label="Subtotal" value={subtotal} />
+          <SummaryLine label="Item Total" value={itemTotal} />
+          {bogoPitaPromo?.discount > 0 ? (
+            <SummaryLine
+              label="BOGO 50% Off Pita"
+              value={-bogoPitaPromo.discount}
+              highlight
+            />
+          ) : null}
           {promotion?.discount ? (
             <SummaryLine
               label={promotion.label ?? "Promotion"}
@@ -138,7 +148,9 @@ export function CheckoutForm({
               highlight
             />
           ) : null}
-          <SummaryLine label="Total" value={total} bold />
+          <SummaryLine label="Subtotal" value={subtotalAfterDiscounts} />
+          <SummaryLine label="Tax (8.875%)" value={tax} />
+          <SummaryLine label="TOTAL" value={total} bold />
         </div>
       </div>
 
