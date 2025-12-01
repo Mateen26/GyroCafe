@@ -21,8 +21,6 @@ export const activePromotions = [
       "mix-gyro-pita",
       "falafel-pita",
       "kofta-kebab-pita",
-      "chicken-shish-kebab-pita",
-      "beef-kofta-pita",
       "fish-pita",
     ],
     requirements: {

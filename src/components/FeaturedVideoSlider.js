@@ -236,13 +236,7 @@ function MainVideoPlayer({ item, videoRef }) {
           </div>
         )}
       </div>
-      {item.caption && (
-        <div className="border-t border-neutral-800 bg-black p-5">
-          <p className="text-sm font-semibold text-white">
-            {item.caption}
-          </p>
-        </div>
-      )}
+     
     </article>
   );
 }

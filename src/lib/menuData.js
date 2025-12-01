@@ -90,30 +90,10 @@ export const menuItems = [
     tags: ["fan favorite"],
   },
   {
-    id: "chicken-w-fries-platter",
-    name: "Chicken Gyro Platter w/ Fries",
-    category: "platters",
-    price: 15.5,
-    image: "/menu/GYRO PLATTERS/chicekn w fries platter.png",
-    description:
-      "Chicken gyro platter served with crispy golden fries on the side.",
-    tags: ["halal"],
-  },
-  {
-    id: "lamb-w-fries-platter",
-    name: "Lamb Gyro Platter w/ Fries",
-    category: "platters",
-    price: 16.5,
-    image: "/menu/GYRO PLATTERS/lamb gyro w fries platter.png",
-    description:
-      "Lamb gyro platter with a side of hand-cut fries and sauces.",
-    tags: ["halal"],
-  },
-  {
     id: "bbq-chicken-tikka-platter",
     name: "BBQ Chicken Tikka Platter",
     category: "platters",
-    price: 16,
+    price: 11,
     image: "/menu/GYRO PLATTERS/BBQ chicken tikka platter.png",
     description:
       "Smoky BBQ chicken tikka over basmati rice with grilled vegetables.",
@@ -150,16 +130,6 @@ export const menuItems = [
     tags: [],
   },
   {
-    id: "beef-kofta-platter-small",
-    name: "Beef Kofta Kebab Platter",
-    category: "platters",
-    price: 15,
-    image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
-    description:
-      "Grilled beef kofta served over rice with vegetables and sauces.",
-    tags: ["halal"],
-  },
-  {
     id: "chicken-shish-platter-small",
     name: "Chicken Shish Kebab Platter",
     category: "platters",
@@ -170,16 +140,6 @@ export const menuItems = [
     tags: ["fan favorite"],
   },
   {
-    id: "kofta-kebab-w-fries-platter",
-    name: "Kofta Kebab Platter w/ Fries",
-    category: "platters",
-    price: 16,
-    image: "/menu/GYRO PLATTERS/kofta kebab w fries platter.png",
-    description:
-      "Kofta kebab platter with crispy fries and all the sauces.",
-    tags: ["halal"],
-  },
-  {
     id: "lamb-chop-platter",
     name: "Lamb Chop Platter",
     category: "platters",
@@ -188,26 +148,6 @@ export const menuItems = [
     description:
       "Lamb chops served in a platter with lettuce, cucumber, tomato, onion, and cabbage with rice and topped with white sauce and hot sauce.",
     tags: ["fan favorite"],
-  },
-  {
-    id: "lamb-chop-w-fries-platter",
-    name: "Lamb Chop Platter w/ Fries",
-    category: "platters",
-    price: 20,
-    image: "/menu/GYRO PLATTERS/lamb chop w fries platter.png",
-    description:
-      "Lamb chops with fries, rice, and all the fixings.",
-    tags: ["halal"],
-  },
-  {
-    id: "lamb-chops-platter",
-    name: "Lamb Chops Platter",
-    category: "platters",
-    price: 19,
-    image: "/menu/GYRO PLATTERS/lamb chops platter.png",
-    description:
-      "Tender lamb chops served over seasoned rice with fresh sides.",
-    tags: ["halal"],
   },
   {
     id: "steam-chicken-leg-platter",
@@ -455,16 +395,6 @@ export const menuItems = [
     image: "/menu/GYRO APPETIZERS-SIDES/grape leaves.png",
     description:
       "Stuffed grape leaves with rice and herbs, served with lemon.",
-    tags: ["halal", "vegetarian"],
-  },
-  {
-    id: "potato-samosa",
-    name: "Potato Samosa",
-    category: "appetizers",
-    price: 5.5,
-    image: "/menu/GYRO APPETIZERS-SIDES/potato somasa.png",
-    description:
-      "Crispy fried samosas filled with spiced potatoes.",
     tags: ["halal", "vegetarian"],
   },
   {
@@ -942,6 +872,11 @@ export const socialFeedItems = [
   // Or use video field with Instagram URL: { id: "...", video: "https://www.instagram.com/p/ABC123/", caption: "..." }
   {
     id: "video-1",
+    video: "/videos/3MUHEED ONLY IN NYC.MOV",
+    caption: "Loaded fries getting the full treatment — gyro meat, white sauce, hot sauce.",
+  },
+  {
+    id: "video-3",
     video: "/videos/2GYROS THE CAFE WAY.MOV",
     caption: "Fresh gyro meat spinning on the grill — the heart of every platter.",
   },
@@ -950,11 +885,7 @@ export const socialFeedItems = [
     video: "/videos/1BIG ORDER.MOV",
     caption: "Behind the scenes: Our signature sauces being mixed fresh daily.",
   },
-  {
-    id: "video-3",
-    video: "/videos/3MUHEED ONLY IN NYC.MOV",
-    caption: "Loaded fries getting the full treatment — gyro meat, white sauce, hot sauce.",
-  },
+  
   {
     id: "video-4",
     video: "/videos/4.MOV",

@@ -13,7 +13,9 @@ export function CartDrawer() {
   const {
     items,
     isOpen,
-    subtotal,
+    itemTotal,
+    subtotalAfterDiscounts,
+    tax,
     promotion,
     bogoPitaPromo,
     totalDiscount,
@@ -381,13 +383,12 @@ export function CartDrawer() {
 
           <footer className="border-t border-neutral-200 px-6 py-5">
             <div className="space-y-3 text-sm text-neutral-600">
-              <SummaryRow label="Subtotal" value={`$${subtotal.toFixed(2)}`} />
+              <SummaryRow label="Item Total" value={`$${itemTotal.toFixed(2)}`} />
               {bogoPitaPromo?.discount > 0 && (
                 <SummaryRow
-                  label="BOGO 50% Off Pitas"
+                  label="BOGO 50% Off Pita"
                   value={`- $${bogoPitaPromo.discount.toFixed(2)}`}
                   highlight
-                  message="Buy any pita, get the second 50% off"
                 />
               )}
               {promotion?.discount > 0 && (
@@ -409,15 +410,10 @@ export function CartDrawer() {
                   )}
                 </div>
               )}
-              {totalDiscount > 0 && (
-                <SummaryRow
-                  label="Total Discounts"
-                  value={`- $${totalDiscount.toFixed(2)}`}
-                  highlight
-                />
-              )}
+              <SummaryRow label="Subtotal" value={`$${subtotalAfterDiscounts.toFixed(2)}`} />
+              <SummaryRow label="Tax (8.875%)" value={`$${tax.toFixed(2)}`} />
               <SummaryRow
-                label="Total (Pickup)"
+                label="TOTAL"
                 value={`$${total.toFixed(2)}`}
                 bold
               />

@@ -25,8 +25,6 @@ export const BOGO_PITA_IDS = [
   "mix-gyro-pita",
   "falafel-pita",
   "kofta-kebab-pita",
-  "chicken-shish-kebab-pita",
-  "beef-kofta-pita",
   "fish-pita",
 ];
 
