@@ -2,12 +2,289 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { HiMiniXMark } from "react-icons/hi2";
-import { HiMinus, HiPlus, HiOutlineTrash } from "react-icons/hi";
+import { HiMinus, HiPlus, HiOutlineTrash, HiChevronDown, HiChevronUp } from "react-icons/hi";
 
 import { siteConfig } from "@/lib/config";
 import { BOGO_PITA_IDS } from "@/lib/promotions";
+import { menuCategories } from "@/lib/menuData";
 import { useCart } from "./CartContext";
+
+function CategorySection({
+  categoryId,
+  categoryName,
+  items,
+  isExpanded,
+  onToggle,
+  bogoPitaPromo,
+  updateQuantity,
+  removeItem,
+}) {
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-white">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between px-4 py-3 text-left transition hover:bg-neutral-50"
+      >
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-dark">
+          {categoryName}
+        </h3>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-neutral-500">
+            {items.length} {items.length === 1 ? "item" : "items"}
+          </span>
+          {isExpanded ? (
+            <HiChevronUp className="h-5 w-5 text-neutral-400" />
+          ) : (
+            <HiChevronDown className="h-5 w-5 text-neutral-400" />
+          )}
+        </div>
+      </button>
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-neutral-200 px-4 py-3">
+              <ul className="space-y-3">
+                {items.flatMap((item) => {
+              const isUpsell = item.metadata?.isUpsellItem === true;
+              const isBogoDiscounted = item.metadata?.isBogoDiscounted === true;
+              
+              // Check if this item is eligible for pita BOGO promotion
+              const isEligiblePita = BOGO_PITA_IDS.includes(item.id);
+              
+              // Check if this pita item gets BOGO discount
+              const pitaDiscountInfo = bogoPitaPromo?.items?.find((d) => d.id === item.id);
+              const pitaDiscountQty = pitaDiscountInfo?.discountQty ?? 0;
+              
+              // For eligible pita items with BOGO promotion active, create separate line items
+              if (isEligiblePita && bogoPitaPromo && bogoPitaPromo.discount > 0 && !isUpsell) {
+                const fullPriceQty = (item.quantity ?? 1) - pitaDiscountQty;
+                const discountedQty = pitaDiscountQty;
+                const itemPrice = item.price ?? 0;
+                const discountedPrice = itemPrice * 0.5;
+                
+                const lineItems = [];
+                
+                // Full price items
+                if (fullPriceQty > 0) {
+                  lineItems.push({
+                    ...item,
+                    quantity: fullPriceQty,
+                    displayPrice: itemPrice,
+                    itemTotal: itemPrice * fullPriceQty,
+                    isBogoDiscounted: false,
+                    isPitaFullPrice: true,
+                  });
+                }
+                
+                // Discounted items
+                if (discountedQty > 0) {
+                  lineItems.push({
+                    ...item,
+                    quantity: discountedQty,
+                    displayPrice: discountedPrice,
+                    itemTotal: discountedPrice * discountedQty,
+                    isBogoDiscounted: true,
+                    isPitaDiscounted: true,
+                    originalPrice: itemPrice,
+                  });
+                }
+                
+                // Store original item quantity for quantity controls
+                const originalItemQuantity = item.quantity ?? 1;
+                
+                return lineItems.map((lineItem, idx) => (
+                  <CartItem
+                    key={`${item.id}-${idx}`}
+                    item={lineItem}
+                    originalItem={item}
+                    originalItemQuantity={originalItemQuantity}
+                    updateQuantity={updateQuantity}
+                    removeItem={removeItem}
+                  />
+                ));
+              }
+              
+              // Regular item rendering (non-pita BOGO items)
+              // Calculate price for upsell items (promotional + full-price portions)
+              let displayPrice = item.price ?? 0;
+              let regularPrice = displayPrice;
+              let itemTotal = displayPrice * (item.quantity ?? 1);
+              
+              if (isUpsell) {
+                const promoPrice = item.price ?? 0; // Upsell promotional price
+                const fullPrice = item.metadata?.upsellType === "fries" ? 4.5 : 2.5;
+                const promoQty = item.metadata?.promotionalQuantity ?? (item.quantity ?? 1);
+                const fullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
+                const totalQty = promoQty + fullPriceQty;
+                
+                // Calculate total price for this item
+                itemTotal = (promoPrice * promoQty) + (fullPrice * fullPriceQty);
+                
+                // Display average price per item
+                displayPrice = totalQty > 0 ? itemTotal / totalQty : promoPrice;
+                regularPrice = fullPrice;
+              } else {
+                itemTotal = displayPrice * (item.quantity ?? 1);
+              }
+
+              return (
+                <CartItem
+                  key={item.id}
+                  item={{
+                    ...item,
+                    displayPrice,
+                    regularPrice,
+                    itemTotal,
+                    isUpsell,
+                    isBogoDiscounted,
+                  }}
+                  originalItem={item}
+                  updateQuantity={updateQuantity}
+                  removeItem={removeItem}
+                />
+              );
+            })}
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function CartItem({ item, originalItem, originalItemQuantity, updateQuantity, removeItem }) {
+  const isUpsell = item.metadata?.isUpsellItem === true;
+  const isBogoDiscounted = item.isBogoDiscounted || item.isPitaDiscounted;
+  const displayPrice = item.displayPrice ?? item.price ?? 0;
+  const itemTotal = item.itemTotal ?? displayPrice * (item.quantity ?? 1);
+  const quantity = originalItemQuantity ?? item.quantity ?? 1;
+
+  return (
+    <li
+      className={`flex gap-3 rounded-xl border p-3 ${
+        isUpsell 
+          ? "border-brand-red/30 bg-brand-red/5" 
+          : isBogoDiscounted
+          ? "border-brand-red/20 bg-brand-red/5"
+          : "border-neutral-200"
+      }`}
+    >
+      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            sizes="64px"
+            className="object-cover"
+          />
+        ) : null}
+      </div>
+      <div className="flex flex-1 flex-col justify-between gap-2">
+        <div>
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm text-brand-dark truncate">
+                {item.name}
+              </p>
+            </div>
+            {isUpsell && (
+              <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red shrink-0">
+                Add-On
+              </span>
+            )}
+            {isBogoDiscounted && (
+              <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red shrink-0">
+                50% Off
+              </span>
+            )}
+            {item.metadata?.isUpgraded === true && (
+              <span className="rounded-full bg-brand-red px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white shrink-0">
+                LARGE
+              </span>
+            )}
+          </div>
+          <div className="mt-1 flex items-center gap-2">
+            {item.isPitaDiscounted && item.originalPrice && (
+              <span className="text-xs text-neutral-400 line-through">
+                ${item.originalPrice.toFixed(2)}
+              </span>
+            )}
+            {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
+              <span className="text-xs text-neutral-400 line-through">
+                ${item.regularPrice?.toFixed(2)}
+              </span>
+            )}
+            <p className="text-xs font-medium text-brand-red">
+              ${displayPrice.toFixed(2)}
+            </p>
+          </div>
+          <div className="mt-1">
+            <p className="text-xs font-semibold text-brand-dark">
+              ${itemTotal.toFixed(2)}
+            </p>
+            {!isUpsell && (
+              <p className="text-[10px] text-neutral-500">
+                {item.quantity} × ${displayPrice.toFixed(2)}
+              </p>
+            )}
+            {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
+              <p className="text-[10px] text-neutral-500">
+                {item.metadata?.promotionalQuantity ?? 0} @ ${(item.price ?? 0).toFixed(2)} + {item.metadata?.fullPriceQuantity} @ ${item.regularPrice?.toFixed(2)}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center rounded-full border border-neutral-200">
+            <button
+              type="button"
+              onClick={() =>
+                updateQuantity(originalItem.id, Math.max(0, quantity - 1))
+              }
+              className="h-7 w-7 text-neutral-700 transition hover:text-brand-red"
+              aria-label={`Decrease ${item.name}`}
+            >
+              <HiMinus className="mx-auto text-sm" />
+            </button>
+            <span className="min-w-[1.5rem] text-center text-xs font-semibold">
+              {item.quantity}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                updateQuantity(originalItem.id, quantity + 1)
+              }
+              className="h-7 w-7 text-neutral-700 transition hover:text-brand-red"
+              aria-label={`Increase ${item.name}`}
+            >
+              <HiPlus className="mx-auto text-sm" />
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => removeItem(originalItem.id)}
+            className="text-neutral-400 transition hover:text-brand-red"
+            aria-label={`Remove ${item.name}`}
+          >
+            <HiOutlineTrash className="text-base" />
+          </button>
+        </div>
+      </div>
+    </li>
+  );
+}
 
 export function CartDrawer() {
   const {
@@ -26,6 +303,58 @@ export function CartDrawer() {
     closeCart,
     clearCart,
   } = useCart();
+
+  // State to track which category sections are expanded
+  const [expandedCategories, setExpandedCategories] = useState(() => {
+    // Initialize all categories as expanded
+    const initial = {};
+    menuCategories.forEach((cat) => {
+      initial[cat.id] = true;
+    });
+    return initial;
+  });
+
+  // Group items by category
+  const groupedItems = useMemo(() => {
+    const groups = {};
+    
+    items.forEach((item) => {
+      const category = item.category || "other";
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(item);
+    });
+
+    // Sort categories by menu order
+    const sortedGroups = {};
+    menuCategories.forEach((cat) => {
+      if (groups[cat.id]) {
+        sortedGroups[cat.id] = groups[cat.id];
+      }
+    });
+    
+    // Add any categories not in menuCategories (like "other")
+    Object.keys(groups).forEach((catId) => {
+      if (!sortedGroups[catId]) {
+        sortedGroups[catId] = groups[catId];
+      }
+    });
+
+    return sortedGroups;
+  }, [items]);
+
+  const toggleCategory = (categoryId) => {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [categoryId]: !prev[categoryId],
+    }));
+  };
+
+  const getCategoryName = (categoryId) => {
+    const category = menuCategories.find((cat) => cat.id === categoryId);
+    return category?.name || categoryId;
+  };
 
   return (
     <div
@@ -82,302 +411,21 @@ export function CartDrawer() {
                 </p>
               </div>
             ) : (
-              <ul className="space-y-5">
-                {items.flatMap((item) => {
-                  const isUpsell = item.metadata?.isUpsellItem === true;
-                  const isBogoDiscounted = item.metadata?.isBogoDiscounted === true;
-                  
-                  // Check if this item is eligible for pita BOGO promotion
-                  const isEligiblePita = BOGO_PITA_IDS.includes(item.id);
-                  
-                  // Check if this pita item gets BOGO discount
-                  const pitaDiscountInfo = bogoPitaPromo?.items?.find((d) => d.id === item.id);
-                  const pitaDiscountQty = pitaDiscountInfo?.discountQty ?? 0;
-                  
-                  // For eligible pita items with BOGO promotion active, create separate line items
-                  if (isEligiblePita && bogoPitaPromo && bogoPitaPromo.discount > 0 && !isUpsell) {
-                    const fullPriceQty = (item.quantity ?? 1) - pitaDiscountQty;
-                    const discountedQty = pitaDiscountQty;
-                    const itemPrice = item.price ?? 0;
-                    const discountedPrice = itemPrice * 0.5;
-                    
-                    const lineItems = [];
-                    
-                    // Full price items
-                    if (fullPriceQty > 0) {
-                      lineItems.push({
-                        ...item,
-                        quantity: fullPriceQty,
-                        displayPrice: itemPrice,
-                        itemTotal: itemPrice * fullPriceQty,
-                        isBogoDiscounted: false,
-                        isPitaFullPrice: true,
-                      });
-                    }
-                    
-                    // Discounted items
-                    if (discountedQty > 0) {
-                      lineItems.push({
-                        ...item,
-                        quantity: discountedQty,
-                        displayPrice: discountedPrice,
-                        itemTotal: discountedPrice * discountedQty,
-                        isBogoDiscounted: true,
-                        isPitaDiscounted: true,
-                        originalPrice: itemPrice,
-                      });
-                    }
-                    
-                    // Store original item quantity for quantity controls
-                    const originalItemQuantity = item.quantity ?? 1;
-                    
-                    return lineItems.map((lineItem, idx) => {
-                      return (
-                        <li
-                          key={`${item.id}-${idx}`}
-                          className={`flex gap-4 rounded-2xl border p-4 ${
-                            lineItem.isPitaDiscounted
-                              ? "border-brand-red/20 bg-brand-red/5"
-                              : "border-neutral-200"
-                          }`}
-                        >
-                          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
-                            {lineItem.image ? (
-                              <Image
-                                src={lineItem.image}
-                                alt={lineItem.name}
-                                fill
-                                sizes="160px"
-                                className="object-cover"
-                              />
-                            ) : null}
-                          </div>
-                          <div className="flex flex-1 flex-col justify-between">
-                            <div>
-                              <div className="flex items-start justify-between gap-2">
-                                <div className="flex-1">
-                                  <p className="text-xs uppercase tracking-wide text-neutral-500">
-                                    {lineItem.category}
-                                  </p>
-                                  <p className="font-semibold text-brand-dark">
-                                    {lineItem.name}
-                                  </p>
-                                </div>
-                                {lineItem.isPitaDiscounted && (
-                                  <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red">
-                                    50% Off
-                                  </span>
-                                )}
-                              </div>
-                              <div className="mt-1 flex items-center gap-2">
-                                {lineItem.isPitaDiscounted && lineItem.originalPrice && (
-                                  <span className="text-xs text-neutral-400 line-through">
-                                    ${lineItem.originalPrice.toFixed(2)}
-                                  </span>
-                                )}
-                                <p className="text-sm font-medium text-brand-red">
-                                  ${lineItem.displayPrice.toFixed(2)}
-                                </p>
-                              </div>
-                              <div className="mt-2">
-                                <p className="text-xs font-semibold text-brand-dark">
-                                  Total: ${lineItem.itemTotal.toFixed(2)}
-                                </p>
-                                <p className="mt-0.5 text-[10px] text-neutral-500">
-                                  {lineItem.quantity} × ${lineItem.displayPrice.toFixed(2)} = ${lineItem.itemTotal.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <div className="inline-flex items-center rounded-full border border-neutral-200">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    updateQuantity(item.id, Math.max(0, originalItemQuantity - 1))
-                                  }
-                                  className="h-8 w-8 text-neutral-700 transition hover:text-brand-red"
-                                  aria-label={`Decrease ${lineItem.name}`}
-                                >
-                                  <HiMinus className="mx-auto text-lg" />
-                                </button>
-                                <span className="min-w-[2rem] text-center text-sm font-semibold">
-                                  {lineItem.quantity}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    updateQuantity(item.id, originalItemQuantity + 1)
-                                  }
-                                  className="h-8 w-8 text-neutral-700 transition hover:text-brand-red"
-                                  aria-label={`Increase ${lineItem.name}`}
-                                >
-                                  <HiPlus className="mx-auto text-lg" />
-                                </button>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => removeItem(item.id)}
-                                className="text-neutral-400 transition hover:text-brand-red"
-                                aria-label={`Remove ${lineItem.name}`}
-                              >
-                                <HiOutlineTrash className="text-lg" />
-                              </button>
-                            </div>
-                          </div>
-                        </li>
-                      );
-                    });
-                  }
-                  
-                  // Regular item rendering (non-pita BOGO items)
-                  // Calculate price for upsell items (promotional + full-price portions)
-                  let displayPrice = item.price ?? 0;
-                  let regularPrice = displayPrice;
-                  let itemTotal = displayPrice * (item.quantity ?? 1);
-                  
-                  if (isUpsell) {
-                    const promoPrice = item.price ?? 0; // Upsell promotional price
-                    const fullPrice = item.metadata?.upsellType === "fries" ? 4.5 : 2.5;
-                    const promoQty = item.metadata?.promotionalQuantity ?? (item.quantity ?? 1);
-                    const fullPriceQty = item.metadata?.fullPriceQuantity ?? 0;
-                    const totalQty = promoQty + fullPriceQty;
-                    
-                    // Calculate total price for this item
-                    itemTotal = (promoPrice * promoQty) + (fullPrice * fullPriceQty);
-                    
-                    // Display average price per item
-                    displayPrice = totalQty > 0 ? itemTotal / totalQty : promoPrice;
-                    regularPrice = fullPrice;
-                  } else {
-                    itemTotal = displayPrice * (item.quantity ?? 1);
-                  }
-
-                  return (
-                    <li
-                      key={item.id}
-                      className={`flex gap-4 rounded-2xl border p-4 ${
-                        isUpsell 
-                          ? "border-brand-red/30 bg-brand-red/5" 
-                          : isBogoDiscounted
-                          ? "border-brand-red/20 bg-brand-red/5"
-                          : "border-neutral-200"
-                      }`}
-                    >
-                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
-                        {item.image ? (
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fill
-                            sizes="160px"
-                            className="object-cover"
-                          />
-                        ) : null}
-                      </div>
-                      <div className="flex flex-1 flex-col justify-between">
-                        <div>
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1">
-                              <p className="text-xs uppercase tracking-wide text-neutral-500">
-                                {item.category}
-                              </p>
-                              <p className="font-semibold text-brand-dark">
-                                {item.name}
-                              </p>
-                            </div>
-                            {isUpsell && (
-                              <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red">
-                                Add-On
-                              </span>
-                            )}
-                            {isBogoDiscounted && (
-                              <span className="rounded-full bg-brand-red/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-red">
-                                50% Off
-                              </span>
-                            )}
-                            {item.metadata?.isUpgraded === true && (
-                              <span className="rounded-full bg-brand-red px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                                LARGE
-                              </span>
-                            )}
-                          </div>
-                          <div className="mt-1 flex items-center gap-2">
-                            {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
-                              <span className="text-xs text-neutral-400 line-through">
-                                ${regularPrice.toFixed(2)}
-                              </span>
-                            )}
-                            <p className="text-sm font-medium text-brand-red">
-                              ${displayPrice.toFixed(2)}
-                              {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
-                                <span className="ml-1 text-xs text-neutral-500">
-                                  (mixed pricing)
-                                </span>
-                              )}
-                            </p>
-                          </div>
-                          {/* Item Total with Calculation */}
-                          <div className="mt-2">
-                            <p className="text-xs font-semibold text-brand-dark">
-                              Total: ${itemTotal.toFixed(2)}
-                            </p>
-                            {!isUpsell && (
-                              <p className="mt-0.5 text-[10px] text-neutral-500">
-                                {item.quantity} × ${displayPrice.toFixed(2)} = ${itemTotal.toFixed(2)}
-                              </p>
-                            )}
-                            {isUpsell && item.metadata?.fullPriceQuantity > 0 && (
-                              <p className="mt-1 text-[10px] text-neutral-500">
-                                {item.metadata?.promotionalQuantity ?? 0} @ ${(item.price ?? 0).toFixed(2)} + {item.metadata?.fullPriceQuantity} @ ${regularPrice.toFixed(2)}
-                              </p>
-                            )}
-                            {isUpsell && item.metadata?.fullPriceQuantity === 0 && (
-                              <p className="mt-0.5 text-[10px] text-neutral-500">
-                                {item.quantity} × ${displayPrice.toFixed(2)} = ${itemTotal.toFixed(2)}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      <div className="flex items-center justify-between">
-                        <div className="inline-flex items-center rounded-full border border-neutral-200">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(item.id, (item.quantity ?? 1) - 1)
-                            }
-                            className="h-8 w-8 text-neutral-700 transition hover:text-brand-red"
-                            aria-label={`Decrease ${item.name}`}
-                          >
-                            <HiMinus className="mx-auto text-lg" />
-                          </button>
-                          <span className="min-w-[2rem] text-center text-sm font-semibold">
-                            {item.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(item.id, (item.quantity ?? 1) + 1)
-                            }
-                            className="h-8 w-8 text-neutral-700 transition hover:text-brand-red"
-                            aria-label={`Increase ${item.name}`}
-                          >
-                            <HiPlus className="mx-auto text-lg" />
-                          </button>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeItem(item.id)}
-                          className="text-neutral-400 transition hover:text-brand-red"
-                          aria-label={`Remove ${item.name}`}
-                        >
-                          <HiOutlineTrash className="text-lg" />
-                        </button>
-                      </div>
-                    </div>
-                  </li>
-                  );
-                })}
-              </ul>
+              <div className="space-y-4">
+                {Object.entries(groupedItems).map(([categoryId, categoryItems]) => (
+                  <CategorySection
+                    key={categoryId}
+                    categoryId={categoryId}
+                    categoryName={getCategoryName(categoryId)}
+                    items={categoryItems}
+                    isExpanded={expandedCategories[categoryId] ?? true}
+                    onToggle={() => toggleCategory(categoryId)}
+                    bogoPitaPromo={bogoPitaPromo}
+                    updateQuantity={updateQuantity}
+                    removeItem={removeItem}
+                  />
+                ))}
+              </div>
             )}
           </div>
 

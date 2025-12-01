@@ -124,7 +124,7 @@ export const menuItems = [
     name: "Kofta Kebab Platter",
     category: "platters",
     price: 11.0,
-    image: "/menu/GYRO PLATTERS/beef kofta kebab platter small.jpg",
+    image: "/menu/GYRO PLATTERS/kofta kebab w fries platter.png",
     description:
       "Served with basmati brown rice, lettuce, tomatoes, cucumbers, cabbage, onions, and finished with our signature white sauce and hot sauce.",
     tags: [],
@@ -153,7 +153,7 @@ export const menuItems = [
     id: "steam-chicken-leg-platter",
     name: "Steamed Chicken Leg Platter",
     category: "platters",
-    price: 14,
+    price: 11,
     image: "/menu/GYRO PLATTERS/steam chicken leg platter.png",
     description:
       "Tender steamed chicken leg over rice with vegetables and sauces.",
