@@ -41,6 +41,12 @@ export const menuCategories = [
     description: "Baklava and sweet bites that finish the meal right.",
   },
   {
+    id: "pookie",
+    name: "Pookie",
+    description:
+      "Pookie is the home of the Big-Body Cookie— Thicc, bold, 6 oz Cookies made to hit every time. We don't just bake treats; we create moments. From giant chocolate-packed cookies bakery staples, Pookie brings the fun back into dessert. Loud flavors, real quality, and a vibe that feels like NYC in every bite.",
+  },
+  {
     id: "milkshakes",
     name: "Milkshakes",
     description: "Creamy, hand-blended milkshakes in delicious flavors.",
@@ -570,6 +576,28 @@ export const menuItems = [
     image: "/menu/GYRO DESSERTS/pistachio baklava.png",
     description: "Layers of flaky phyllo, pistachio, and honey syrup.",
     tags: ["halal", "sweet", "fan favorite"],
+  },
+
+  // POOKIE
+  {
+    id: "big-body-chocolate-chip",
+    name: "Big Body Chocolate Chip",
+    category: "pookie",
+    price: 4.0,
+    image: "/menu/GYRO DESSERTS/dessert tile.jpeg",
+    description:
+      "A Fresh-baked thicc & gooey, 6 oz Chocolate Chip Cookie with crispy edges and a soft, melty center. Pure big-body bliss in every bite.",
+    tags: ["sweet"],
+  },
+  {
+    id: "big-body-dark-chocolate-peanut-butter",
+    name: "Big Body Dark Chocolate Peanut Butter",
+    category: "pookie",
+    price: 4.0,
+    image: "/menu/GYRO DESSERTS/dessert tile.jpeg",
+    description:
+      "Fresh-Baked heavyweight 6 oz Peanut Butter Cookie loaded with rich, dark chocolate chunks and peanut butter chips. Bold, warm, and seriously satisfying.",
+    tags: ["sweet"],
   },
 
   // MILKSHAKES
