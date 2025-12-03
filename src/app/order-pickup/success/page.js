@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
 import { useCart } from "@/components/cart/CartContext";
 
-export default function OrderPickupSuccess() {
+function OrderPickupSuccessContent() {
   const { clearCart } = useCart();
   const searchParams = useSearchParams();
   const method = searchParams?.get("method") ?? "pay_in_store";
@@ -95,6 +95,27 @@ export default function OrderPickupSuccess() {
         </div>
       </Section>
     </main>
+  );
+}
+
+export default function OrderPickupSuccess() {
+  return (
+    <Suspense fallback={
+      <main className="flex flex-col">
+        <Section background="red">
+          <div className="space-y-4 text-white py-10">
+            <p className="text-lg uppercase tracking-[0.4em] text-white">
+              Gyro Cafe Pickup
+            </p>
+            <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl">
+              Loading...
+            </h1>
+          </div>
+        </Section>
+      </main>
+    }>
+      <OrderPickupSuccessContent />
+    </Suspense>
   );
 }
 
