@@ -655,7 +655,7 @@ export function CartProvider({ children }) {
     }, 150);
   }, [pendingUpgradeItem, state.items]);
 
-  const handleUpsellSelect = useCallback(async (type) => {
+  const handleUpsellSelect = useCallback(async (type, pookieQuantities = { chocolateChip: 0, peanutButter: 0 }) => {
     const capacity = calculateUpsellCapacity(state.items);
     if (capacity <= 0) return;
 
@@ -675,6 +675,29 @@ export function CartProvider({ children }) {
       const drinkItem = createUpsellItem("drink", quantityToAdd, menuItems);
       dispatch({ type: "ADD_ITEM", payload: { item: friesItem } });
       dispatch({ type: "ADD_ITEM", payload: { item: drinkItem } });
+    }
+
+    // Add Pookie items if quantities are greater than 0
+    if (pookieQuantities.chocolateChip > 0) {
+      const chocolateChipItem = menuItems.find((item) => item.id === "big-body-chocolate-chip");
+      if (chocolateChipItem) {
+        const pookieItem = {
+          ...chocolateChipItem,
+          quantity: pookieQuantities.chocolateChip,
+        };
+        dispatch({ type: "ADD_ITEM", payload: { item: pookieItem } });
+      }
+    }
+
+    if (pookieQuantities.peanutButter > 0) {
+      const peanutButterItem = menuItems.find((item) => item.id === "big-body-dark-chocolate-peanut-butter");
+      if (peanutButterItem) {
+        const pookieItem = {
+          ...peanutButterItem,
+          quantity: pookieQuantities.peanutButter,
+        };
+        dispatch({ type: "ADD_ITEM", payload: { item: pookieItem } });
+      }
     }
   }, [state.items]);
 
