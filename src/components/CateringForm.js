@@ -32,6 +32,18 @@ export function CateringForm() {
     }));
   };
 
+  const formatDate = (dateString) => {
+    // Convert YYYY-MM-DD to DD/MM/YYYY
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  };
+
+  const capitalizeFirst = (str) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!form.consent) {
@@ -40,14 +52,34 @@ export function CateringForm() {
     }
     setStatus({ state: "submitting" });
     try {
-      const response = await fetch("/api/catering", {
+      // Map form fields to API payload structure
+      const payload = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phoneNumber: form.phone,
+        eventDate: formatDate(form.date),
+        eventTime: form.time, // Already in HH:mm format
+        eventLocation: form.location,
+        numberOfGuests: parseInt(form.guests, 10),
+        deliveryOrPickup: capitalizeFirst(form.service),
+        eventType: capitalizeFirst(form.eventType),
+        publicOrPrivate: capitalizeFirst(form.isPublic),
+        eventDetails: form.message,
+        acknowledge: form.consent,
+      };
+
+      const response = await fetch("/api/payment/catering-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Unable to send request. Please try again.");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || "Unable to send request. Please try again."
+        );
       }
 
       setStatus({
@@ -205,7 +237,33 @@ export function CateringForm() {
         className="w-full justify-center md:w-auto"
         disabled={status.state === "submitting"}
       >
-        Submit Catering Request
+        {status.state === "submitting" ? (
+          <>
+            <svg
+              className="h-5 w-5 animate-spin"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            Submitting...
+          </>
+        ) : (
+          "Submit Catering Request"
+        )}
       </Button>
     </form>
   );
