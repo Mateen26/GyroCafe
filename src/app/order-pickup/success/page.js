@@ -1,18 +1,26 @@
+"use client";
+
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "@/components/Button";
 import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
+import { useCart } from "@/components/cart/CartContext";
 
-export const metadata = {
-  title: "Order Confirmed · Gyro Cafe Pickup",
-};
+export default function OrderPickupSuccess() {
+  const { clearCart } = useCart();
+  const searchParams = useSearchParams();
+  const method = searchParams?.get("method") ?? "pay_in_store";
+  const name = searchParams?.get("name");
+  const pickupTime = searchParams?.get("pickupTime");
+  const orderId = searchParams?.get("order");
 
-export default function OrderPickupSuccess({ searchParams }) {
-  const method = searchParams?.method ?? "pay_in_store";
-  const name = searchParams?.name;
-  const pickupTime = searchParams?.pickupTime;
-  const orderId = searchParams?.order;
+  useEffect(() => {
+    // Clear cart for both payment methods when user lands on success page
+    clearCart();
+  }, [clearCart]);
 
   const heading =
     method === "pay_online"

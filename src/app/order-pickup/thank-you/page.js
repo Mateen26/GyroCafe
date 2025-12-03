@@ -6,9 +6,11 @@ import Link from "next/link";
 import { Button } from "@/components/Button";
 import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
+import { useCart } from "@/components/cart/CartContext";
 
 export default function OrderPickupThankYou() {
   const [orderDetails, setOrderDetails] = useState(null);
+  const { clearCart } = useCart();
 
   useEffect(() => {
     // Retrieve order details from sessionStorage
@@ -24,7 +26,10 @@ export default function OrderPickupThankYou() {
         }
       }
     }
-  }, []);
+    
+    // Clear cart when user returns from successful Stripe payment
+    clearCart();
+  }, [clearCart]);
 
   return (
     <main className="flex flex-col">
