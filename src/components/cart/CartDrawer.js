@@ -194,8 +194,8 @@ function CartItem({ item, originalItem, originalItemQuantity, updateQuantity, re
       <div className="flex flex-1 flex-col justify-between gap-2">
         <div>
           <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm text-brand-dark truncate">
+            <div className="flex-1 min-w-0 pr-2">
+              <p className="break-words font-semibold text-sm text-brand-dark">
                 {item.name}
               </p>
             </div>

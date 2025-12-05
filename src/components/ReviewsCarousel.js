@@ -3,9 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { HiMiniChevronLeft, HiMiniChevronRight } from "react-icons/hi2";
+import { HiArrowTopRightOnSquare } from "react-icons/hi2";
 
 import { Button } from "./Button";
 import { Section } from "./Section";
+import { platformStats } from "@/lib/reviewsData";
 
 const AUTOPLAY_INTERVAL = 7000;
 
@@ -41,15 +43,88 @@ export function ReviewsCarousel({
             Loved in Brooklyn
           </h2>
           {summary ? (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1 text-2xl font-extrabold">
-                <span>{summary.rating.toFixed(1)}</span>
-                <Stars count={5} />
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1 text-2xl font-extrabold">
+                  <span>{summary.rating.toFixed(1)}</span>
+                  <Stars count={5} />
+                </div>
+                <p className="text-sm font-semibold uppercase tracking-wide opacity-80">
+                  {summary.count.toLocaleString()}+ reviews across{" "}
+                  {summary.platforms?.slice(0, 3).join(", ")}
+                </p>
               </div>
-              <p className="text-sm font-semibold uppercase tracking-wide opacity-80">
-                {summary.count}+ reviews across{" "}
-                {summary.platforms?.slice(0, 3).join(", ")}
-              </p>
+              
+              {/* Marketing Lines */}
+              <div className="space-y-2 text-sm font-medium opacity-90">
+                <p>
+                  See <span className="font-bold">{platformStats.grubhub.count.toLocaleString()}</span> reviews on{" "}
+                  <a
+                    href={platformStats.grubhub.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-80 transition"
+                  >
+                    Grubhub
+                  </a>
+                </p>
+                <p>
+                  See <span className="font-bold">{platformStats.doordash.countLabel || platformStats.doordash.count.toLocaleString()}</span> reviews on{" "}
+                  <a
+                    href={platformStats.doordash.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-80 transition"
+                  >
+                    DoorDash
+                  </a>
+                </p>
+                <p>
+                  See <span className="font-bold">{platformStats.ubereats.countLabel || platformStats.ubereats.count.toLocaleString()}</span> reviews on{" "}
+                  <a
+                    href={platformStats.ubereats.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-80 transition"
+                  >
+                    Uber Eats
+                  </a>
+                </p>
+                <p>
+                  See <span className="font-bold">{platformStats.google.count.toLocaleString()}</span> reviews on{" "}
+                  <a
+                    href={platformStats.google.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:opacity-80 transition"
+                  >
+                    Google
+                  </a>
+                </p>
+              </div>
+
+              {/* Platform Links */}
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                {Object.values(platformStats).map((platform) => (
+                  <a
+                    key={platform.name}
+                    href={platform.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between rounded-xl border border-white/20 bg-white/5 px-4 py-3 transition hover:bg-white/10 hover:border-white/30"
+                  >
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide">
+                        {platform.name}
+                      </p>
+                      <p className="mt-0.5 text-xs opacity-70">
+                        {platform.rating.toFixed(1)} ⭐ · {platform.countLabel || platform.count.toLocaleString()} reviews
+                      </p>
+                    </div>
+                    <HiArrowTopRightOnSquare className="h-4 w-4 opacity-50 transition group-hover:opacity-100" />
+                  </a>
+                ))}
+              </div>
             </div>
           ) : null}
           {cta ? (
@@ -65,8 +140,8 @@ export function ReviewsCarousel({
 
         <div className="space-y-6">
           <div className="rounded-3xl border border-white/10 bg-white/10 p-6 shadow-lg backdrop-blur md:p-8">
-            <div className="flex items-center gap-3 text-brand-red">
-              <Stars count={active.rating} />
+            <div className="flex items-center gap-3">
+              <Stars count={active.rating} className="text-brand-red" />
               <span className="text-xs font-semibold uppercase tracking-wide text-white/80">
                 {active.platform}
               </span>
@@ -125,11 +200,11 @@ export function ReviewsCarousel({
   );
 }
 
-function Stars({ count = 5 }) {
+function Stars({ count = 5, className = "" }) {
   return (
-    <div className="flex items-center gap-1 text-brand-red">
+    <div className={`flex items-center gap-1 ${className || "text-brand-red"}`}>
       {Array.from({ length: Math.round(count) }).map((_, index) => (
-        <FaStar key={index} />
+        <FaStar key={index} className="fill-current" />
       ))}
     </div>
   );

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Button } from "./Button";
 
-const pickupWindows = ["ASAP", "In 15 minutes", "In 30 minutes", "Schedule"];
+const pickupWindows = ["ASAP", "In 15 minutes", "In 30 minutes"];
 
 const initialForm = {
   name: "",
