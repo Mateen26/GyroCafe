@@ -122,6 +122,23 @@ export default function OrderPickupView() {
                 total,
               })
             );
+            // Store receipt data for PDF download
+            sessionStorage.setItem(
+              "orderReceipt",
+              JSON.stringify({
+                orderNumber: checkoutData?.id || "Pending",
+                customerName: form.name,
+                customerEmail: form.email,
+                pickupTime: form.pickupTime,
+                total,
+                items,
+                itemTotal,
+                subtotalAfterDiscounts,
+                tax,
+                promotion,
+                bogoPitaPromo,
+              })
+            );
           }
           window.location.href = checkoutData.url;
           return;
@@ -142,10 +159,37 @@ export default function OrderPickupView() {
 
       const data = await response.json();
       clearCart();
+      
+      // Handle both new and old response formats
+      const orderId = data?.orderNumber ?? data?.orderId ?? "";
+      const customerName = data?.customer?.name ?? form.name ?? "";
+      const customerEmail = data?.customer?.email ?? form.email ?? "";
+      
+      // Store order details in sessionStorage for receipt
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(
+          "orderReceipt",
+          JSON.stringify({
+            orderNumber: orderId,
+            customerName,
+            customerEmail,
+            pickupTime: form.pickupTime,
+            total,
+            items,
+            itemTotal,
+            subtotalAfterDiscounts,
+            tax,
+            promotion,
+            bogoPitaPromo,
+          })
+        );
+      }
+      
       const params = new URLSearchParams({
         method: "pay_in_store",
-        order: data?.orderId ?? "",
-        name: form.name,
+        order: orderId,
+        name: customerName,
+        email: customerEmail,
         pickupTime: form.pickupTime,
       });
       router.push(`/order-pickup/success?${params.toString()}`);
