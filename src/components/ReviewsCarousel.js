@@ -47,7 +47,7 @@ export function ReviewsCarousel({
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1 text-2xl font-extrabold">
                   <span>{summary.rating.toFixed(1)}</span>
-                  <Stars count={5} />
+                  <Stars count={5} className="text-yellow-400" />
                 </div>
                 <p className="text-sm font-semibold uppercase tracking-wide opacity-80">
                   {summary.count.toLocaleString()}+ reviews across{" "}
@@ -118,7 +118,7 @@ export function ReviewsCarousel({
                         {platform.name}
                       </p>
                       <p className="mt-0.5 text-xs opacity-70">
-                        {platform.rating.toFixed(1)} ⭐ · {platform.countLabel || platform.count.toLocaleString()} reviews
+                        {platform.rating.toFixed(1)} <span className="text-yellow-400">⭐</span> · {platform.countLabel || platform.count.toLocaleString()} reviews
                       </p>
                     </div>
                     <HiArrowTopRightOnSquare className="h-4 w-4 opacity-50 transition group-hover:opacity-100" />
@@ -141,7 +141,7 @@ export function ReviewsCarousel({
         <div className="space-y-6">
           <div className="rounded-3xl border border-white/10 bg-white/10 p-6 shadow-lg backdrop-blur md:p-8">
             <div className="flex items-center gap-3">
-              <Stars count={active.rating} className="text-brand-red" />
+              <Stars count={active.rating} className="text-yellow-400" />
               <span className="text-xs font-semibold uppercase tracking-wide text-white/80">
                 {active.platform}
               </span>
@@ -202,7 +202,7 @@ export function ReviewsCarousel({
 
 function Stars({ count = 5, className = "" }) {
   return (
-    <div className={`flex items-center gap-1 ${className || "text-brand-red"}`}>
+    <div className={`flex items-center gap-1 ${className || "text-yellow-400"}`}>
       {Array.from({ length: Math.round(count) }).map((_, index) => (
         <FaStar key={index} className="fill-current" />
       ))}

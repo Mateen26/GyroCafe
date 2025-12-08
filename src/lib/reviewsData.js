@@ -45,26 +45,6 @@ export const reviews = [
   // Grubhub Reviews
   {
     id: "grubhub-1",
-    name: "Charles",
-    platform: "Grubhub",
-    rating: 4,
-    quote: "Every thing was great but Tseki sauce was not what I expected",
-    date: "Today",
-    orderDetails: "Lamb Gyro Sandwich, Kofta Kebab, Grape Leaves, Baklava",
-  },
-  {
-    id: "grubhub-2",
-    name: "Kris",
-    platform: "Grubhub",
-    rating: 4,
-    quote:
-      "The food here is actually great. Always fresh. But- it is never prepared the same way. It's so inconsistent that I'm never sure what is going to come. No matter what instructions I share or don't share. And that has been my expertise ordering day to day.",
-    date: "3 days ago",
-    orderDetails: "Baklava, Nachos A La Cafe",
-    isTopReviewer: true,
-  },
-  {
-    id: "grubhub-3",
     name: "Min Jung",
     platform: "Grubhub",
     rating: 5,
@@ -73,7 +53,7 @@ export const reviews = [
     isTopReviewer: true,
   },
   {
-    id: "grubhub-4",
+    id: "grubhub-2",
     name: "Michelle",
     platform: "Grubhub",
     rating: 5,
@@ -89,21 +69,12 @@ export const reviews = [
     platform: "DoorDash",
     rating: 5,
     quote:
-      "The French Fries were more like potato wedges, absolutely loved them because they weren't crunchy to the point of just being really sharp in my mouth. The Chicken Gyro Platter was also awesome, no unnecessary ingredients. The large lasted me literally two days because I got full after eating some of it. The Chapli Kebabs are better elsewhere.",
+      "The French Fries were more like potato wedges, absolutely loved them because they weren't crunchy to the point of just being really sharp in my mouth. The Chicken Gyro Platter was also awesome, no unnecessary ingredients. The large lasted me literally two days because I got full after eating some of it.",
     date: "Jan 1, 2023",
     isEmergingExpert: true,
   },
   {
     id: "doordash-2",
-    name: "Kris A",
-    platform: "DoorDash",
-    rating: 4,
-    quote:
-      "I really think there has been an ownership change because the quality of the food is just so much better and the new menu items are great. There are still some issues with quality control like the hummus is sometimes spoiled and the meat is underseasoned. But when it's done right- the food is so so good here. Hot plates, crispy edges, crispy fries, fresh tomatoes in the salad! The meats are always fresh and the platter portions are great. Keep it up team!! It's easily one of the best fast and delicious choices in the neighborhood!",
-    date: "Sep 30, 2025",
-  },
-  {
-    id: "doordash-3",
     name: "Coleman B",
     platform: "DoorDash",
     rating: 5,
@@ -114,12 +85,14 @@ export const reviews = [
   // Uber Eats Reviews
   {
     id: "ubereats-1",
-    name: "Galina G.",
+    name: "Tanvir Meah",
     platform: "Uber Eats",
-    rating: 4,
+    rating: 5,
     quote:
-      "thank you very much, this is really delicious! I especially liked the baklava, it was very tender and melted in your mouth. It's a shame that I received 1 drink instead of 2, I can't know whose fault it was – the store or the delivery person, but it's a little unpleasant.",
-    date: "Mar 18, 2024",
+      "I order from gyro cafe using uber eats all the time and they never disappoint. The food is always fresh and tastes great. My go to are the lamb gyro pita wrap and baklava.",
+    date: "7 months ago",
+    isLocalGuide: true,
+    reviewCount: 21,
   },
   {
     id: "ubereats-2",
@@ -148,7 +121,7 @@ export const reviews = [
     platform: "Google",
     rating: 5,
     quote:
-      "If u see people filling in here just kno u need to get right behind them! Fresh, well seasoned and filling. I'd recommend anything but the fried chicken, it just sits there. So I went back again after not having been in some time... I got the lamb chops this time... omg. The flavor the chargrilled bits.. they're so good! And I can't stress to you enough about the Curry lamb!!🤤🤤🤤",
+      "If u see people filling in here just kno u need to get right behind them! Fresh, well seasoned and filling. So I went back again after not having been in some time... I got the lamb chops this time... omg. The flavor the chargrilled bits.. they're so good! And I can't stress to you enough about the Curry lamb!!🤤🤤🤤",
     date: "11 months ago",
     isLocalGuide: true,
     reviewCount: 58,
@@ -156,13 +129,107 @@ export const reviews = [
   },
   {
     id: "google-3",
-    name: "Jefe Birkner",
+    name: "Tanvir Meah",
     platform: "Google",
     rating: 5,
     quote:
-      "The guys working the counter were inconsistent, one struggled to understand my request, the other jumped in to help. Ordered a combo of lamb gyro and falafel over salad, mixed veg, and some pickled peppers. All super yummy. 6:30 on a Saturday night, all seats are empty, I think most of the business is takeout. I'm not a fan of distracting TV while I eat, and watching an auction of $1 million+ cars is confusing, like who watches this, certainly few of the people that might be able to participate in such an auction. Wish I could just read, in the quiet....",
-    date: "10 months ago",
+      "I order from gyro cafe using uber eats all the time and they never disappoint. The food is always fresh and tastes great. My go to are the lamb gyro pita wrap and baklava.",
+    date: "7 months ago",
     isLocalGuide: true,
-    reviewCount: 142,
+    reviewCount: 21,
+  },
+  {
+    id: "google-4",
+    name: "gunsbound",
+    platform: "Google",
+    rating: 5,
+    quote:
+      "The lamb gyro nanwich I had was very big. Kind of unwieldy to eat with out meat and stuff spilling out. I like it.",
+    date: "2 months ago",
+    isLocalGuide: true,
+    reviewCount: 414,
+  },
+  {
+    id: "google-5",
+    name: "Monirul Mohamed Alam",
+    platform: "Google",
+    rating: 5,
+    quote:
+      "Really really great food. Even after many years, still highly recommended for quick grab bites. Especially for takeouts, an excellent 👌 choice.",
+    date: "6 months ago",
+    isLocalGuide: true,
+    reviewCount: 101,
+  },
+  {
+    id: "google-6",
+    name: "Muheed Ali",
+    platform: "Google",
+    rating: 5,
+    quote: "Amazing food! Very homey feel, great people",
+    date: "3 months ago",
+    reviewCount: 9,
+  },
+  {
+    id: "google-7",
+    name: "Simas Urbonas",
+    platform: "Google",
+    rating: 5,
+    quote:
+      "The best halal spot for me, period. I've been coming here for years and after traveling so much, this is where I always come back to for a lamb gyro 🥙",
+    date: "5 months ago",
+    isLocalGuide: true,
+    reviewCount: 42,
+  },
+  {
+    id: "google-8",
+    name: "Vinny Wang",
+    platform: "Google",
+    rating: 5,
+    quote:
+      "I've been ordering online from here for over a year now and I've gotten their mixed platter dish every time so I'll only speak to that specific dish. It is DELICIOUS!! I love this place and I've probably had the mixed platter close to 10 times.",
+    date: "9 months ago",
+    isLocalGuide: true,
+    reviewCount: 91,
+  },
+  {
+    id: "google-9",
+    name: "Ayaan P",
+    platform: "Google",
+    rating: 5,
+    quote:
+      "My favorite halal place in new york. Tasty meat with good ratio of veggies. Slightly pricy but worth it. Would recommend for sure.",
+    date: "5 years ago",
+    reviewCount: 1,
+  },
+  {
+    id: "google-10",
+    name: "Mehmet SİVAS",
+    platform: "Google",
+    rating: 5,
+    quote:
+      "Always nice, clean, big portions, smiling brothers working here whenever i am close i visit",
+    date: "2 years ago",
+    isLocalGuide: true,
+    reviewCount: 59,
+  },
+  {
+    id: "google-11",
+    name: "Online User",
+    platform: "Google",
+    rating: 5,
+    quote: "Always fast service and good food",
+    date: "7 months ago",
+    isLocalGuide: true,
+    reviewCount: 44,
+  },
+  {
+    id: "google-12",
+    name: "cheetah 1",
+    platform: "Google",
+    rating: 5,
+    quote: "Always the best and consistent taste... one of brooklyns best..",
+    date: "2 months ago",
+    isLocalGuide: true,
+    reviewCount: 64,
   },
 ];

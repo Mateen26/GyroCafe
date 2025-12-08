@@ -112,7 +112,7 @@ export default function ReviewsPage() {
                   <HiArrowTopRightOnSquare className="h-5 w-5 text-neutral-400 transition group-hover:text-brand-red" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 text-brand-red">
+                  <div className="flex items-center gap-1 text-yellow-400">
                     <span className="text-xl font-bold">{platform.rating.toFixed(1)}</span>
                     <FaStar className="h-4 w-4 fill-current" />
                   </div>
@@ -151,7 +151,7 @@ export default function ReviewsPage() {
                     </h3>
                     {platform && (
                       <p className="mt-1 text-sm text-neutral-600">
-                        {platform.rating.toFixed(1)} ⭐ · {platform.countLabel || platform.count.toLocaleString()} reviews
+                        {platform.rating.toFixed(1)} <span className="text-yellow-400">⭐</span> · {platform.countLabel || platform.count.toLocaleString()} reviews
                       </p>
                     )}
                   </div>
@@ -167,7 +167,7 @@ export default function ReviewsPage() {
                         <span className="text-xs font-semibold uppercase tracking-wide text-brand-red">
                           {review.platform}
                         </span>
-                        <div className="flex items-center gap-1 text-brand-red">
+                        <div className="flex items-center gap-1 text-yellow-400">
                           {Array.from({ length: Math.round(review.rating) }).map((_, i) => (
                             <FaStar key={i} className="h-3 w-3 fill-current" />
                           ))}

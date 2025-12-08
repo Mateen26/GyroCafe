@@ -656,13 +656,41 @@ export function CartProvider({ children }) {
   }, [pendingUpgradeItem, state.items]);
 
   const handleUpsellSelect = useCallback(async (type, pookieQuantities = { chocolateChip: 0, peanutButter: 0 }) => {
+    // Dynamically import menuItems to get image paths
+    const { menuItems } = await import("@/lib/menuData");
+
+    // Handle cookies-only case (no fries/soda/both selected)
+    if (type === "cookies") {
+      // Add Pookie items if quantities are greater than 0
+      if (pookieQuantities.chocolateChip > 0) {
+        const chocolateChipItem = menuItems.find((item) => item.id === "big-body-chocolate-chip");
+        if (chocolateChipItem) {
+          const pookieItem = {
+            ...chocolateChipItem,
+            quantity: pookieQuantities.chocolateChip,
+          };
+          dispatch({ type: "ADD_ITEM", payload: { item: pookieItem } });
+        }
+      }
+
+      if (pookieQuantities.peanutButter > 0) {
+        const peanutButterItem = menuItems.find((item) => item.id === "big-body-dark-chocolate-peanut-butter");
+        if (peanutButterItem) {
+          const pookieItem = {
+            ...peanutButterItem,
+            quantity: pookieQuantities.peanutButter,
+          };
+          dispatch({ type: "ADD_ITEM", payload: { item: pookieItem } });
+        }
+      }
+      return;
+    }
+
+    // Handle fries/soda/both selections
     const capacity = calculateUpsellCapacity(state.items);
     if (capacity <= 0) return;
 
     const quantityToAdd = Math.min(capacity, 1); // Add 1 at a time for now
-
-    // Dynamically import menuItems to get image paths
-    const { menuItems } = await import("@/lib/menuData");
 
     if (type === "fries") {
       const friesItem = createUpsellItem("fries", quantityToAdd, menuItems);
