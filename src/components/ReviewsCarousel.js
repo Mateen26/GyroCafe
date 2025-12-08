@@ -34,69 +34,69 @@ export function ReviewsCarousel({
 
   return (
     <Section background={background}>
-      <div className="grid gap-10 lg:grid-cols-[1fr,1.2fr] lg:items-center py-20">
-        <div className="space-y-6">
-          <p className="text-lg uppercase tracking-[0.4em]">
+      <div className="grid gap-8 md:gap-10 lg:grid-cols-[1fr,1.2fr] lg:items-center py-12 md:py-16 lg:py-20 overflow-hidden">
+        <div className="space-y-4 md:space-y-6 min-w-0">
+          <p className="text-base md:text-lg uppercase tracking-[0.4em]">
             Our Community Speaks
           </p>
-          <h2 className="text-3xl font-bold uppercase tracking-tight md:text-4xl">
+          <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tight lg:text-4xl">
             Loved in Brooklyn
           </h2>
           {summary ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 text-2xl font-extrabold">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-1 text-xl md:text-2xl font-extrabold">
                   <span>{summary.rating.toFixed(1)}</span>
                   <Stars count={5} className="text-yellow-400" />
                 </div>
-                <p className="text-sm font-semibold uppercase tracking-wide opacity-80">
+                <p className="text-xs sm:text-sm font-semibold uppercase tracking-wide opacity-80 break-words">
                   {summary.count.toLocaleString()}+ reviews across{" "}
                   {summary.platforms?.slice(0, 3).join(", ")}
                 </p>
               </div>
               
               {/* Marketing Lines */}
-              <div className="space-y-2 text-sm font-medium opacity-90">
-                <p>
+              <div className="space-y-1.5 md:space-y-2 text-xs sm:text-sm font-medium opacity-90">
+                <p className="break-words">
                   See <span className="font-bold">{platformStats.grubhub.count.toLocaleString()}</span> reviews on{" "}
                   <a
                     href={platformStats.grubhub.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:opacity-80 transition"
+                    className="underline hover:opacity-80 transition break-all"
                   >
                     Grubhub
                   </a>
                 </p>
-                <p>
+                <p className="break-words">
                   See <span className="font-bold">{platformStats.doordash.countLabel || platformStats.doordash.count.toLocaleString()}</span> reviews on{" "}
                   <a
                     href={platformStats.doordash.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:opacity-80 transition"
+                    className="underline hover:opacity-80 transition break-all"
                   >
                     DoorDash
                   </a>
                 </p>
-                <p>
+                <p className="break-words">
                   See <span className="font-bold">{platformStats.ubereats.countLabel || platformStats.ubereats.count.toLocaleString()}</span> reviews on{" "}
                   <a
                     href={platformStats.ubereats.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:opacity-80 transition"
+                    className="underline hover:opacity-80 transition break-all"
                   >
                     Uber Eats
                   </a>
                 </p>
-                <p>
+                <p className="break-words">
                   See <span className="font-bold">{platformStats.google.count.toLocaleString()}</span> reviews on{" "}
                   <a
                     href={platformStats.google.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:opacity-80 transition"
+                    className="underline hover:opacity-80 transition break-all"
                   >
                     Google
                   </a>
@@ -104,24 +104,24 @@ export function ReviewsCarousel({
               </div>
 
               {/* Platform Links */}
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 pt-2">
                 {Object.values(platformStats).map((platform) => (
                   <a
                     key={platform.name}
                     href={platform.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center justify-between rounded-xl border border-white/20 bg-white/5 px-4 py-3 transition hover:bg-white/10 hover:border-white/30"
+                    className="group flex items-center justify-between rounded-xl border border-white/20 bg-white/5 px-3 py-2.5 sm:px-4 sm:py-3 transition hover:bg-white/10 hover:border-white/30 min-w-0"
                   >
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold uppercase tracking-wide truncate">
                         {platform.name}
                       </p>
-                      <p className="mt-0.5 text-xs opacity-70">
+                      <p className="mt-0.5 text-xs opacity-70 truncate">
                         {platform.rating.toFixed(1)} <span className="text-yellow-400">⭐</span> · {platform.countLabel || platform.count.toLocaleString()} reviews
                       </p>
                     </div>
-                    <HiArrowTopRightOnSquare className="h-4 w-4 opacity-50 transition group-hover:opacity-100" />
+                    <HiArrowTopRightOnSquare className="h-4 w-4 opacity-50 transition group-hover:opacity-100 shrink-0 ml-2" />
                   </a>
                 ))}
               </div>
@@ -132,24 +132,25 @@ export function ReviewsCarousel({
               href={cta.href}
               external={cta.external}
               variant={cta.variant ?? "light"}
+              className="w-full sm:w-auto"
             >
               {cta.label}
             </Button>
           ) : null}
         </div>
 
-        <div className="space-y-6">
-          <div className="rounded-3xl border border-white/10 bg-white/10 p-6 shadow-lg backdrop-blur md:p-8">
-            <div className="flex items-center gap-3">
+        <div className="space-y-4 md:space-y-6 min-w-0">
+          <div className="rounded-2xl md:rounded-3xl border border-white/10 bg-white/10 p-4 sm:p-6 md:p-8 shadow-lg backdrop-blur">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <Stars count={active.rating} className="text-yellow-400" />
               <span className="text-xs font-semibold uppercase tracking-wide text-white/80">
                 {active.platform}
               </span>
             </div>
-            <blockquote className="mt-4 text-lg font-semibold text-white">
-              “{active.quote}”
+            <blockquote className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold text-white break-words">
+              "{active.quote}"
             </blockquote>
-            <footer className="mt-6 text-sm text-white/70">
+            <footer className="mt-4 sm:mt-6 text-xs sm:text-sm text-white/70 break-words">
               <span className="font-semibold uppercase tracking-wide text-white">
                 {active.name}
               </span>{" "}
@@ -157,7 +158,7 @@ export function ReviewsCarousel({
             </footer>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             <button
               type="button"
               onClick={() =>
@@ -165,18 +166,18 @@ export function ReviewsCarousel({
                   (index - 1 + items.length) % items.length
                 )
               }
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-white hover:bg-white/10"
+              className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-white hover:bg-white/10"
               aria-label="Previous review"
             >
-              <HiMiniChevronLeft className="text-xl" />
+              <HiMiniChevronLeft className="text-lg sm:text-xl" />
             </button>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-1 justify-center overflow-x-auto scrollbar-hide">
               {items.map((review, index) => (
                 <button
                   key={review.id}
                   type="button"
                   onClick={() => setActiveIndex(index)}
-                  className={`h-2.5 w-6 rounded-full transition ${
+                  className={`h-2 sm:h-2.5 w-5 sm:w-6 shrink-0 rounded-full transition ${
                     index === activeIndex ? "bg-white" : "bg-white/30"
                   }`}
                   aria-label={`Show review ${index + 1}`}
@@ -188,10 +189,10 @@ export function ReviewsCarousel({
               onClick={() =>
                 setActiveIndex((index) => (index + 1) % items.length)
               }
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-white hover:bg-white/10"
+              className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-white hover:bg-white/10"
               aria-label="Next review"
             >
-              <HiMiniChevronRight className="text-xl" />
+              <HiMiniChevronRight className="text-lg sm:text-xl" />
             </button>
           </div>
         </div>

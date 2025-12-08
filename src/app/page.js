@@ -48,25 +48,25 @@ export default function Home() {
       />
 
       {/* MEET SAÜCED Banner */}
-      <Section background="red" className="py-16 md:py-20">
-        <div className="text-center">
-          <h2 className="text-5xl font-bold uppercase tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+      <Section background="red" className="py-12 md:py-16 lg:py-20 overflow-hidden">
+        <div className="text-center px-4 sm:px-6 md:px-8 max-w-full">
+          <h2 className="text-2xl font-bold uppercase tracking-tight leading-tight sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl whitespace-nowrap overflow-x-auto overflow-y-visible pb-3 sm:pb-0 scrollbar-hide">
             <span 
-              className="bg-gradient-to-r from-black from-0% via-black via-33% via-white via-50% via-white via-66% to-[#FFD700] to-100% bg-clip-text text-transparent"
+              className="bg-gradient-to-r from-black from-0% via-black via-33% via-white via-50% via-white via-66% to-[#FFD700] to-100% bg-clip-text text-transparent inline-block"
               style={{
                 backgroundImage: 'linear-gradient(to right, #000000 0%, #000000 33%, #FFFFFF 50%, #FFFFFF 100%)'
               }}
             >
               MEET SA
             </span>
-            <span className="relative inline-block bg-gradient-to-r from-[#FFFFFF] via-[#FFF500] to-[#FFD700] bg-clip-text text-transparent">
+            <span className="relative inline-block bg-gradient-to-r from-[#FFFFFF] via-[#FFF500] to-[#FFD700] bg-clip-text text-transparent mx-0.5 sm:mx-1 pt-2 sm:pt-0">
               U
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-5">
-                <span className="block w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#fefcbb] to-[#fefcbb] shadow-md" />
-                <span className="block w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] shadow-md relative left-[0.8px] " />
+              <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 flex gap-1 sm:-top-3 sm:gap-5 pointer-events-none z-10">
+                <span className="block w-1.5 h-1.5 sm:w-3.5 sm:h-3.5 rounded-full bg-gradient-to-br from-[#fefcbb] to-[#fefcbb] shadow-md" />
+                <span className="block w-1.5 h-1.5 sm:w-3.5 sm:h-3.5 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] shadow-md relative left-[0.8px]" />
               </span>
             </span>
-            <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent inline-block">
               CED
             </span>
           </h2>

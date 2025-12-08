@@ -6,6 +6,55 @@ import { HiMiniXMark } from "react-icons/hi2";
 export function ToastNotification({ isOpen, onClose, message, type = "info" }) {
   if (!isOpen) return null;
 
+  // For success type, show a simple bottom toast on mobile, full modal on desktop
+  const isSuccess = type === "success";
+
+  if (isSuccess) {
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed bottom-4 left-1/2 z-50 w-[90%] max-w-sm -translate-x-1/2 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 shadow-lg md:bottom-8"
+            onClick={onClose}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-500 text-white">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <p className="flex-1 text-sm font-semibold text-green-800">
+                {message}
+              </p>
+              <button
+                onClick={onClose}
+                className="shrink-0 rounded-full p-1 text-green-600 transition hover:bg-green-100"
+                aria-label="Close"
+              >
+                <HiMiniXMark className="h-5 w-5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
+  // For other types, show full modal
   return (
     <AnimatePresence>
       {isOpen && (

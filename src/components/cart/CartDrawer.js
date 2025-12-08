@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiMiniXMark } from "react-icons/hi2";
 import { HiMinus, HiPlus, HiOutlineTrash, HiChevronDown, HiChevronUp } from "react-icons/hi";
@@ -314,6 +314,27 @@ export function CartDrawer() {
     return initial;
   });
 
+  // State for summary collapse (mobile only)
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
+  const isMobileRef = useRef(false);
+
+  // Check if mobile on mount and window resize
+  useEffect(() => {
+    const checkMobile = () => {
+      isMobileRef.current = window.innerWidth < 768;
+      // Set initial summary state based on screen size
+      if (isMobileRef.current) {
+        setIsSummaryExpanded(false);
+      } else {
+        setIsSummaryExpanded(true);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Group items by category
   const groupedItems = useMemo(() => {
     const groups = {};
@@ -430,54 +451,85 @@ export function CartDrawer() {
           </div>
 
           <footer className="border-t border-neutral-200 px-6 py-5">
-            <div className="space-y-3 text-sm text-neutral-600">
-              <SummaryRow label="Item Total" value={`$${itemTotal.toFixed(2)}`} />
-              {bogoPitaPromo?.discount > 0 && (
-                <SummaryRow
-                  label="BOGO 50% Off Pita"
-                  value={`- $${bogoPitaPromo.discount.toFixed(2)}`}
-                  highlight
-                />
-              )}
-              {promotion?.discount > 0 && (
-                <div>
-                  <SummaryRow
-                    label={promotion?.label ?? "Promo Applied"}
-                    value={`- $${promotion.discount.toFixed(2)}`}
-                    highlight
-                    message={promotion.description}
-                  />
-                  {promotion?.breakdown && promotion.breakdown.length > 0 && (
-                    <div className="mt-1 space-y-0.5 pl-2 text-[10px] text-neutral-500">
-                      {promotion.breakdown.map((item, idx) => (
-                        <p key={idx}>
-                          {item.count} × {item.name} @ ${item.price.toFixed(2)} = ${item.total.toFixed(2)} (FREE)
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-              <SummaryRow label="Subtotal" value={`$${subtotalAfterDiscounts.toFixed(2)}`} />
-              <SummaryRow label="Tax (8.875%)" value={`$${tax.toFixed(2)}`} />
-              <SummaryRow
-                label="TOTAL"
-                value={`$${total.toFixed(2)}`}
-                bold
-              />
+            {/* Summary Toggle Button (Mobile Only) */}
+            <div className="md:hidden mb-3">
+              <button
+                type="button"
+                onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                className="flex w-full items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-brand-dark transition hover:bg-neutral-100"
+              >
+                <span>Order Summary</span>
+                {isSummaryExpanded ? (
+                  <HiChevronUp className="h-5 w-5 text-neutral-400" />
+                ) : (
+                  <HiChevronDown className="h-5 w-5 text-neutral-400" />
+                )}
+              </button>
             </div>
+
+            {/* Order Summary - Collapsible on Mobile */}
+            <AnimatePresence initial={false}>
+              {(isSummaryExpanded || !isMobileRef.current) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-3 text-sm text-neutral-600">
+                    <SummaryRow label="Item Total" value={`$${itemTotal.toFixed(2)}`} />
+                    {bogoPitaPromo?.discount > 0 && (
+                      <SummaryRow
+                        label="BOGO 50% Off Pita"
+                        value={`- $${bogoPitaPromo.discount.toFixed(2)}`}
+                        highlight
+                      />
+                    )}
+                    {promotion?.discount > 0 && (
+                      <div>
+                        <SummaryRow
+                          label={promotion?.label ?? "Promo Applied"}
+                          value={`- $${promotion.discount.toFixed(2)}`}
+                          highlight
+                          message={promotion.description}
+                        />
+                        {promotion?.breakdown && promotion.breakdown.length > 0 && (
+                          <div className="mt-1 space-y-0.5 pl-2 text-[10px] text-neutral-500">
+                            {promotion.breakdown.map((item, idx) => (
+                              <p key={idx}>
+                                {item.count} × {item.name} @ ${item.price.toFixed(2)} = ${item.total.toFixed(2)} (FREE)
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <SummaryRow label="Subtotal" value={`$${subtotalAfterDiscounts.toFixed(2)}`} />
+                    <SummaryRow label="Tax (8.875%)" value={`$${tax.toFixed(2)}`} />
+                    <SummaryRow
+                      label="TOTAL"
+                      value={`$${total.toFixed(2)}`}
+                      bold
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <p className="mt-4 text-xs uppercase tracking-widest text-neutral-500">
               Pickup orders only · Pay online or in-store
             </p>
 
-            <div className="mt-4 flex flex-col gap-3">
+            {/* Buttons - Side by side on mobile, stacked on desktop */}
+            <div className="mt-4 flex flex-row gap-2 md:flex-col md:gap-3">
               <Link
                 href="/order-pickup"
                 onClick={closeCart}
-                className="block rounded-full border border-brand-red bg-brand-red px-5 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white shadow-md shadow-brand-red/20 transition hover:opacity-90"
+                className="flex-1 rounded-full border border-brand-red bg-brand-red px-3 py-2 text-center text-xs font-semibold uppercase tracking-wide text-white shadow-md shadow-brand-red/20 transition hover:opacity-90 md:px-5 md:py-3 md:text-sm"
               >
-                Go to Checkout
+                <span className="md:hidden">Checkout</span>
+                <span className="hidden md:inline">Go to Checkout</span>
               </Link>
               {items.length > 0 ? (
                 <button
@@ -486,9 +538,10 @@ export function CartDrawer() {
                     clearCart();
                     closeCart();
                   }}
-                  className="rounded-full border border-neutral-300 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-neutral-500 transition hover:border-brand-red hover:text-brand-red"
+                  className="flex-1 rounded-full border border-neutral-300 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 transition hover:border-brand-red hover:text-brand-red md:px-5 md:py-3 md:text-sm"
                 >
-                  Clear Cart
+                  <span className="md:hidden">Clear</span>
+                  <span className="hidden md:inline">Clear Cart</span>
                 </button>
               ) : null}
             </div>

@@ -166,7 +166,7 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-neutral-200 bg-white p-8 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-neutral-200 bg-white p-4 md:p-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -236,9 +236,9 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                   </h3>
                   <div className="space-y-3">
                     {/* Big Body Chocolate Chip */}
-                    <div className="flex items-center gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
+                    <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <span className="break-words text-sm font-semibold text-neutral-800">
+                        <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
                           Big Body Chocolate Chip
                         </span>
                         <span className="text-xs font-medium text-brand-red">
@@ -268,9 +268,9 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                     </div>
 
                     {/* Big Body Dark Chocolate Peanut Butter */}
-                    <div className="flex items-center gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
+                    <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <span className="break-words text-sm font-semibold text-neutral-800">
+                        <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
                           Big Body Dark Chocolate Peanut Butter
                         </span>
                         <span className="text-xs font-medium text-brand-red">
@@ -303,27 +303,38 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
 
                 {/* Bottom Action Buttons */}
                 {hasSelectedItems ? (
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 md:gap-3">
                     <Button
                       variant="outline"
                       onClick={onClose}
-                      className="flex-1 justify-center py-3 text-base"
+                      className="flex-1 justify-center py-2 text-xs md:py-3 md:text-base"
                     >
                       No Thanks
                     </Button>
                     <Button
                       variant="primary"
                       onClick={handleAddSelected}
-                      className="flex-1 justify-center py-3 text-base font-semibold"
+                      className="flex-1 justify-center py-2 text-xs font-semibold md:py-3 md:text-base"
                     >
-                      Add Selected ({calculateTotalQuantity} items - ${calculateTotalPrice.toFixed(2)})
+                      <span className="hidden sm:inline md:hidden">
+                        Add ({calculateTotalQuantity} - ${calculateTotalPrice.toFixed(2)})
+                      </span>
+                      <span className="hidden md:flex md:flex-col md:items-center md:gap-0.5">
+                        <span>Add Selected</span>
+                        <span className="text-xs opacity-90">
+                          {calculateTotalQuantity} items - ${calculateTotalPrice.toFixed(2)}
+                        </span>
+                      </span>
+                      <span className="sm:hidden">
+                        Add ({calculateTotalQuantity} - ${calculateTotalPrice.toFixed(2)})
+                      </span>
                     </Button>
                   </div>
                 ) : (
                   <Button
                     variant="outline"
                     onClick={onClose}
-                    className="w-full justify-center py-3 text-base"
+                    className="w-full justify-center py-2 text-xs md:py-3 md:text-base"
                   >
                     No Thanks
                   </Button>
