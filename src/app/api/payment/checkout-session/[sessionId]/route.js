@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
   const paymentUrl = process.env.NEXT_PUBLIC_payment_URL;
-  const { sessionId } = params;
+  const { sessionId } = await params;
   
   if (!paymentUrl) {
     return NextResponse.json(
