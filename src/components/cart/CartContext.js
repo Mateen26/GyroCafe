@@ -22,6 +22,7 @@ import {
 } from "@/lib/upsell";
 import { upsellConfig } from "@/lib/promotionsConfig";
 import { hasUpgradeOption, getUpgradeInfo } from "@/lib/platterUpgrades";
+import { isMobileDevice } from "@/lib/utils";
 
 const STORAGE_KEY = "gyro-cafe-cart";
 const TAX_RATE = 0.08875; // 8.875%
@@ -39,7 +40,7 @@ function cartReducer(state, action) {
     case "INITIALIZE":
       return { ...state, ...action.payload };
     case "ADD_ITEM": {
-      const { item } = action.payload;
+      const { item, shouldOpenCart } = action.payload;
       const items = [...state.items];
       const existingIndex = items.findIndex(
         (cartItem) => cartItem.id === item.id && 
@@ -62,7 +63,8 @@ function cartReducer(state, action) {
           metadata: item.metadata ?? {},
         });
       }
-      return { ...state, items, isOpen: true };
+      // Only auto-open cart on desktop (when shouldOpenCart is true)
+      return { ...state, items, isOpen: shouldOpenCart === true ? true : state.isOpen };
     }
     case "REMOVE_ITEM":
       return {
@@ -476,7 +478,25 @@ export function CartProvider({ children }) {
     }
     
     // No upgrade option, add item normally
-    dispatch({ type: "ADD_ITEM", payload: { item } });
+    // Check if mobile - if so, show toast instead of opening cart
+    const isMobile = isMobileDevice();
+    if (isMobile) {
+      // Show toast notification on mobile
+      setToastNotification({
+        isOpen: true,
+        message: `${item.name} added to cart`,
+        type: "success",
+      });
+      // Auto-dismiss toast after 3 seconds
+      setTimeout(() => {
+        setToastNotification({ isOpen: false, message: "" });
+      }, 3000);
+      // Don't open cart on mobile
+      dispatch({ type: "ADD_ITEM", payload: { item, shouldOpenCart: false } });
+    } else {
+      // Open cart on desktop
+      dispatch({ type: "ADD_ITEM", payload: { item, shouldOpenCart: true } });
+    }
   }, [showUpgradeModal, pendingUpgradeItem]);
 
   const removeItem = useCallback((id) => {
@@ -641,7 +661,8 @@ export function CartProvider({ children }) {
     // IMPORTANT: When upgrading, we dispatch with largeId, which is different from originalId
     // The ref prevents the original SMALL item from being added
     // When declining, we dispatch with originalId, and the ref is cleared so it can be added
-    dispatch({ type: "ADD_ITEM", payload: { item: itemToAdd } });
+    const isMobile = isMobileDevice();
+    dispatch({ type: "ADD_ITEM", payload: { item: itemToAdd, shouldOpenCart: !isMobile } });
 
     // Reset the processing flag after a short delay to allow state updates to complete
     setTimeout(() => {
@@ -656,25 +677,54 @@ export function CartProvider({ children }) {
   }, [pendingUpgradeItem, state.items]);
 
   const handleUpsellSelect = useCallback(async (type, pookieQuantities = { chocolateChip: 0, peanutButter: 0 }) => {
+    // Dynamically import menuItems to get image paths
+    const { menuItems } = await import("@/lib/menuData");
+    const isMobile = isMobileDevice();
+
+    // Handle cookies-only case (no fries/soda/both selected)
+    if (type === "cookies") {
+      // Add Pookie items if quantities are greater than 0
+      if (pookieQuantities.chocolateChip > 0) {
+        const chocolateChipItem = menuItems.find((item) => item.id === "big-body-chocolate-chip");
+        if (chocolateChipItem) {
+          const pookieItem = {
+            ...chocolateChipItem,
+            quantity: pookieQuantities.chocolateChip,
+          };
+          dispatch({ type: "ADD_ITEM", payload: { item: pookieItem, shouldOpenCart: !isMobile } });
+        }
+      }
+
+      if (pookieQuantities.peanutButter > 0) {
+        const peanutButterItem = menuItems.find((item) => item.id === "big-body-dark-chocolate-peanut-butter");
+        if (peanutButterItem) {
+          const pookieItem = {
+            ...peanutButterItem,
+            quantity: pookieQuantities.peanutButter,
+          };
+          dispatch({ type: "ADD_ITEM", payload: { item: pookieItem, shouldOpenCart: !isMobile } });
+        }
+      }
+      return;
+    }
+
+    // Handle fries/soda/both selections
     const capacity = calculateUpsellCapacity(state.items);
     if (capacity <= 0) return;
 
     const quantityToAdd = Math.min(capacity, 1); // Add 1 at a time for now
 
-    // Dynamically import menuItems to get image paths
-    const { menuItems } = await import("@/lib/menuData");
-
     if (type === "fries") {
       const friesItem = createUpsellItem("fries", quantityToAdd, menuItems);
-      dispatch({ type: "ADD_ITEM", payload: { item: friesItem } });
+      dispatch({ type: "ADD_ITEM", payload: { item: friesItem, shouldOpenCart: !isMobile } });
     } else if (type === "drink") {
       const drinkItem = createUpsellItem("drink", quantityToAdd, menuItems);
-      dispatch({ type: "ADD_ITEM", payload: { item: drinkItem } });
+      dispatch({ type: "ADD_ITEM", payload: { item: drinkItem, shouldOpenCart: !isMobile } });
     } else if (type === "both") {
       const friesItem = createUpsellItem("fries", quantityToAdd, menuItems);
       const drinkItem = createUpsellItem("drink", quantityToAdd, menuItems);
-      dispatch({ type: "ADD_ITEM", payload: { item: friesItem } });
-      dispatch({ type: "ADD_ITEM", payload: { item: drinkItem } });
+      dispatch({ type: "ADD_ITEM", payload: { item: friesItem, shouldOpenCart: !isMobile } });
+      dispatch({ type: "ADD_ITEM", payload: { item: drinkItem, shouldOpenCart: !isMobile } });
     }
 
     // Add Pookie items if quantities are greater than 0
@@ -685,7 +735,7 @@ export function CartProvider({ children }) {
           ...chocolateChipItem,
           quantity: pookieQuantities.chocolateChip,
         };
-        dispatch({ type: "ADD_ITEM", payload: { item: pookieItem } });
+        dispatch({ type: "ADD_ITEM", payload: { item: pookieItem, shouldOpenCart: !isMobile } });
       }
     }
 
@@ -696,7 +746,7 @@ export function CartProvider({ children }) {
           ...peanutButterItem,
           quantity: pookieQuantities.peanutButter,
         };
-        dispatch({ type: "ADD_ITEM", payload: { item: pookieItem } });
+        dispatch({ type: "ADD_ITEM", payload: { item: pookieItem, shouldOpenCart: !isMobile } });
       }
     }
   }, [state.items]);

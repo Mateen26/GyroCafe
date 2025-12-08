@@ -42,7 +42,7 @@ export const menuCategories = [
   },
   {
     id: "pookie",
-    name: "Pookie",
+    name: "Pookie (Big Body Cookies)",
     description:
       "Pookie is the home of the Big-Body Cookie— Thicc, bold, 6 oz Cookies made to hit every time. We don't just bake treats; we create moments. From giant chocolate-packed cookies bakery staples, Pookie brings the fun back into dessert. Loud flavors, real quality, and a vibe that feels like NYC in every bite.",
   },
@@ -584,7 +584,7 @@ export const menuItems = [
     name: "Big Body Chocolate Chip",
     category: "pookie",
     price: 4.0,
-    image: "/menu/GYRO DESSERTS/dessert tile.jpeg",
+    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "A Fresh-baked thicc & gooey, 6 oz Chocolate Chip Cookie with crispy edges and a soft, melty center. Pure big-body bliss in every bite.",
     tags: ["sweet"],
@@ -594,7 +594,7 @@ export const menuItems = [
     name: "Big Body Dark Chocolate Peanut Butter",
     category: "pookie",
     price: 4.0,
-    image: "/menu/GYRO DESSERTS/dessert tile.jpeg",
+    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "Fresh-Baked heavyweight 6 oz Peanut Butter Cookie loaded with rich, dark chocolate chunks and peanut butter chips. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],

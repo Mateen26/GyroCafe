@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiMiniXMark } from "react-icons/hi2";
 import { Button } from "./Button";
@@ -9,23 +9,124 @@ import { upsellConfig } from "@/lib/promotionsConfig";
 export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
   const [chocolateChipQty, setChocolateChipQty] = useState(0);
   const [peanutButterQty, setPeanutButterQty] = useState(0);
+  const [selectedFries, setSelectedFries] = useState(false);
+  const [selectedSoda, setSelectedSoda] = useState(false);
+  const [selectedBoth, setSelectedBoth] = useState(false);
 
-  // Reset quantities when modal closes
+  // Reset quantities and selections when modal closes
   useEffect(() => {
     if (!isOpen) {
       setChocolateChipQty(0);
       setPeanutButterQty(0);
+      setSelectedFries(false);
+      setSelectedSoda(false);
+      setSelectedBoth(false);
     }
   }, [isOpen]);
 
+  // Calculate prices (moved before early return to satisfy Rules of Hooks)
+  const friesPrice = upsellConfig.products.fries.upsellPrice;
+  const sodaPrice = upsellConfig.products.drink.upsellPrice;
+  const bothPrice = friesPrice + sodaPrice;
+  const pookieTotal = (chocolateChipQty + peanutButterQty) * 4.0;
+
+  // Calculate total price based on selections
+  const calculateTotalPrice = useMemo(() => {
+    let total = 0;
+    
+    if (selectedBoth || (selectedFries && selectedSoda)) {
+      total += bothPrice;
+    } else {
+      if (selectedFries) total += friesPrice;
+      if (selectedSoda) total += sodaPrice;
+    }
+    
+    total += pookieTotal;
+    return total;
+  }, [selectedFries, selectedSoda, selectedBoth, pookieTotal, bothPrice, friesPrice, sodaPrice]);
+
+  // Calculate total quantity
+  const calculateTotalQuantity = useMemo(() => {
+    let qty = 0;
+    
+    if (selectedBoth || (selectedFries && selectedSoda)) {
+      qty += 2; // Both counts as 2 items
+    } else {
+      if (selectedFries) qty += 1;
+      if (selectedSoda) qty += 1;
+    }
+    
+    qty += chocolateChipQty + peanutButterQty;
+    return qty;
+  }, [selectedFries, selectedSoda, selectedBoth, chocolateChipQty, peanutButterQty]);
+
+  // Check if any items are selected
+  const hasSelectedItems = selectedFries || selectedSoda || selectedBoth || chocolateChipQty > 0 || peanutButterQty > 0;
+
   if (!isOpen) return null;
 
-  const handleSelect = (type) => {
+  const handleToggleFries = () => {
+    setSelectedFries((prev) => {
+      const newValue = !prev;
+      // If both fries and soda will be selected after this toggle, auto-select "Add Both"
+      if (newValue && selectedSoda) {
+        setSelectedBoth(true);
+      } else if (!newValue) {
+        // If fries is deselected, deselect "Add Both" if it was auto-selected
+        setSelectedBoth(false);
+      }
+      return newValue;
+    });
+  };
+
+  const handleToggleSoda = () => {
+    setSelectedSoda((prev) => {
+      const newValue = !prev;
+      // If both fries and soda will be selected after this toggle, auto-select "Add Both"
+      if (newValue && selectedFries) {
+        setSelectedBoth(true);
+      } else if (!newValue) {
+        // If soda is deselected, deselect "Add Both" if it was auto-selected
+        setSelectedBoth(false);
+      }
+      return newValue;
+    });
+  };
+
+  const handleToggleBoth = () => {
+    const newBothState = !selectedBoth;
+    setSelectedBoth(newBothState);
+    // When "Add Both" is toggled, set both fries and soda to match
+    setSelectedFries(newBothState);
+    setSelectedSoda(newBothState);
+  };
+
+  const handleAddSelected = () => {
     const pookieQuantities = {
       chocolateChip: chocolateChipQty,
       peanutButter: peanutButterQty,
     };
-    onSelect(type, pookieQuantities);
+    
+    // Determine which type to pass based on selections
+    let type = null;
+    if (selectedBoth || (selectedFries && selectedSoda)) {
+      type = "both";
+    } else if (selectedFries) {
+      type = "fries";
+    } else if (selectedSoda) {
+      type = "drink";
+    }
+    
+    // If only cookies are selected, we still need to pass something
+    // We'll pass the selections object instead
+    if (type) {
+      onSelect(type, pookieQuantities);
+    } else if (chocolateChipQty > 0 || peanutButterQty > 0) {
+      // Only cookies selected - pass a special type or handle differently
+      // For now, pass "cookies" as type or modify onSelect to handle this
+      onSelect("cookies", pookieQuantities);
+    }
+    
     onClose();
   };
 
@@ -44,10 +145,6 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
       setPeanutButterQty((prev) => Math.max(0, prev - 1));
     }
   };
-
-  const pookieTotal = (chocolateChipQty + peanutButterQty) * 4.0;
-  const baseBothPrice = upsellConfig.products.fries.upsellPrice + upsellConfig.products.drink.upsellPrice;
-  const totalWithPookie = baseBothPrice + pookieTotal;
 
   return (
     <AnimatePresence>
@@ -69,7 +166,7 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-neutral-200 bg-white p-8 shadow-2xl"
+            className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-neutral-200 bg-white p-4 md:p-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -97,27 +194,39 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
 
               <div className="grid gap-3">
                 <Button
-                  variant="primary"
-                  onClick={() => handleSelect("fries")}
-                  className="w-full justify-center py-3 text-base font-semibold"
+                  variant={selectedFries ? "primary" : "outline"}
+                  onClick={handleToggleFries}
+                  className={`w-full justify-center py-3 text-base font-semibold transition-all ${
+                    selectedFries
+                      ? "bg-brand-red border-brand-red text-white"
+                      : "border-2 hover:border-brand-red/50"
+                  }`}
                 >
-                  Add Fries (${upsellConfig.products.fries.upsellPrice.toFixed(2)})
+                  Add Fries (${friesPrice.toFixed(2)})
                 </Button>
 
                 <Button
-                  variant="primary"
-                  onClick={() => handleSelect("drink")}
-                  className="w-full justify-center py-3 text-base font-semibold"
+                  variant={selectedSoda ? "primary" : "outline"}
+                  onClick={handleToggleSoda}
+                  className={`w-full justify-center py-3 text-base font-semibold transition-all ${
+                    selectedSoda
+                      ? "bg-brand-red border-brand-red text-white"
+                      : "border-2 hover:border-brand-red/50"
+                  }`}
                 >
-                  Add Soda (${upsellConfig.products.drink.upsellPrice.toFixed(2)})
+                  Add Soda (${sodaPrice.toFixed(2)})
                 </Button>
 
                 <Button
-                  variant="primary"
-                  onClick={() => handleSelect("both")}
-                  className="w-full justify-center py-3 text-base font-semibold"
+                  variant={selectedBoth ? "primary" : "outline"}
+                  onClick={handleToggleBoth}
+                  className={`w-full justify-center py-3 text-base font-semibold transition-all ${
+                    selectedBoth
+                      ? "bg-brand-red border-brand-red text-white"
+                      : "border-2 hover:border-brand-red/50"
+                  }`}
                 >
-                  Add Both (${totalWithPookie.toFixed(2)})
+                  Add Both (${bothPrice.toFixed(2)})
                 </Button>
 
                 {/* Pookie It Up Section */}
@@ -127,9 +236,9 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                   </h3>
                   <div className="space-y-3">
                     {/* Big Body Chocolate Chip */}
-                    <div className="flex items-center gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
+                    <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <span className="break-words text-sm font-semibold text-neutral-800">
+                        <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
                           Big Body Chocolate Chip
                         </span>
                         <span className="text-xs font-medium text-brand-red">
@@ -159,9 +268,9 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                     </div>
 
                     {/* Big Body Dark Chocolate Peanut Butter */}
-                    <div className="flex items-center gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
+                    <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <span className="break-words text-sm font-semibold text-neutral-800">
+                        <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
                           Big Body Dark Chocolate Peanut Butter
                         </span>
                         <span className="text-xs font-medium text-brand-red">
@@ -192,13 +301,44 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                   </div>
                 </div>
 
-                <Button
-                  variant="outline"
-                  onClick={onClose}
-                  className="w-full justify-center py-3 text-base"
-                >
-                  No Thanks
-                </Button>
+                {/* Bottom Action Buttons */}
+                {hasSelectedItems ? (
+                  <div className="flex gap-2 md:gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={onClose}
+                      className="flex-1 justify-center py-2 text-xs md:py-3 md:text-base"
+                    >
+                      No Thanks
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={handleAddSelected}
+                      className="flex-1 justify-center py-2 text-xs font-semibold md:py-3 md:text-base"
+                    >
+                      <span className="hidden sm:inline md:hidden">
+                        Add ({calculateTotalQuantity} - ${calculateTotalPrice.toFixed(2)})
+                      </span>
+                      <span className="hidden md:flex md:flex-col md:items-center md:gap-0.5">
+                        <span>Add Selected</span>
+                        <span className="text-xs opacity-90">
+                          {calculateTotalQuantity} items - ${calculateTotalPrice.toFixed(2)}
+                        </span>
+                      </span>
+                      <span className="sm:hidden">
+                        Add ({calculateTotalQuantity} - ${calculateTotalPrice.toFixed(2)})
+                      </span>
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={onClose}
+                    className="w-full justify-center py-2 text-xs md:py-3 md:text-base"
+                  >
+                    No Thanks
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>

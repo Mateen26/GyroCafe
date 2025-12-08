@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import jsPDF from "jspdf";
 
@@ -9,39 +10,189 @@ import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
 import { useCart } from "@/components/cart/CartContext";
 
-export default function OrderPickupThankYou() {
+function OrderPickupThankYouContent() {
   const [orderDetails, setOrderDetails] = useState(null);
   const [receiptData, setReceiptData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { clearCart } = useCart();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Retrieve order details from sessionStorage
-    if (typeof window !== "undefined") {
-      const stored = sessionStorage.getItem("pendingOrder");
-      if (stored) {
-        try {
-          setOrderDetails(JSON.parse(stored));
-          // Clear the stored data after reading
-          sessionStorage.removeItem("pendingOrder");
-        } catch (err) {
-          console.error("Failed to parse order details:", err);
-        }
-      }
+    const fetchCheckoutSession = async () => {
+      if (typeof window === "undefined") return;
+
+      // Clear cart when user returns from successful Stripe payment
+      clearCart();
+
+      // Get session_id from URL params or sessionStorage
+      let sessionId = searchParams?.get("session_id");
       
-      // Load receipt data
-      const receiptStored = sessionStorage.getItem("orderReceipt");
-      if (receiptStored) {
-        try {
-          setReceiptData(JSON.parse(receiptStored));
-        } catch (err) {
-          console.error("Failed to parse receipt data:", err);
+      if (!sessionId) {
+        // Try to get from sessionStorage (stored as orderNumber in orderReceipt)
+        const receiptStored = sessionStorage.getItem("orderReceipt");
+        if (receiptStored) {
+          try {
+            const stored = JSON.parse(receiptStored);
+            // The orderNumber might be the session_id if it starts with "cs_"
+            if (stored.orderNumber && (stored.orderNumber.startsWith("cs_") || stored.orderNumber.startsWith("cs_test_"))) {
+              sessionId = stored.orderNumber;
+            }
+          } catch (err) {
+            console.error("Failed to parse stored receipt:", err);
+          }
         }
       }
-    }
-    
-    // Clear cart when user returns from successful Stripe payment
-    clearCart();
-  }, [clearCart]);
+
+      if (!sessionId) {
+        // Fallback to sessionStorage data if no session_id
+        const stored = sessionStorage.getItem("pendingOrder");
+        if (stored) {
+          try {
+            setOrderDetails(JSON.parse(stored));
+            sessionStorage.removeItem("pendingOrder");
+          } catch (err) {
+            console.error("Failed to parse order details:", err);
+          }
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Fetch checkout session data
+        const response = await fetch(`/api/payment/checkout-session/${sessionId}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch order details");
+        }
+
+        const sessionData = await response.json();
+
+        // Parse the session data
+        const amountSubtotal = (sessionData.amount_subtotal || 0) / 100;
+        const amountTotal = (sessionData.amount_total || 0) / 100;
+        const tax = amountTotal - amountSubtotal; // Calculate tax from difference
+
+        // Parse orderItems from metadata
+        let orderItems = [];
+        if (sessionData.metadata?.orderItems) {
+          try {
+            orderItems = JSON.parse(sessionData.metadata.orderItems);
+          } catch (err) {
+            console.error("Failed to parse orderItems:", err);
+          }
+        }
+
+        // Get menu items and upsell config to map itemIds to names
+        const { menuItems } = await import("@/lib/menuData");
+        const { upsellConfig } = await import("@/lib/promotionsConfig");
+        
+        const itemsWithNames = orderItems.map((orderItem) => {
+          let menuItem = menuItems.find((item) => item.id === orderItem.itemId);
+          
+          // Handle upsell items (e.g., "french-fries-upsell", "coke-can-upsell")
+          if (!menuItem && orderItem.itemId.endsWith("-upsell")) {
+            const baseId = orderItem.itemId.replace("-upsell", "");
+            menuItem = menuItems.find((item) => item.id === baseId);
+            
+            // Get upsell name from config
+            if (baseId === "french-fries") {
+              return {
+                ...orderItem,
+                name: upsellConfig.products.fries.name,
+                price: orderItem.unitPrice || 0,
+                quantity: orderItem.quantity || 1,
+              };
+            } else if (baseId === "coke-can") {
+              return {
+                ...orderItem,
+                name: upsellConfig.products.drink.name,
+                price: orderItem.unitPrice || 0,
+                quantity: orderItem.quantity || 1,
+              };
+            }
+          }
+          
+          return {
+            ...orderItem,
+            name: menuItem?.name || orderItem.itemId,
+            price: orderItem.unitPrice || 0,
+            quantity: orderItem.quantity || 1,
+          };
+        });
+
+        // Get pickupTime from metadata or sessionStorage fallback
+        let pickupTime = sessionData.metadata?.pickupTime || sessionData.metadata?.pickup_time;
+        if (!pickupTime || pickupTime === "N/A") {
+          const stored = sessionStorage.getItem("pendingOrder");
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              pickupTime = parsed.pickupTime;
+            } catch (err) {
+              // Ignore
+            }
+          }
+        }
+
+        // Build receipt data
+        const receipt = {
+          orderNumber: sessionData.metadata?.orderNumber || sessionData.session_id,
+          customerName: sessionData.customer_details?.name || "",
+          customerEmail: sessionData.customer_details?.email || "",
+          pickupTime: pickupTime || "N/A",
+          items: itemsWithNames,
+          itemTotal: amountSubtotal,
+          subtotalAfterDiscounts: amountSubtotal,
+          tax: tax,
+          total: amountTotal,
+          paymentStatus: sessionData.payment_status,
+          paymentTransactionId: sessionData.payment_transaction_id,
+        };
+
+        setReceiptData(receipt);
+        setOrderDetails({
+          name: receipt.customerName,
+          email: receipt.customerEmail,
+          pickupTime: receipt.pickupTime,
+          total: receipt.total,
+        });
+
+        // Clear sessionStorage after successful fetch
+        sessionStorage.removeItem("pendingOrder");
+        sessionStorage.removeItem("orderReceipt");
+      } catch (err) {
+        console.error("Error fetching checkout session:", err);
+        setError("Failed to load order details. Please contact support.");
+        
+        // Fallback to sessionStorage data
+        const stored = sessionStorage.getItem("pendingOrder");
+        const receiptStored = sessionStorage.getItem("orderReceipt");
+        if (stored) {
+          try {
+            setOrderDetails(JSON.parse(stored));
+          } catch (parseErr) {
+            console.error("Failed to parse order details:", parseErr);
+          }
+        }
+        if (receiptStored) {
+          try {
+            setReceiptData(JSON.parse(receiptStored));
+          } catch (parseErr) {
+            console.error("Failed to parse receipt data:", parseErr);
+          }
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCheckoutSession();
+  }, [searchParams, clearCart]);
 
   const downloadPDF = () => {
     const doc = new jsPDF();
@@ -154,8 +305,25 @@ export default function OrderPickupThankYou() {
 
       <Section background="white">
         <div className="space-y-6 text-sm text-neutral-600 py-10">
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-red border-t-transparent mb-4" />
+              <p className="text-base font-semibold text-brand-dark">
+                Loading order details...
+              </p>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !isLoading && (
+            <div className="rounded-2xl border-2 border-brand-red/30 bg-brand-red/10 p-6">
+              <p className="text-base font-semibold text-brand-red">{error}</p>
+            </div>
+          )}
+
           {/* Receipt Information */}
-          {(receiptData || orderDetails) && (
+          {!isLoading && (receiptData || orderDetails) && (
             <div className="rounded-2xl border-2 border-brand-red/20 bg-brand-red/5 p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold uppercase tracking-wide text-brand-dark">
@@ -203,6 +371,51 @@ export default function OrderPickupThankYou() {
                   </p>
                 </div>
               )}
+
+              {/* Order Items */}
+              {receiptData?.items && receiptData.items.length > 0 && (
+                <div className="pt-4 border-t border-neutral-200">
+                  <span className="text-xs uppercase tracking-wide text-neutral-500">Items Ordered</span>
+                  <div className="mt-2 space-y-2">
+                    {receiptData.items.map((item, index) => (
+                      <div key={index} className="flex justify-between text-sm">
+                        <span className="text-brand-dark">
+                          {item.quantity}x {item.name}
+                        </span>
+                        <span className="font-semibold text-brand-dark">
+                          ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Order Totals */}
+              {receiptData && (
+                <div className="pt-4 border-t border-neutral-200 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-600">Subtotal</span>
+                    <span className="font-semibold text-brand-dark">
+                      ${(receiptData.itemTotal || 0).toFixed(2)}
+                    </span>
+                  </div>
+                  {receiptData.tax > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-neutral-600">Tax (8.875%)</span>
+                      <span className="font-semibold text-brand-dark">
+                        ${(receiptData.tax || 0).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-base pt-2 border-t border-neutral-200">
+                    <span className="font-bold text-brand-dark">Total</span>
+                    <span className="font-bold text-brand-dark">
+                      ${(receiptData.total || 0).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           
@@ -242,6 +455,37 @@ export default function OrderPickupThankYou() {
         </div>
       </Section>
     </main>
+  );
+}
+
+export default function OrderPickupThankYou() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex flex-col">
+          <Section background="red">
+            <div className="space-y-4 text-white py-10">
+              <p className="text-lg uppercase tracking-[0.4em] text-white">
+                Gyro Cafe Pickup
+              </p>
+              <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl">
+                Payment Confirmed
+              </h1>
+            </div>
+          </Section>
+          <Section background="white">
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-red border-t-transparent mb-4" />
+              <p className="text-base font-semibold text-brand-dark">
+                Loading...
+              </p>
+            </div>
+          </Section>
+        </main>
+      }
+    >
+      <OrderPickupThankYouContent />
+    </Suspense>
   );
 }
 

@@ -12,7 +12,7 @@ const initialForm = {
   email: "",
   pickupTime: pickupWindows[0],
   notes: "",
-  paymentMethod: "pay_in_store",
+  paymentMethod: "pay_online",
 };
 
 export function CheckoutForm({
@@ -103,7 +103,7 @@ export function CheckoutForm({
         </legend>
         {[
           { value: "pay_online", label: "Pay Online (Card via Stripe)" },
-          { value: "pay_in_store", label: "Pay In-Store (Cash or Card)" },
+          // { value: "pay_in_store", label: "Pay In-Store (Cash or Card)" }, // Hidden for now
         ].map((option) => (
           <label
             key={option.value}

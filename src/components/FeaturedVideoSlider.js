@@ -46,7 +46,7 @@ export function FeaturedVideoSlider({ items = [], collageItems = [] }) {
   return (
     <section className="bg-black py-20">
       <div className="mx-auto max-w-[100rem] px-4 sm:px-6 lg:px-16">
-        <div className="grid   lg:grid-cols-[minmax(0,_1.7fr)_minmax(0,_0.9fr)] items-start">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,_1.7fr)_minmax(0,_0.9fr)] lg:gap-12 items-start">
           {/* Main Video - Left Side (Large) */}
           <div className="order-1 w-full lg:max-w-[900px]">
             <AnimatePresence mode="wait">
@@ -70,8 +70,8 @@ export function FeaturedVideoSlider({ items = [], collageItems = [] }) {
           </div>
 
           {/* Collage Grid - Right Side (Small Thumbnails) */}
-          <div className="order-2 w-full lg:max-w-[65rem]">
-            <div className="grid grid-cols-3 lg:grid-cols-3 gap-6 max-h-[510px] overflow-y-auto pr-2 lg:pr-0 custom-scrollbar">
+          <div className="order-2 w-full lg:max-w-[65rem] mt-0 lg:mt-0">
+            <div className="grid grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 max-h-[510px] overflow-y-auto pr-2 lg:pr-0 custom-scrollbar">
               {collageVideos.map((item, index) => {
                 // Find original index in allVideos array
                 const originalIndex = allVideos.findIndex(v => v.id === item.id);
