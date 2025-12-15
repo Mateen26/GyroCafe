@@ -48,9 +48,9 @@ export default function Home() {
       />
 
       {/* MEET SAÜCED Banner */}
-      <Section background="red" className="py-12 md:py-16 lg:py-20 overflow-visible">
+      <Section background="red" className="py-4 md:py-8 lg:py-12 overflow-visible">
         <div className="text-center px-4 sm:px-6 md:px-8 max-w-full">
-          <h2 className="text-2xl font-bold uppercase tracking-tight leading-tight sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl whitespace-nowrap overflow-visible pb-3 sm:pb-0 md:pb-0">
+          <h2 className="text-4xl font-bold uppercase tracking-tight leading-tight sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl whitespace-nowrap overflow-visible pt-2 sm:pt-0 md:pt-0 sm:pb-0 md:pb-0">
             <span 
               className="bg-gradient-to-r from-black from-0% via-black via-33% via-white via-50% via-white via-66% to-[#FFD700] to-100% bg-clip-text text-transparent inline-block"
               style={{
@@ -62,8 +62,8 @@ export default function Home() {
             <span className="relative inline-block bg-gradient-to-r from-[#FFFFFF] via-[#FFF500] to-[#FFD700] bg-clip-text text-transparent mx-0.5 sm:mx-1">
               U
               <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 flex gap-1 sm:-top-3 sm:gap-5 md:-top-4 md:gap-6 pointer-events-none z-10">
-                <span className="block w-1.5 h-1.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-[#fefcbb] to-[#fefcbb] shadow-md" />
-                <span className="block w-1.5 h-1.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] shadow-md relative left-[0.8px]" />
+                <span className="block w-2 h-2 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-[#fefcbb] to-[#fefcbb] shadow-md" />
+                <span className="block w-2 h-2 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] shadow-md relative left-[0.8px]" />
               </span>
             </span>
             <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FFD700] bg-clip-text text-transparent inline-block">
