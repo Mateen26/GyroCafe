@@ -599,6 +599,26 @@ export const menuItems = [
       "Fresh-Baked heavyweight 6 oz Peanut Butter Cookie loaded with rich, dark chocolate chunks and peanut butter chips. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],
   },
+  {
+    id: "big-body-white-black-oreo",
+    name: "Big Body White and Black Oreo Cookie",
+    category: "pookie",
+    price: 4.0,
+    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
+    description:
+      "6 oz Big Body Cookie filled with white and dark chocolate chips, topped with Oreos. Warm them up for 20 seconds for the gooeist bite :)",
+    tags: ["sweet"],
+  },
+  {
+    id: "decadent-assortment",
+    name: "Decadent Assortment",
+    category: "pookie",
+    price: 12.0,
+    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
+    description:
+      "Indecisive on flavor? Try all three of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
+    tags: ["sweet"],
+  },
 
   // MILKSHAKES
   {

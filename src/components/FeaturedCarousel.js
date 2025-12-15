@@ -80,11 +80,11 @@ export function FeaturedCarousel({
               <h3 className="mt-1.5 lg:mt-2 text-base lg:text-lg font-semibold uppercase tracking-wide text-brand-dark">
                 {activeSlide?.name}
               </h3>
-              {activeSlide?.description ? (
+              {/* {activeSlide?.description ? (
                 <p className="mt-1 text-xs lg:text-sm text-neutral-600">
                   {activeSlide.description}
                 </p>
-              ) : null}
+              ) : null} */}
             </motion.div>
           </div>
           {cta ? (
