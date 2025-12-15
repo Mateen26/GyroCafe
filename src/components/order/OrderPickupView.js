@@ -87,6 +87,7 @@ export default function OrderPickupView() {
           token: tokenData.token,
           success_url: `${origin}/order-pickup/thank-you`,
           cancel_url: `${origin}/order-pickup?canceled=1`,
+          notes: form.notes,
           orderItems: items.map((item) => ({
             itemId: item.id,
             quantity: item.quantity ?? 1,

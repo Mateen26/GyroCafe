@@ -192,6 +192,13 @@ export function CartProvider({ children }) {
       return;
     }
 
+    // If cart is empty, close upsell modal and return early
+    if (state.items.length === 0) {
+      setShowUpsellModal(false);
+      previousItemsRef.current = state.items;
+      return;
+    }
+
     const totalEntrees = getTotalEntreeQuantity(state.items);
     const previousEntrees = getTotalEntreeQuantity(previousItemsRef.current);
     const upsellItems = state.items.filter((item) => item.metadata?.isUpsellItem === true);
@@ -368,8 +375,8 @@ export function CartProvider({ children }) {
     }
 
     // Check if upsell should trigger (when entrée is added)
-    // Only check if upgrade modal is not showing
-    if (!showUpgradeModal) {
+    // Only check if upgrade modal is not showing and cart is not empty
+    if (!showUpgradeModal && state.items.length > 0) {
       const capacity = shouldTriggerUpsell(state.items, previousItemsRef.current);
       if (capacity > 0) {
         setShowUpsellModal(true);
