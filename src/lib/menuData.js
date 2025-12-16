@@ -972,7 +972,7 @@ export const socialFeedItems = [
   },
   {
     id: "video-13",
-    video: "/videos/13.MOV",
+    video: "/videos/13.mp4",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
