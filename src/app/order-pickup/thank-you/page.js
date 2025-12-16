@@ -139,16 +139,16 @@ function OrderPickupThankYouContent() {
           }
         }
 
-        // Build receipt data
+        // Build receipt data - use metadata values if available, otherwise calculate
         const receipt = {
           orderNumber: sessionData.metadata?.orderNumber || sessionData.session_id,
           customerName: sessionData.customer_details?.name || "",
           customerEmail: sessionData.customer_details?.email || "",
           pickupTime: pickupTime || "N/A",
           items: itemsWithNames,
-          itemTotal: amountSubtotal,
-          subtotalAfterDiscounts: amountSubtotal,
-          tax: tax,
+          itemTotal: parseFloat(sessionData.metadata?.itemTotal) || amountSubtotal,
+          subtotalAfterDiscounts: parseFloat(sessionData.metadata?.subtotal) || amountSubtotal,
+          tax: parseFloat(sessionData.metadata?.tax) || tax,
           total: amountTotal,
           paymentStatus: sessionData.payment_status,
           paymentTransactionId: sessionData.payment_transaction_id,
@@ -514,30 +514,34 @@ function OrderPickupThankYouContent() {
               )}
 
               {/* Order Totals */}
-              {receiptData && (
-                <div className="pt-4 border-t border-neutral-200 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-neutral-600">Subtotal</span>
-                    <span className="font-semibold text-brand-dark">
-                      ${(receiptData.itemTotal || 0).toFixed(2)}
-                    </span>
-                  </div>
-                  {receiptData.tax > 0 && (
+              {receiptData && (() => {
+                const subtotal = receiptData.subtotalAfterDiscounts || receiptData.itemTotal || 0;
+                const calculatedTax = receiptData.tax || (subtotal * 0.08875);
+                const calculatedTotal = receiptData.total || (subtotal + calculatedTax);
+                
+                return (
+                  <div className="pt-4 border-t border-neutral-200 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-neutral-600">Subtotal</span>
+                      <span className="font-semibold text-brand-dark">
+                        ${subtotal.toFixed(2)}
+                      </span>
+                    </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-neutral-600">Tax (8.875%)</span>
                       <span className="font-semibold text-brand-dark">
-                        ${(receiptData.tax || 0).toFixed(2)}
+                        ${calculatedTax.toFixed(2)}
                       </span>
                     </div>
-                  )}
-                  <div className="flex justify-between text-base pt-2 border-t border-neutral-200">
-                    <span className="font-bold text-brand-dark">Total</span>
-                    <span className="font-bold text-brand-dark">
-                      ${(receiptData.total || 0).toFixed(2)}
-                    </span>
+                    <div className="flex justify-between text-base pt-2 border-t border-neutral-200">
+                      <span className="font-bold text-brand-dark">Total</span>
+                      <span className="font-bold text-brand-dark">
+                        ${calculatedTotal.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           )}
           
