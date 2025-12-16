@@ -163,6 +163,7 @@ function OrderPickupThankYouContent() {
           customerName: sessionData.customer_details?.name || "",
           customerEmail: sessionData.customer_details?.email || "",
           pickupTime: pickupTime || "N/A",
+          notes: sessionData.metadata?.notes || "",
           items: itemsWithNames,
           itemTotal: parseFloat(sessionData.metadata?.itemTotal) || amountSubtotal,
           subtotalAfterDiscounts: parseFloat(sessionData.metadata?.subtotal) || amountSubtotal,
@@ -255,6 +256,7 @@ function OrderPickupThankYouContent() {
       customerName: orderDetails?.name || "N/A",
       customerEmail: orderDetails?.email || "N/A",
       pickupTime: orderDetails?.pickupTime || "N/A",
+      notes: "",
       total: orderDetails?.total || 0,
       items: [],
       itemTotal: 0,
@@ -306,7 +308,15 @@ function OrderPickupThankYouContent() {
         doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
         yPos += 8;
         doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
-        yPos += 15;
+        yPos += 8;
+        
+        // Notes
+        if (receipt.notes) {
+          doc.text(`Notes: ${receipt.notes}`, 20, yPos);
+          yPos += 8;
+        }
+        
+        yPos += 7;
 
         // Helper function to add a new page with header
         const addNewPage = () => {
@@ -419,7 +429,7 @@ function OrderPickupThankYouContent() {
         doc.setFont(undefined, "bold");
         // Calculate total if not provided
         const calculatedTotal = receipt.total || (receipt.subtotalAfterDiscounts || 0) + calculatedTax;
-        doc.text(`TOTAL: $${calculatedTotal.toFixed(2)}`, 20, yPos);
+        doc.text(`Grand Total (Subtotal + Tax): $${calculatedTotal.toFixed(2)}`, 20, yPos);
         yPos += 15;
 
         // Footer
@@ -462,7 +472,15 @@ function OrderPickupThankYouContent() {
       doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
       yPos += 8;
       doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
-      yPos += 15;
+      yPos += 8;
+      
+      // Notes
+      if (receipt.notes) {
+        doc.text(`Notes: ${receipt.notes}`, 20, yPos);
+        yPos += 8;
+      }
+      
+      yPos += 7;
 
       // Helper function to add a new page with header (fallback version)
       const addNewPageFallback = () => {
@@ -574,7 +592,7 @@ function OrderPickupThankYouContent() {
       doc.setFont(undefined, "bold");
       // Calculate total if not provided
       const calculatedTotal = receipt.total || (receipt.subtotalAfterDiscounts || 0) + calculatedTax;
-      doc.text(`TOTAL: $${calculatedTotal.toFixed(2)}`, 20, yPos);
+      doc.text(`Grand Total (Subtotal + Tax): $${calculatedTotal.toFixed(2)}`, 20, yPos);
       yPos += 15;
 
       // Footer
@@ -683,6 +701,16 @@ function OrderPickupThankYouContent() {
                 </div>
               )}
 
+              {/* Notes */}
+              {receiptData?.notes && (
+                <div>
+                  <span className="text-xs uppercase tracking-wide text-neutral-500">Notes</span>
+                  <p className="text-base text-brand-dark mt-1">
+                    {receiptData.notes}
+                  </p>
+                </div>
+              )}
+
               {/* Order Items - Grouped by Category */}
               {receiptData?.items && receiptData.items.length > 0 && (() => {
                 const groupedItems = groupItemsByCategory(receiptData.items);
@@ -745,7 +773,7 @@ function OrderPickupThankYouContent() {
                       </span>
                     </div>
                     <div className="flex justify-between text-base pt-2 border-t border-neutral-200">
-                      <span className="font-bold text-brand-dark">Total</span>
+                      <span className="font-bold text-brand-dark">Grand Total (Subtotal + Tax)</span>
                       <span className="font-bold text-brand-dark">
                         ${calculatedTotal.toFixed(2)}
                       </span>
