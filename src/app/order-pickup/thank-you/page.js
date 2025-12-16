@@ -88,9 +88,12 @@ function OrderPickupThankYouContent() {
         const sessionData = await response.json();
 
         // Parse the session data
+        // metadata.amount is the Grand Total, metadata.tax is the tax
+        const metadataAmount = parseFloat(sessionData.metadata?.amount) || 0;
+        const metadataTax = parseFloat(sessionData.metadata?.tax) || 0;
         const amountSubtotal = (sessionData.amount_subtotal || 0) / 100;
         const amountTotal = (sessionData.amount_total || 0) / 100;
-        const tax = amountTotal - amountSubtotal; // Calculate tax from difference
+        const tax = amountTotal - amountSubtotal; // Calculate tax from difference (fallback)
 
         // Parse orderItems from metadata
         let orderItems = [];
@@ -158,6 +161,11 @@ function OrderPickupThankYouContent() {
         }
 
         // Build receipt data - use metadata values if available, otherwise calculate
+        // metadata.amount = Grand Total, metadata.tax = Tax, Subtotal = amount - tax
+        const grandTotal = metadataAmount || amountTotal;
+        const taxAmount = metadataTax || tax;
+        const subtotal = metadataAmount && metadataTax ? (metadataAmount - metadataTax) : (parseFloat(sessionData.metadata?.subtotal) || amountSubtotal);
+        
         const receipt = {
           orderNumber: sessionData.metadata?.orderNumber || sessionData.session_id,
           customerName: sessionData.customer_details?.name || "",
@@ -166,9 +174,9 @@ function OrderPickupThankYouContent() {
           notes: sessionData.metadata?.notes || "",
           items: itemsWithNames,
           itemTotal: parseFloat(sessionData.metadata?.itemTotal) || amountSubtotal,
-          subtotalAfterDiscounts: parseFloat(sessionData.metadata?.subtotal) || amountSubtotal,
-          tax: parseFloat(sessionData.metadata?.tax) || tax,
-          total: amountTotal,
+          subtotalAfterDiscounts: subtotal,
+          tax: taxAmount,
+          total: grandTotal,
           paymentStatus: sessionData.payment_status,
           paymentTransactionId: sessionData.payment_transaction_id,
         };
@@ -418,18 +426,19 @@ function OrderPickupThankYouContent() {
           yPos += 7;
         }
         
-        doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
+        // Use receipt values: total is Grand Total, tax is Tax, subtotal is calculated
+        const grandTotal = receipt.total || 0;
+        const taxAmount = receipt.tax || 0;
+        const subtotal = receipt.subtotalAfterDiscounts || (grandTotal - taxAmount);
+        
+        doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yPos);
         yPos += 7;
-        // Calculate tax as 8.875% of subtotal if not provided
-        const calculatedTax = receipt.tax || (receipt.subtotalAfterDiscounts || 0) * 0.08875;
-        doc.text(`Tax (8.875%): $${calculatedTax.toFixed(2)}`, 20, yPos);
+        doc.text(`Tax (8.875%): $${taxAmount.toFixed(2)}`, 20, yPos);
         yPos += 7;
         
         doc.setFontSize(12);
         doc.setFont(undefined, "bold");
-        // Calculate total if not provided
-        const calculatedTotal = receipt.total || (receipt.subtotalAfterDiscounts || 0) + calculatedTax;
-        doc.text(`Grand Total (Subtotal + Tax): $${calculatedTotal.toFixed(2)}`, 20, yPos);
+        doc.text(`Grand Total: $${grandTotal.toFixed(2)}`, 20, yPos);
         yPos += 15;
 
         // Footer
@@ -581,18 +590,19 @@ function OrderPickupThankYouContent() {
         yPos = addNewPageFallback();
       }
       
-      doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
+      // Use receipt values: total is Grand Total, tax is Tax, subtotal is calculated
+      const grandTotal = receipt.total || 0;
+      const taxAmount = receipt.tax || 0;
+      const subtotal = receipt.subtotalAfterDiscounts || (grandTotal - taxAmount);
+      
+      doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yPos);
       yPos += 7;
-      // Calculate tax as 8.875% of subtotal if not provided
-      const calculatedTax = receipt.tax || (receipt.subtotalAfterDiscounts || 0) * 0.08875;
-      doc.text(`Tax (8.875%): $${calculatedTax.toFixed(2)}`, 20, yPos);
+      doc.text(`Tax (8.875%): $${taxAmount.toFixed(2)}`, 20, yPos);
       yPos += 7;
       
       doc.setFontSize(12);
       doc.setFont(undefined, "bold");
-      // Calculate total if not provided
-      const calculatedTotal = receipt.total || (receipt.subtotalAfterDiscounts || 0) + calculatedTax;
-      doc.text(`Grand Total (Subtotal + Tax): $${calculatedTotal.toFixed(2)}`, 20, yPos);
+      doc.text(`Grand Total: $${grandTotal.toFixed(2)}`, 20, yPos);
       yPos += 15;
 
       // Footer
@@ -754,9 +764,10 @@ function OrderPickupThankYouContent() {
 
               {/* Order Totals */}
               {receiptData && (() => {
-                const subtotal = receiptData.subtotalAfterDiscounts || receiptData.itemTotal || 0;
-                const calculatedTax = receiptData.tax || (subtotal * 0.08875);
-                const calculatedTotal = receiptData.total || (subtotal + calculatedTax);
+                // Use receipt values: total is Grand Total, tax is Tax, subtotal is calculated
+                const grandTotal = receiptData.total || 0;
+                const taxAmount = receiptData.tax || 0;
+                const subtotal = receiptData.subtotalAfterDiscounts || (grandTotal - taxAmount);
                 
                 return (
                   <div className="pt-4 border-t border-neutral-200 space-y-2">
@@ -769,13 +780,13 @@ function OrderPickupThankYouContent() {
                     <div className="flex justify-between text-sm">
                       <span className="text-neutral-600">Tax (8.875%)</span>
                       <span className="font-semibold text-brand-dark">
-                        ${calculatedTax.toFixed(2)}
+                        ${taxAmount.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between text-base pt-2 border-t border-neutral-200">
-                      <span className="font-bold text-brand-dark">Grand Total (Subtotal + Tax)</span>
+                      <span className="font-bold text-brand-dark">Grand Total</span>
                       <span className="font-bold text-brand-dark">
-                        ${calculatedTotal.toFixed(2)}
+                        ${grandTotal.toFixed(2)}
                       </span>
                     </div>
                   </div>
