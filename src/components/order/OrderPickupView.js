@@ -88,6 +88,9 @@ export default function OrderPickupView() {
           success_url: `${origin}/order-pickup/thank-you`,
           cancel_url: `${origin}/order-pickup?canceled=1`,
           notes: form.notes,
+          tax: tax,
+          subtotal: subtotalAfterDiscounts,
+          itemTotal: itemTotal,
           orderItems: items.map((item) => ({
             itemId: item.id,
             quantity: item.quantity ?? 1,
