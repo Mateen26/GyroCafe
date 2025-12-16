@@ -71,7 +71,7 @@ export function FeaturedVideoSlider({ items = [], collageItems = [] }) {
 
           {/* Collage Grid - Right Side (Small Thumbnails) */}
           <div className="order-2 w-full lg:max-w-[65rem] mt-0 lg:mt-0">
-            <div className="grid grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 max-h-[510px] overflow-y-auto pr-2 lg:pr-0 custom-scrollbar">
+            <div className="grid grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 max-h-[510px] overflow-y-auto pr-2 lg:pr-0 custom-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
               {collageVideos.map((item, index) => {
                 // Find original index in allVideos array
                 const originalIndex = allVideos.findIndex(v => v.id === item.id);
@@ -245,6 +245,7 @@ function CollageVideoThumbnail({ item, isActive, videoRef: setVideoRef }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   
   // Register video ref with parent if callback provided
   useEffect(() => {
@@ -252,6 +253,49 @@ function CollageVideoThumbnail({ item, isActive, videoRef: setVideoRef }) {
       setVideoRef(videoRef.current);
     }
   }, [setVideoRef]);
+
+  // Load thumbnail frame for iOS compatibility
+  useEffect(() => {
+    if (!item.video || !videoRef.current) return;
+
+    const video = videoRef.current;
+
+    const loadThumbnail = () => {
+      // Seek to first frame to show thumbnail on iOS
+      if (video.readyState >= 2) {
+        video.currentTime = 0.1;
+        setThumbnailLoaded(true);
+      }
+    };
+
+    const handleLoadedMetadata = () => {
+      video.currentTime = 0.1;
+      setThumbnailLoaded(true);
+    };
+
+    const handleLoadedData = () => {
+      if (!thumbnailLoaded) {
+        video.currentTime = 0.1;
+        setThumbnailLoaded(true);
+      }
+    };
+
+    // Try to load thumbnail immediately if metadata is already loaded
+    if (video.readyState >= 1) {
+      loadThumbnail();
+    }
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("loadeddata", handleLoadedData);
+
+    // Force load on iOS
+    video.load();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("loadeddata", handleLoadedData);
+    };
+  }, [item.video, thumbnailLoaded]);
 
   useEffect(() => {
     if (!item.video || !videoRef.current) return;
@@ -284,8 +328,11 @@ function CollageVideoThumbnail({ item, isActive, videoRef: setVideoRef }) {
         observer.unobserve(container);
       };
     } else {
-      // Pause when not hovered
+      // Pause when not hovered and reset to first frame
       video.pause();
+      if (!isHovered) {
+        video.currentTime = 0.1;
+      }
     }
   }, [item.video, isHovered]);
 
@@ -307,7 +354,13 @@ function CollageVideoThumbnail({ item, isActive, videoRef: setVideoRef }) {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
+          style={{
+            WebkitTransform: "translateZ(0)",
+            transform: "translateZ(0)",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+          }}
         />
         {/* Play overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
