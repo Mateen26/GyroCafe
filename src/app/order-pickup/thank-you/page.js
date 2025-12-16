@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useLayoutEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import jsPDF from "jspdf";
@@ -19,12 +19,26 @@ function OrderPickupThankYouContent() {
   const { clearCart } = useCart();
   const searchParams = useSearchParams();
 
+  // Clear cart immediately on mount to prevent restoration from localStorage
+  // Use useLayoutEffect to run synchronously before browser paint, ensuring it runs before CartContext initialization
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const STORAGE_KEY = "gyro-cafe-cart";
+    // Clear localStorage immediately and synchronously
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      console.warn("Failed to clear cart from localStorage:", error);
+    }
+    
+    // Clear cart state
+    clearCart();
+  }, [clearCart]);
+
   useEffect(() => {
     const fetchCheckoutSession = async () => {
       if (typeof window === "undefined") return;
-
-      // Clear cart when user returns from successful Stripe payment
-      clearCart();
 
       // Get session_id from URL params or sessionStorage
       let sessionId = searchParams?.get("session_id");
@@ -357,7 +371,20 @@ function OrderPickupThankYouContent() {
             
             yPos += 3; // Space between categories
           });
+          
+          // Calculate and display total items count
+          const totalItems = receipt.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
           yPos += 5;
+          
+          // Check if we need a new page before adding total items
+          if (yPos > pageHeight - bottomMargin - 15) {
+            yPos = addNewPage();
+          }
+          
+          doc.setFontSize(10);
+          doc.setFont(undefined, "bold");
+          doc.text(`Total Items: ${totalItems}`, 20, yPos);
+          yPos += 10;
         }
 
         // Totals - ensure they're on the last page
@@ -498,7 +525,20 @@ function OrderPickupThankYouContent() {
           
           yPos += 3; // Space between categories
         });
+        
+        // Calculate and display total items count
+        const totalItems = receipt.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
         yPos += 5;
+        
+        // Check if we need a new page before adding total items
+        if (yPos > pageHeight - bottomMargin - 15) {
+          yPos = addNewPageFallback();
+        }
+        
+        doc.setFontSize(10);
+        doc.setFont(undefined, "bold");
+        doc.text(`Total Items: ${totalItems}`, 20, yPos);
+        yPos += 10;
       }
 
       // Totals
@@ -670,6 +710,15 @@ function OrderPickupThankYouContent() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                    {/* Total Items Count */}
+                    <div className="pt-2 border-t border-neutral-200">
+                      <div className="flex justify-between text-sm font-semibold text-brand-dark">
+                        <span>Total Items:</span>
+                        <span>
+                          {receiptData.items.reduce((sum, item) => sum + (item.quantity || 1), 0)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
