@@ -208,82 +208,196 @@ function OrderPickupThankYouContent() {
       tax: 0,
     };
 
-    // Header
-    doc.setFontSize(20);
-    doc.setTextColor(220, 38, 38); // brand-red
-    doc.text("GYRO CAFE", 105, 20, { align: "center" });
+    // Load and add logo
+    const img = new Image();
+    img.crossOrigin = "anonymous";
     
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    doc.text("Order Receipt", 105, 30, { align: "center" });
-    
-    // Order Details
-    doc.setFontSize(10);
-    let yPos = 45;
-    doc.text(`Order Number: ${receipt.orderNumber}`, 20, yPos);
-    yPos += 8;
-    doc.text(`Customer Name: ${receipt.customerName}`, 20, yPos);
-    yPos += 8;
-    doc.text(`Email: ${receipt.customerEmail}`, 20, yPos);
-    yPos += 8;
-    doc.text(`Pickup Time: ${receipt.pickupTime}`, 20, yPos);
-    yPos += 8;
-    doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
-    yPos += 8;
-    doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
-    yPos += 15;
+    const addLogoToPDF = () => {
+      try {
+        // Convert image to base64
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const imgData = canvas.toDataURL("image/jpeg");
+        
+        // Add logo to PDF (top left, 30px height)
+        const logoWidth = 30;
+        const logoHeight = 30;
+        const logoX = 20; // Left margin
+        doc.addImage(imgData, "JPEG", logoX, 10, logoWidth, logoHeight);
+        
+        // Header text below logo
+        doc.setFontSize(20);
+        doc.setTextColor(220, 38, 38); // brand-red
+        doc.text("GYRO CAFE", 105, 50, { align: "center" });
+        
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Order Receipt", 105, 58, { align: "center" });
+        
+        // Order Details
+        doc.setFontSize(10);
+        let yPos = 70;
+        
+        doc.text(`Order Number: ${receipt.orderNumber}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Customer Name: ${receipt.customerName}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Email: ${receipt.customerEmail}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Pickup Time: ${receipt.pickupTime}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
+        yPos += 15;
 
-    // Items
-    if (receipt.items && receipt.items.length > 0) {
-      doc.setFontSize(12);
-      doc.text("Items Ordered:", 20, yPos);
-      yPos += 8;
-      doc.setFontSize(10);
-      
-      receipt.items.forEach((item) => {
-        const itemText = `${item.quantity}x ${item.name}`;
-        const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
-        doc.text(itemText, 20, yPos);
-        doc.text(itemPrice, 180, yPos, { align: "right" });
+        // Items
+        if (receipt.items && receipt.items.length > 0) {
+          doc.setFontSize(12);
+          doc.text("Items Ordered:", 20, yPos);
+          yPos += 8;
+          doc.setFontSize(10);
+          
+          receipt.items.forEach((item) => {
+            const itemText = `${item.quantity}x ${item.name}`;
+            const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
+            doc.text(itemText, 20, yPos);
+            doc.text(itemPrice, 180, yPos, { align: "right" });
+            yPos += 7;
+          });
+          yPos += 5;
+        }
+
+        // Totals
+        doc.setFontSize(10);
+        doc.text(`Item Total: $${(receipt.itemTotal || 0).toFixed(2)}`, 20, yPos);
         yPos += 7;
-      });
+        
+        if (receipt.bogoPitaPromo?.discount > 0) {
+          doc.text(`BOGO 50% Off Pita: -$${receipt.bogoPitaPromo.discount.toFixed(2)}`, 20, yPos);
+          yPos += 7;
+        }
+        
+        if (receipt.promotion?.discount > 0) {
+          doc.text(`Promotion: -$${receipt.promotion.discount.toFixed(2)}`, 20, yPos);
+          yPos += 7;
+        }
+        
+        doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Tax (8.875%): $${(receipt.tax || 0).toFixed(2)}`, 20, yPos);
+        yPos += 7;
+        
+        doc.setFontSize(12);
+        doc.setFont(undefined, "bold");
+        doc.text(`TOTAL: $${(receipt.total || 0).toFixed(2)}`, 20, yPos);
+        yPos += 15;
+
+        // Footer
+        doc.setFont(undefined, "normal");
+        doc.setFontSize(8);
+        doc.text("Thank you for your order!", 105, yPos, { align: "center" });
+        yPos += 5;
+        doc.text("Payment confirmed via Stripe.", 105, yPos, { align: "center" });
+
+        // Save PDF
+        doc.save(`GyroCafe-Receipt-${receipt.orderNumber}.pdf`);
+      } catch (error) {
+        console.error("Error adding logo to PDF:", error);
+        // Fallback: save PDF without logo
+        doc.save(`GyroCafe-Receipt-${receipt.orderNumber}.pdf`);
+      }
+    };
+    
+    img.onload = addLogoToPDF;
+    img.onerror = () => {
+      // Fallback if logo fails to load - create PDF without logo
+      doc.setFontSize(20);
+      doc.setTextColor(220, 38, 38);
+      doc.text("GYRO CAFE", 105, 20, { align: "center" });
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text("Order Receipt", 105, 30, { align: "center" });
+      
+      doc.setFontSize(10);
+      let yPos = 45;
+      
+      doc.text(`Order Number: ${receipt.orderNumber}`, 20, yPos);
+      yPos += 8;
+      doc.text(`Customer Name: ${receipt.customerName}`, 20, yPos);
+      yPos += 8;
+      doc.text(`Email: ${receipt.customerEmail}`, 20, yPos);
+      yPos += 8;
+      doc.text(`Pickup Time: ${receipt.pickupTime}`, 20, yPos);
+      yPos += 8;
+      doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
+      yPos += 8;
+      doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
+      yPos += 15;
+
+      // Items
+      if (receipt.items && receipt.items.length > 0) {
+        doc.setFontSize(12);
+        doc.text("Items Ordered:", 20, yPos);
+        yPos += 8;
+        doc.setFontSize(10);
+        
+        receipt.items.forEach((item) => {
+          const itemText = `${item.quantity}x ${item.name}`;
+          const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
+          doc.text(itemText, 20, yPos);
+          doc.text(itemPrice, 180, yPos, { align: "right" });
+          yPos += 7;
+        });
+        yPos += 5;
+      }
+
+      // Totals
+      doc.setFontSize(10);
+      doc.text(`Item Total: $${(receipt.itemTotal || 0).toFixed(2)}`, 20, yPos);
+      yPos += 7;
+      
+      if (receipt.bogoPitaPromo?.discount > 0) {
+        doc.text(`BOGO 50% Off Pita: -$${receipt.bogoPitaPromo.discount.toFixed(2)}`, 20, yPos);
+        yPos += 7;
+      }
+      
+      if (receipt.promotion?.discount > 0) {
+        doc.text(`Promotion: -$${receipt.promotion.discount.toFixed(2)}`, 20, yPos);
+        yPos += 7;
+      }
+      
+      doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
+      yPos += 7;
+      doc.text(`Tax (8.875%): $${(receipt.tax || 0).toFixed(2)}`, 20, yPos);
+      yPos += 7;
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, "bold");
+      doc.text(`TOTAL: $${(receipt.total || 0).toFixed(2)}`, 20, yPos);
+      yPos += 15;
+
+      // Footer
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(8);
+      doc.text("Thank you for your order!", 105, yPos, { align: "center" });
       yPos += 5;
-    }
+      doc.text("Payment confirmed via Stripe.", 105, yPos, { align: "center" });
 
-    // Totals
-    doc.setFontSize(10);
-    doc.text(`Item Total: $${(receipt.itemTotal || 0).toFixed(2)}`, 20, yPos);
-    yPos += 7;
+      // Save PDF
+      doc.save(`GyroCafe-Receipt-${receipt.orderNumber}.pdf`);
+    };
     
-    if (receipt.bogoPitaPromo?.discount > 0) {
-      doc.text(`BOGO 50% Off Pita: -$${receipt.bogoPitaPromo.discount.toFixed(2)}`, 20, yPos);
-      yPos += 7;
+    // Start loading the image
+    img.src = "/logo.jpeg";
+    
+    // If image is already cached, onload might not fire, so check complete
+    if (img.complete) {
+      addLogoToPDF();
     }
-    
-    if (receipt.promotion?.discount > 0) {
-      doc.text(`Promotion: -$${receipt.promotion.discount.toFixed(2)}`, 20, yPos);
-      yPos += 7;
-    }
-    
-    doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
-    yPos += 7;
-    doc.text(`Tax (8.875%): $${(receipt.tax || 0).toFixed(2)}`, 20, yPos);
-    yPos += 7;
-    
-    doc.setFontSize(12);
-    doc.setFont(undefined, "bold");
-    doc.text(`TOTAL: $${(receipt.total || 0).toFixed(2)}`, 20, yPos);
-    yPos += 15;
-
-    // Footer
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(8);
-    doc.text("Thank you for your order!", 105, yPos, { align: "center" });
-    yPos += 5;
-    doc.text("Payment confirmed via Stripe.", 105, yPos, { align: "center" });
-
-    // Save PDF
-    doc.save(`GyroCafe-Receipt-${receipt.orderNumber}.pdf`);
   };
 
   return (
