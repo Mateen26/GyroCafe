@@ -9,6 +9,7 @@ import { Button } from "@/components/Button";
 import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
 import { useCart } from "@/components/cart/CartContext";
+import { menuCategories } from "@/lib/menuData";
 
 function OrderPickupThankYouContent() {
   const [orderDetails, setOrderDetails] = useState(null);
@@ -106,6 +107,7 @@ function OrderPickupThankYouContent() {
                 name: upsellConfig.products.fries.name,
                 price: orderItem.unitPrice || 0,
                 quantity: orderItem.quantity || 1,
+                category: menuItem?.category || "appetizers",
               };
             } else if (baseId === "coke-can") {
               return {
@@ -113,6 +115,7 @@ function OrderPickupThankYouContent() {
                 name: upsellConfig.products.drink.name,
                 price: orderItem.unitPrice || 0,
                 quantity: orderItem.quantity || 1,
+                category: menuItem?.category || "drinks",
               };
             }
           }
@@ -122,6 +125,7 @@ function OrderPickupThankYouContent() {
             name: menuItem?.name || orderItem.itemId,
             price: orderItem.unitPrice || 0,
             quantity: orderItem.quantity || 1,
+            category: menuItem?.category || "other",
           };
         });
 
@@ -194,6 +198,42 @@ function OrderPickupThankYouContent() {
     fetchCheckoutSession();
   }, [searchParams, clearCart]);
 
+  // Helper function to group items by category (matching cart drawer logic)
+  const groupItemsByCategory = (items) => {
+    const groups = {};
+    
+    items.forEach((item) => {
+      const category = item.category || "other";
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(item);
+    });
+
+    // Sort categories by menu order
+    const sortedGroups = {};
+    menuCategories.forEach((cat) => {
+      if (groups[cat.id]) {
+        sortedGroups[cat.id] = groups[cat.id];
+      }
+    });
+    
+    // Add any categories not in menuCategories (like "other")
+    Object.keys(groups).forEach((catId) => {
+      if (!sortedGroups[catId]) {
+        sortedGroups[catId] = groups[catId];
+      }
+    });
+
+    return sortedGroups;
+  };
+
+  // Helper function to get category name
+  const getCategoryName = (categoryId) => {
+    const category = menuCategories.find((cat) => cat.id === categoryId);
+    return category?.name || categoryId;
+  };
+
   const downloadPDF = () => {
     const doc = new jsPDF();
     const receipt = receiptData || {
@@ -254,24 +294,79 @@ function OrderPickupThankYouContent() {
         doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
         yPos += 15;
 
-        // Items
+        // Helper function to add a new page with header
+        const addNewPage = () => {
+          doc.addPage();
+          // Add logo to new page
+          doc.addImage(imgData, "JPEG", logoX, 10, logoWidth, logoHeight);
+          doc.setFontSize(20);
+          doc.setTextColor(220, 38, 38);
+          doc.text("GYRO CAFE", 105, 50, { align: "center" });
+          doc.setFontSize(12);
+          doc.setTextColor(0, 0, 0);
+          doc.text("Order Receipt", 105, 58, { align: "center" });
+          return 70; // Return starting yPos for new page
+        };
+
+        // Items grouped by category
         if (receipt.items && receipt.items.length > 0) {
+          const groupedItems = groupItemsByCategory(receipt.items);
+          const pageHeight = 280; // A4 page height in mm
+          const bottomMargin = 40; // Space needed for totals and footer
+          
           doc.setFontSize(12);
           doc.text("Items Ordered:", 20, yPos);
           yPos += 8;
           doc.setFontSize(10);
           
-          receipt.items.forEach((item) => {
-            const itemText = `${item.quantity}x ${item.name}`;
-            const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
-            doc.text(itemText, 20, yPos);
-            doc.text(itemPrice, 180, yPos, { align: "right" });
+          // Iterate through grouped items
+          Object.entries(groupedItems).forEach(([categoryId, categoryItems]) => {
+            // Check if we need a new page before adding category header
+            if (yPos > pageHeight - bottomMargin - 15) {
+              yPos = addNewPage();
+            }
+            
+            // Category header
+            doc.setFontSize(11);
+            doc.setFont(undefined, "bold");
+            doc.text(getCategoryName(categoryId), 20, yPos);
             yPos += 7;
+            doc.setFontSize(10);
+            doc.setFont(undefined, "normal");
+            
+            // Items in this category
+            categoryItems.forEach((item) => {
+              // Check if we need a new page before adding item
+              if (yPos > pageHeight - bottomMargin - 10) {
+                yPos = addNewPage();
+                // Re-add category header if we're on a new page
+                doc.setFontSize(11);
+                doc.setFont(undefined, "bold");
+                doc.text(getCategoryName(categoryId), 20, yPos);
+                yPos += 7;
+                doc.setFontSize(10);
+                doc.setFont(undefined, "normal");
+              }
+              
+              const itemText = `${item.quantity}x ${item.name}`;
+              const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
+              doc.text(itemText, 25, yPos); // Indent items slightly
+              doc.text(itemPrice, 180, yPos, { align: "right" });
+              yPos += 7;
+            });
+            
+            yPos += 3; // Space between categories
           });
           yPos += 5;
         }
 
-        // Totals
+        // Totals - ensure they're on the last page
+        const pageHeight = 280;
+        const totalsHeight = 60; // Approximate height needed for totals
+        if (yPos > pageHeight - totalsHeight) {
+          yPos = addNewPage();
+        }
+        
         doc.setFontSize(10);
         doc.text(`Item Total: $${(receipt.itemTotal || 0).toFixed(2)}`, 20, yPos);
         yPos += 7;
@@ -342,19 +437,66 @@ function OrderPickupThankYouContent() {
       doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
       yPos += 15;
 
-      // Items
+      // Helper function to add a new page with header (fallback version)
+      const addNewPageFallback = () => {
+        doc.addPage();
+        doc.setFontSize(20);
+        doc.setTextColor(220, 38, 38);
+        doc.text("GYRO CAFE", 105, 20, { align: "center" });
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Order Receipt", 105, 30, { align: "center" });
+        return 45; // Return starting yPos for new page
+      };
+
+      // Items grouped by category
       if (receipt.items && receipt.items.length > 0) {
+        const groupedItems = groupItemsByCategory(receipt.items);
+        const pageHeight = 280;
+        const bottomMargin = 40;
+        
         doc.setFontSize(12);
         doc.text("Items Ordered:", 20, yPos);
         yPos += 8;
         doc.setFontSize(10);
         
-        receipt.items.forEach((item) => {
-          const itemText = `${item.quantity}x ${item.name}`;
-          const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
-          doc.text(itemText, 20, yPos);
-          doc.text(itemPrice, 180, yPos, { align: "right" });
+        // Iterate through grouped items
+        Object.entries(groupedItems).forEach(([categoryId, categoryItems]) => {
+          // Check if we need a new page before adding category header
+          if (yPos > pageHeight - bottomMargin - 15) {
+            yPos = addNewPageFallback();
+          }
+          
+          // Category header
+          doc.setFontSize(11);
+          doc.setFont(undefined, "bold");
+          doc.text(getCategoryName(categoryId), 20, yPos);
           yPos += 7;
+          doc.setFontSize(10);
+          doc.setFont(undefined, "normal");
+          
+          // Items in this category
+          categoryItems.forEach((item) => {
+            // Check if we need a new page before adding item
+            if (yPos > pageHeight - bottomMargin - 10) {
+              yPos = addNewPageFallback();
+              // Re-add category header if we're on a new page
+              doc.setFontSize(11);
+              doc.setFont(undefined, "bold");
+              doc.text(getCategoryName(categoryId), 20, yPos);
+              yPos += 7;
+              doc.setFontSize(10);
+              doc.setFont(undefined, "normal");
+            }
+            
+            const itemText = `${item.quantity}x ${item.name}`;
+            const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
+            doc.text(itemText, 25, yPos); // Indent items slightly
+            doc.text(itemPrice, 180, yPos, { align: "right" });
+            yPos += 7;
+          });
+          
+          yPos += 3; // Space between categories
         });
         yPos += 5;
       }
@@ -372,6 +514,13 @@ function OrderPickupThankYouContent() {
       if (receipt.promotion?.discount > 0) {
         doc.text(`Promotion: -$${receipt.promotion.discount.toFixed(2)}`, 20, yPos);
         yPos += 7;
+      }
+      
+      // Totals - ensure they're on the last page
+      const pageHeight = 280;
+      const totalsHeight = 60;
+      if (yPos > pageHeight - totalsHeight) {
+        yPos = addNewPageFallback();
       }
       
       doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
@@ -494,24 +643,37 @@ function OrderPickupThankYouContent() {
                 </div>
               )}
 
-              {/* Order Items */}
-              {receiptData?.items && receiptData.items.length > 0 && (
-                <div className="pt-4 border-t border-neutral-200">
-                  <span className="text-xs uppercase tracking-wide text-neutral-500">Items Ordered</span>
-                  <div className="mt-2 space-y-2">
-                    {receiptData.items.map((item, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span className="text-brand-dark">
-                          {item.quantity}x {item.name}
-                        </span>
-                        <span className="font-semibold text-brand-dark">
-                          ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
-                        </span>
-                      </div>
-                    ))}
+              {/* Order Items - Grouped by Category */}
+              {receiptData?.items && receiptData.items.length > 0 && (() => {
+                const groupedItems = groupItemsByCategory(receiptData.items);
+                
+                return (
+                  <div className="pt-4 border-t border-neutral-200">
+                    <span className="text-xs uppercase tracking-wide text-neutral-500">Items Ordered</span>
+                    <div className="mt-3 space-y-4">
+                      {Object.entries(groupedItems).map(([categoryId, categoryItems]) => (
+                        <div key={categoryId} className="space-y-2">
+                          <h4 className="text-xs font-semibold uppercase tracking-wide text-brand-dark">
+                            {getCategoryName(categoryId)}
+                          </h4>
+                          <div className="space-y-2 pl-2">
+                            {categoryItems.map((item, index) => (
+                              <div key={`${categoryId}-${index}`} className="flex justify-between text-sm">
+                                <span className="text-brand-dark">
+                                  {item.quantity}x {item.name}
+                                </span>
+                                <span className="font-semibold text-brand-dark">
+                                  ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
 
               {/* Order Totals */}
               {receiptData && (() => {
