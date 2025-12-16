@@ -131,12 +131,16 @@ function OrderPickupSuccessContent() {
         
         doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
         yPos += 7;
-        doc.text(`Tax (8.875%): $${(receipt.tax || 0).toFixed(2)}`, 20, yPos);
+        // Calculate tax as 8.875% of subtotal if not provided
+        const calculatedTax = receipt.tax || (receipt.subtotalAfterDiscounts || 0) * 0.08875;
+        doc.text(`Tax (8.875%): $${calculatedTax.toFixed(2)}`, 20, yPos);
         yPos += 7;
         
         doc.setFontSize(12);
         doc.setFont(undefined, "bold");
-        doc.text(`TOTAL: $${(receipt.total || 0).toFixed(2)}`, 20, yPos);
+        // Calculate total if not provided
+        const calculatedTotal = receipt.total || (receipt.subtotalAfterDiscounts || 0) + calculatedTax;
+        doc.text(`TOTAL: $${calculatedTotal.toFixed(2)}`, 20, yPos);
         yPos += 15;
 
         // Footer
@@ -215,12 +219,16 @@ function OrderPickupSuccessContent() {
       
       doc.text(`Subtotal: $${(receipt.subtotalAfterDiscounts || 0).toFixed(2)}`, 20, yPos);
       yPos += 7;
-      doc.text(`Tax (8.875%): $${(receipt.tax || 0).toFixed(2)}`, 20, yPos);
+      // Calculate tax as 8.875% of subtotal if not provided
+      const calculatedTax = receipt.tax || (receipt.subtotalAfterDiscounts || 0) * 0.08875;
+      doc.text(`Tax (8.875%): $${calculatedTax.toFixed(2)}`, 20, yPos);
       yPos += 7;
       
       doc.setFontSize(12);
       doc.setFont(undefined, "bold");
-      doc.text(`TOTAL: $${(receipt.total || 0).toFixed(2)}`, 20, yPos);
+      // Calculate total if not provided
+      const calculatedTotal = receipt.total || (receipt.subtotalAfterDiscounts || 0) + calculatedTax;
+      doc.text(`TOTAL: $${calculatedTotal.toFixed(2)}`, 20, yPos);
       yPos += 15;
 
       // Footer
