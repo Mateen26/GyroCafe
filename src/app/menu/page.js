@@ -29,16 +29,7 @@ export default function MenuPage() {
               is grilled to order, drenched in the original SAÜCED trio, and
               ready when you arrive at {siteConfig.address}.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2 text-xs uppercase tracking-[0.3em] text-white/70">
-              {menuCategories.map((category) => (
-                <span
-                  key={category.id}
-                  className="rounded-full border border-white/30 px-3 py-1"
-                >
-                  {category.name}
-                </span>
-              ))}
-            </div>
+          
           </div>
           <div className="space-y-4 rounded-3xl border border-white/20 bg-white/10 p-6 text-white shadow-lg backdrop-blur">
             <h2 className="text-sm font-semibold uppercase tracking-wide">
