@@ -581,7 +581,7 @@ export const menuItems = [
   // POOKIE
   {
     id: "big-body-chocolate-chip",
-    name: "Big Body Chocolate Chip",
+    name: "Big Body Chocolate Chip (Cookie)",
     category: "pookie",
     price: 4.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
@@ -591,7 +591,7 @@ export const menuItems = [
   },
   {
     id: "big-body-dark-chocolate-peanut-butter",
-    name: "Big Body Dark Chocolate Peanut Butter",
+    name: "Big Body Dark Chocolate Peanut Butter (Cookie)",
     category: "pookie",
     price: 4.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
