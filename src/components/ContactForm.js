@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Button } from "./Button";
+import { getApiEndpoint } from "@/lib/utils";
 
 const initialState = {
   name: "",
@@ -23,7 +24,7 @@ export function ContactForm() {
     event.preventDefault();
     setStatus({ state: "submitting" });
     try {
-      const response = await fetch("/api/payment/contact", {
+      const response = await fetch(getApiEndpoint('contact'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

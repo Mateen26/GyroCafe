@@ -10,6 +10,7 @@ import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
 import { useCart } from "@/components/cart/CartContext";
 import { menuCategories } from "@/lib/menuData";
+import { getApiEndpoint } from "@/lib/utils";
 
 function OrderPickupThankYouContent() {
   const [orderDetails, setOrderDetails] = useState(null);
@@ -78,8 +79,8 @@ function OrderPickupThankYouContent() {
         setIsLoading(true);
         setError(null);
 
-        // Fetch checkout session data
-        const response = await fetch(`/api/payment/checkout-session/${sessionId}`);
+        // Fetch checkout session data (uses proxy on Vercel, direct on other hosts)
+        const response = await fetch(getApiEndpoint(`checkout-session/${sessionId}`));
         
         if (!response.ok) {
           throw new Error("Failed to fetch order details");

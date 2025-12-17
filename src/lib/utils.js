@@ -24,3 +24,49 @@ export function useIsMobile() {
   return () => window.innerWidth < 768;
 }
 
+/**
+ * Get API endpoint - uses proxy on Vercel, direct on other hosts
+ * @param {string} endpoint - API endpoint path (e.g., 'generate-token', 'checkout')
+ * @returns {string} Full API URL (proxy or direct)
+ */
+export function getApiEndpoint(endpoint) {
+  // Remove leading slash if present
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+  
+  // Check if we're on Vercel
+  const isVercel = typeof window !== 'undefined' && 
+    window.location.origin === 'https://gyro-cafe.vercel.app';
+  
+  if (isVercel) {
+    // Use Next.js API proxy routes on Vercel
+    return `/api/payment/${cleanEndpoint}`;
+  } else {
+    // Use direct backend API on other hosts (Hostinger, etc.)
+    const paymentUrl = process.env.NEXT_PUBLIC_payment_URL;
+    if (!paymentUrl) {
+      throw new Error('Payment service is not configured.');
+    }
+    return `${paymentUrl}/${cleanEndpoint}`;
+  }
+}
+
+/**
+ * Get API endpoint for orders endpoint (different path structure)
+ * @param {string} endpoint - API endpoint path (e.g., 'api/orders')
+ * @returns {string} Full API URL (proxy or direct)
+ */
+export function getOrdersApiEndpoint(endpoint = 'api/orders') {
+  const isVercel = typeof window !== 'undefined' && 
+    window.location.origin === 'https://gyro-cafe.vercel.app';
+  
+  if (isVercel) {
+    return `/api/${endpoint}`;
+  } else {
+    const paymentUrl = process.env.NEXT_PUBLIC_payment_URL;
+    if (!paymentUrl) {
+      throw new Error('Payment service is not configured.');
+    }
+    return `${paymentUrl}/${endpoint}`;
+  }
+}
+

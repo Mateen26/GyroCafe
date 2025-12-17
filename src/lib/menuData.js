@@ -912,6 +912,18 @@ export const featuredSlides = [
   },
 ];
 
+// Helper function to generate poster path from video path
+function getPosterPath(videoPath) {
+  // Only generate poster for local videos (not Instagram URLs)
+  if (!videoPath || videoPath.startsWith('http')) {
+    return null;
+  }
+  // Extract filename without extension and create poster path
+  const filename = videoPath.split('/').pop();
+  const nameWithoutExt = filename.replace(/\.[^/.]+$/, '');
+  return `/videos/posters/${nameWithoutExt}.jpg`;
+}
+
 // All social feed items (kept for backward compatibility)
 export const socialFeedItems = [
   // You can use either local videos or Instagram URLs:
@@ -921,88 +933,105 @@ export const socialFeedItems = [
   {
     id: "video-1",
     video: "/videos/3MUHEED ONLY IN NYC.MOV",
+    poster: "/videos/posters/3MUHEED ONLY IN NYC.jpg",
     caption: "Loaded fries getting the full treatment — gyro meat, white sauce, hot sauce.",
   },
   {
     id: "video-3",
     video: "/videos/2GYROS THE CAFE WAY.MOV",
+    poster: "/videos/posters/2GYROS THE CAFE WAY.jpg",
     caption: "Fresh gyro meat spinning on the grill — the heart of every platter.",
   },
   {
     id: "video-2",
     video: "/videos/1BIG ORDER.MOV",
+    poster: "/videos/posters/1BIG ORDER.jpg",
     caption: "Behind the scenes: Our signature sauces being mixed fresh daily.",
   },
   
   {
     id: "video-4",
     video: "/videos/4.MOV",
+    poster: "/videos/posters/4.jpg",
     caption: "Naanwiches being pressed to perfection — crispy outside, melty inside.",
   },
   {
     id: "video-5",
     video: "/videos/5.MOV",
+    poster: "/videos/posters/5.jpg",
     caption: "Late-night vibes: The grill stays hot until 1 AM.",
   },
   {
     id: "video-6",
     video: "/videos/6.MOV",
+    poster: "/videos/posters/6.jpg",
     caption: "Falafel being fried fresh — crispy golden perfection.",
   },
   
   {
     id: "video-9",
     video: "/videos/9.MOV",
+    poster: "/videos/posters/9.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-10",
     video: "/videos/10.MOV",
+    poster: "/videos/posters/10.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-11",
     video: "/videos/11.MOV",
+    poster: "/videos/posters/11.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-12",
     video: "/videos/12.MOV",
+    poster: "/videos/posters/12.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-13",
     video: "/videos/13.mp4",
+    poster: "/videos/posters/13.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-14",
     video: "/videos/14.MOV",
+    poster: "/videos/posters/14.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-15",
     video: "/videos/15.MOV",
+    poster: "/videos/posters/15.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },    
   {
     id: "video-16",
     video: "/videos/16.MOV",
+    poster: "/videos/posters/16.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-17",
     video: "/videos/17.MOV",
+    poster: "/videos/posters/17.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-18",
     video: "/videos/18.MOV",
+    poster: "/videos/posters/18.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
   {
     id: "video-19",
     video: "/videos/19.MOV",
+    poster: "/videos/posters/19.jpg",
     caption: "The Gyro Cafe way: Fresh ingredients, family recipes, Brooklyn love.",
   },
 ];
