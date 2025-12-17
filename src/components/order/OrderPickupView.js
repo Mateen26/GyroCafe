@@ -9,6 +9,7 @@ import { CheckoutForm } from "@/components/CheckoutForm";
 import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
 import { useCart } from "@/components/cart/CartContext";
+import { getApiEndpoint, getOrdersApiEndpoint } from "@/lib/utils";
 
 function formatCurrency(value) {
   return Intl.NumberFormat("en-US", {
@@ -60,8 +61,8 @@ export default function OrderPickupView() {
       };
 
       if (form.paymentMethod === "pay_online") {
-        // Step 1: Generate token via API route (avoids CORS issues)
-        const tokenResponse = await fetch("/api/payment/generate-token", {
+        // Step 1: Generate token (uses proxy on Vercel, direct on other hosts)
+        const tokenResponse = await fetch(getApiEndpoint('generate-token'), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });
@@ -78,7 +79,7 @@ export default function OrderPickupView() {
           throw new Error("Payment token unavailable. Please try again.");
         }
 
-        // Step 2: Create checkout session via API route
+        // Step 2: Create checkout session directly from backend
         const origin = typeof window !== "undefined" ? window.location.origin : "";
         const checkoutPayload = {
           item: `Gyro Cafe Order - ${items.length} item${items.length > 1 ? "s" : ""}`,
@@ -99,7 +100,7 @@ export default function OrderPickupView() {
           })),
         };
 
-        const checkoutResponse = await fetch("/api/payment/checkout", {
+        const checkoutResponse = await fetch(getApiEndpoint('checkout'), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(checkoutPayload),
@@ -150,8 +151,8 @@ export default function OrderPickupView() {
         throw new Error("Checkout session unavailable. Contact support.");
       }
 
-      // Pay in store flow
-      const response = await fetch("/api/orders", {
+      // Pay in store flow (uses proxy on Vercel, direct on other hosts)
+      const response = await fetch(getOrdersApiEndpoint(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

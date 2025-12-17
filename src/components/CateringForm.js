@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Button } from "./Button";
+import { getApiEndpoint } from "@/lib/utils";
 
 const initialState = {
   firstName: "",
@@ -69,7 +70,7 @@ export function CateringForm() {
         acknowledge: form.consent,
       };
 
-      const response = await fetch("/api/payment/catering-request", {
+      const response = await fetch(getApiEndpoint('catering-request'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
