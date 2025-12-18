@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { NavigationProgress } from "@/components/NavigationProgress";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/components/cart/CartContext";
 import { UpsellModalWrapper } from "@/components/UpsellModalWrapper";
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} bg-white text-brand-dark antialiased`}
       >
         <CartProvider>
+          <NavigationProgress />
           <Header />
           <CartDrawer />
           <UpsellModalWrapper />

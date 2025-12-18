@@ -113,6 +113,23 @@ function OrderPickupThankYouContent() {
         const itemsWithNames = orderItems.map((orderItem) => {
           let menuItem = menuItems.find((item) => item.id === orderItem.itemId);
           
+          // Handle large platter items (e.g., "chicken-gyro-platter-large")
+          if (!menuItem && orderItem.itemId.endsWith("-large")) {
+            const baseId = orderItem.itemId.replace("-large", "");
+            menuItem = menuItems.find((item) => item.id === baseId);
+            
+            // If found, use base platter's name with " - Large" suffix and category
+            if (menuItem) {
+              return {
+                ...orderItem,
+                name: `${menuItem.name} - Large`,
+                price: orderItem.unitPrice || 0,
+                quantity: orderItem.quantity || 1,
+                category: menuItem.category || "platters",
+              };
+            }
+          }
+          
           // Handle upsell items (e.g., "french-fries-upsell", "coke-can-upsell")
           if (!menuItem && orderItem.itemId.endsWith("-upsell")) {
             const baseId = orderItem.itemId.replace("-upsell", "");
@@ -287,58 +304,118 @@ function OrderPickupThankYouContent() {
         ctx.drawImage(img, 0, 0);
         const imgData = canvas.toDataURL("image/jpeg");
         
-        // Add logo to PDF (top left, 30px height)
-        const logoWidth = 30;
-        const logoHeight = 30;
+        // Add logo to PDF (top left)
+        const logoWidth = 25;
+        const logoHeight = 25;
         const logoX = 20; // Left margin
-        doc.addImage(imgData, "JPEG", logoX, 10, logoWidth, logoHeight);
+        const logoY = 10;
+        doc.addImage(imgData, "JPEG", logoX, logoY, logoWidth, logoHeight);
         
-        // Header text below logo
-        doc.setFontSize(20);
-        doc.setTextColor(220, 38, 38); // brand-red
-        doc.text("GYRO CAFE", 105, 50, { align: "center" });
-        
-        doc.setFontSize(12);
+        // "Order Receipt" title next to logo
+        doc.setFontSize(18);
         doc.setTextColor(0, 0, 0);
-        doc.text("Order Receipt", 105, 58, { align: "center" });
+        doc.setFont(undefined, "bold");
+        doc.text("Order Receipt", logoX + logoWidth + 8, logoY + 12);
         
-        // Order Details
+        // Order number in top-right
         doc.setFontSize(10);
-        let yPos = 70;
+        doc.setFont(undefined, "normal");
+        doc.setTextColor(0, 0, 0);
+        const orderNumText = `Order #${receipt.orderNumber}`;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const orderNumX = pageWidth - 20;
+        doc.text(orderNumText, orderNumX, logoY + 8, { align: "right" });
         
-        doc.text(`Order Number: ${receipt.orderNumber}`, 20, yPos);
-        yPos += 8;
-        doc.text(`Customer Name: ${receipt.customerName}`, 20, yPos);
-        yPos += 8;
-        doc.text(`Email: ${receipt.customerEmail}`, 20, yPos);
-        yPos += 8;
-        doc.text(`Pickup Time: ${receipt.pickupTime}`, 20, yPos);
-        yPos += 8;
-        doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
-        yPos += 8;
-        doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
-        yPos += 8;
+        // Green "Paid" badge below order number
+        const badgeY = logoY + 14;
+        const badgeWidth = 20;
+        const badgeHeight = 8;
+        doc.setFillColor(34, 197, 94); // Green color
+        doc.roundedRect(orderNumX - badgeWidth, badgeY - 4, badgeWidth, badgeHeight, 2, 2, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(8);
+        doc.setFont(undefined, "bold");
+        doc.text("Paid", orderNumX - badgeWidth / 2, badgeY + 1, { align: "center" });
+        doc.setTextColor(0, 0, 0);
+        doc.setFont(undefined, "normal");
         
-        // Notes
-        if (receipt.notes) {
-          doc.text(`Notes: ${receipt.notes}`, 20, yPos);
-          yPos += 8;
+        let yPos = logoY + logoHeight + 12;
+        
+        // Customer & Pickup Info Box (light gray background) - Two columns layout
+        const infoBoxY = yPos;
+        const infoBoxHeight = 35;
+        const infoBoxWidth = pageWidth - 40;
+        doc.setFillColor(243, 244, 246); // Light gray
+        doc.roundedRect(20, infoBoxY, infoBoxWidth, infoBoxHeight, 3, 3, "F");
+        
+        // Calculate column positions
+        const leftColumnX = 25;
+        const separatorX = 20 + infoBoxWidth / 2; // Middle of the box
+        const rightColumnX = separatorX + 5; // Right column starts after separator
+        
+        // Vertical separator line
+        doc.setDrawColor(200, 200, 200); // Light gray line
+        doc.setLineWidth(0.5);
+        doc.line(separatorX, infoBoxY + 3, separatorX, infoBoxY + infoBoxHeight - 3);
+        
+        // Left column: Customer info
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        let leftY = infoBoxY + 7;
+        doc.text(`Customer: ${receipt.customerName}`, leftColumnX, leftY);
+        leftY += 6;
+        
+        // Email
+        doc.setFontSize(9);
+        doc.text(`Email: ${receipt.customerEmail}`, leftColumnX, leftY);
+        leftY += 6;
+        
+        // Phone
+        doc.text(`Phone: ${siteConfig.phone}`, leftColumnX, leftY);
+        
+        // Right column: Pickup info
+        let rightY = infoBoxY + 7;
+        doc.setFontSize(10);
+        doc.text(`Pickup Time: ${receipt.pickupTime}`, rightColumnX, rightY);
+        rightY += 6;
+        
+        // Pickup location - split after Brooklyn to wrap
+        doc.setFontSize(9);
+        doc.text(`Pickup Location: 580 Coney Island Ave, Brooklyn,`, rightColumnX, rightY);
+        rightY += 6;
+        doc.text(`NY 11218`, rightColumnX, rightY);
+        
+        yPos = infoBoxY + infoBoxHeight + 8;
+        
+        // Special Instructions Box (light yellow background) - only if notes exist
+        if (receipt.notes && receipt.notes.trim()) {
+          const notesBoxY = yPos;
+          const notesBoxHeight = 12;
+          const notesBoxWidth = pageWidth - 40;
+          doc.setFillColor(254, 252, 232); // Light yellow
+          doc.roundedRect(20, notesBoxY, notesBoxWidth, notesBoxHeight, 3, 3, "F");
+          
+          // Notes text
+          doc.setFontSize(9);
+          doc.setTextColor(0, 0, 0);
+          doc.text(`Notes: ${receipt.notes}`, 25, notesBoxY + 7);
+          
+          yPos = notesBoxY + notesBoxHeight + 10;
+        } else {
+          yPos += 5;
         }
-        
-        yPos += 7;
 
         // Helper function to add a new page with header
         const addNewPage = () => {
           doc.addPage();
-          // Add logo to new page
-          doc.addImage(imgData, "JPEG", logoX, 10, logoWidth, logoHeight);
-          doc.setFontSize(20);
-          doc.setTextColor(220, 38, 38);
-          doc.text("GYRO CAFE", 105, 50, { align: "center" });
-          doc.setFontSize(12);
-          doc.setTextColor(0, 0, 0);
-          doc.text("Order Receipt", 105, 58, { align: "center" });
-          return 70; // Return starting yPos for new page
+        // Add logo to new page
+        doc.addImage(imgData, "JPEG", logoX, logoY, logoWidth, logoHeight);
+        // "Order Receipt" title
+        doc.setFontSize(18);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont(undefined, "bold");
+        doc.text("Order Receipt", logoX + logoWidth + 8, logoY + 12);
+        return logoY + logoHeight + 12; // Return starting yPos for new page
         };
 
         // Items grouped by category
@@ -347,10 +424,15 @@ function OrderPickupThankYouContent() {
           const pageHeight = 280; // A4 page height in mm
           const bottomMargin = 40; // Space needed for totals and footer
           
-          doc.setFontSize(12);
-          doc.text("Items Ordered:", 20, yPos);
-          yPos += 8;
+          // "ITEMS ORDERED" heading in red
+          doc.setFontSize(14);
+          doc.setTextColor(220, 38, 38); // Red
+          doc.setFont(undefined, "bold");
+          doc.text("ITEMS ORDERED", 20, yPos);
+          yPos += 10;
           doc.setFontSize(10);
+          doc.setTextColor(0, 0, 0);
+          doc.setFont(undefined, "normal");
           
           // Iterate through grouped items
           Object.entries(groupedItems).forEach(([categoryId, categoryItems]) => {
@@ -359,11 +441,12 @@ function OrderPickupThankYouContent() {
               yPos = addNewPage();
             }
             
-            // Category header
+            // Category header (bold, slightly larger)
             doc.setFontSize(11);
             doc.setFont(undefined, "bold");
+            doc.setTextColor(0, 0, 0);
             doc.text(getCategoryName(categoryId), 20, yPos);
-            yPos += 7;
+            yPos += 8;
             doc.setFontSize(10);
             doc.setFont(undefined, "normal");
             
@@ -375,79 +458,80 @@ function OrderPickupThankYouContent() {
                 // Re-add category header if we're on a new page
                 doc.setFontSize(11);
                 doc.setFont(undefined, "bold");
+                doc.setTextColor(0, 0, 0);
                 doc.text(getCategoryName(categoryId), 20, yPos);
-                yPos += 7;
+                yPos += 8;
                 doc.setFontSize(10);
                 doc.setFont(undefined, "normal");
               }
               
-              const itemText = `${item.quantity}x ${item.name}`;
+              const itemText = item.quantity > 1 
+                ? `${item.name} (x${item.quantity})`
+                : item.name;
               const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
-              doc.text(itemText, 25, yPos); // Indent items slightly
-              doc.text(itemPrice, 180, yPos, { align: "right" });
+              
+              // Draw dotted line from item name to price
+              const itemStartX = 25;
+              const itemEndX = 170;
+              const priceX = 180;
+              const lineY = yPos - 2;
+              
+              // Draw dotted line (simulate with small dashes)
+              doc.setDrawColor(200, 200, 200);
+              doc.setLineWidth(0.1);
+              for (let x = itemStartX + doc.getTextWidth(itemText) + 2; x < priceX - 2; x += 1.5) {
+                doc.line(x, lineY, x + 0.8, lineY);
+              }
+              
+              doc.text(itemText, itemStartX, yPos);
+              doc.text(itemPrice, priceX, yPos, { align: "right" });
               yPos += 7;
             });
             
             yPos += 3; // Space between categories
           });
           
-          // Calculate and display total items count
-          const totalItems = receipt.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
-          yPos += 5;
-          
-          // Check if we need a new page before adding total items
-          if (yPos > pageHeight - bottomMargin - 15) {
-            yPos = addNewPage();
-          }
-          
-          doc.setFontSize(10);
-          doc.setFont(undefined, "bold");
-          doc.text(`Total Items: ${totalItems}`, 20, yPos);
-          yPos += 10;
+          yPos += 5; // Space after items
         }
 
         // Totals - ensure they're on the last page
         const pageHeight = 280;
-        const totalsHeight = 60; // Approximate height needed for totals
+        const totalsHeight = 50; // Approximate height needed for totals
         if (yPos > pageHeight - totalsHeight) {
           yPos = addNewPage();
         }
         
-        doc.setFontSize(10);
-        doc.text(`Item Total: $${(receipt.itemTotal || 0).toFixed(2)}`, 20, yPos);
-        yPos += 7;
-        
-        if (receipt.bogoPitaPromo?.discount > 0) {
-          doc.text(`BOGO 50% Off Pita: -$${receipt.bogoPitaPromo.discount.toFixed(2)}`, 20, yPos);
-          yPos += 7;
-        }
-        
-        if (receipt.promotion?.discount > 0) {
-          doc.text(`Promotion: -$${receipt.promotion.discount.toFixed(2)}`, 20, yPos);
-          yPos += 7;
-        }
-        
-        // Use receipt values: total is Grand Total, tax is Tax, subtotal is calculated
+        // Calculate totals
         const grandTotal = receipt.total || 0;
         const taxAmount = receipt.tax || 0;
         const subtotal = receipt.subtotalAfterDiscounts || (grandTotal - taxAmount);
+        const totalItems = receipt.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
         
-        doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yPos);
-        yPos += 7;
-        doc.text(`Tax (8.875%): $${taxAmount.toFixed(2)}`, 20, yPos);
+        // Items count and subtotal
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont(undefined, "normal");
+        doc.text(`Items (${totalItems}): $${subtotal.toFixed(2)}`, 20, yPos);
         yPos += 7;
         
+        // Tax with percentage
+        const taxPercent = taxAmount > 0 ? ((taxAmount / subtotal) * 100).toFixed(3) : "8.875";
+        doc.text(`Tax (${taxPercent}%): $${taxAmount.toFixed(2)}`, 20, yPos);
+        yPos += 7;
+        
+        // GRAND TOTAL in bold red
         doc.setFontSize(12);
+        doc.setTextColor(220, 38, 38); // Red
         doc.setFont(undefined, "bold");
-        doc.text(`Grand Total: $${grandTotal.toFixed(2)}`, 20, yPos);
+        doc.text(`GRAND TOTAL: $${grandTotal.toFixed(2)}`, 20, yPos);
         yPos += 15;
 
         // Footer
         doc.setFont(undefined, "normal");
-        doc.setFontSize(8);
-        doc.text("Thank you for your order!", 105, yPos, { align: "center" });
-        yPos += 5;
-        doc.text("Payment confirmed via Stripe.", 105, yPos, { align: "center" });
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        const footerText = `Thanks for choosing Gyro Cafe. Questions? Call us at ${siteConfig.phone}`;
+        doc.text(footerText, pageWidth / 2, yPos, { align: "center", maxWidth: pageWidth - 40 });
 
         // Save PDF
         doc.save(`GyroCafe-Receipt-${receipt.orderNumber}.pdf`);
@@ -461,47 +545,107 @@ function OrderPickupThankYouContent() {
     img.onload = addLogoToPDF;
     img.onerror = () => {
       // Fallback if logo fails to load - create PDF without logo
-      doc.setFontSize(20);
-      doc.setTextColor(220, 38, 38);
-      doc.text("GYRO CAFE", 105, 20, { align: "center" });
-      doc.setFontSize(12);
+      const pageWidth = doc.internal.pageSize.getWidth();
+      
+      // "Order Receipt" title
+      doc.setFontSize(18);
       doc.setTextColor(0, 0, 0);
-      doc.text("Order Receipt", 105, 30, { align: "center" });
+      doc.setFont(undefined, "bold");
+      doc.text("Order Receipt", 20, 20);
       
+      // Order number in top-right
       doc.setFontSize(10);
-      let yPos = 45;
+      doc.setFont(undefined, "normal");
+      doc.setTextColor(0, 0, 0);
+      const orderNumText = `Order #${receipt.orderNumber}`;
+      const orderNumX = pageWidth - 20;
+      doc.text(orderNumText, orderNumX, 18, { align: "right" });
       
-      doc.text(`Order Number: ${receipt.orderNumber}`, 20, yPos);
-      yPos += 8;
-      doc.text(`Customer Name: ${receipt.customerName}`, 20, yPos);
-      yPos += 8;
-      doc.text(`Email: ${receipt.customerEmail}`, 20, yPos);
-      yPos += 8;
-      doc.text(`Pickup Time: ${receipt.pickupTime}`, 20, yPos);
-      yPos += 8;
-      doc.text(`Pickup Location: ${siteConfig.address}`, 20, yPos);
-      yPos += 8;
-      doc.text(`Phone: ${siteConfig.phone}`, 20, yPos);
-      yPos += 8;
+      // Green "Paid" badge
+      const badgeY = 24;
+      const badgeWidth = 20;
+      const badgeHeight = 8;
+      doc.setFillColor(34, 197, 94); // Green
+      doc.roundedRect(orderNumX - badgeWidth, badgeY - 4, badgeWidth, badgeHeight, 2, 2, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont(undefined, "bold");
+      doc.text("Paid", orderNumX - badgeWidth / 2, badgeY + 1, { align: "center" });
+      doc.setTextColor(0, 0, 0);
+      doc.setFont(undefined, "normal");
       
-      // Notes
-      if (receipt.notes) {
-        doc.text(`Notes: ${receipt.notes}`, 20, yPos);
-        yPos += 8;
+      let yPos = 35;
+      
+      // Customer & Pickup Info Box (light gray background) - Two columns layout
+      const infoBoxY = yPos;
+      const infoBoxHeight = 35;
+      const infoBoxWidth = pageWidth - 40;
+      doc.setFillColor(243, 244, 246); // Light gray
+      doc.roundedRect(20, infoBoxY, infoBoxWidth, infoBoxHeight, 3, 3, "F");
+      
+      // Calculate column positions
+      const leftColumnX = 25;
+      const separatorX = 20 + infoBoxWidth / 2; // Middle of the box
+      const rightColumnX = separatorX + 5; // Right column starts after separator
+      
+      // Vertical separator line
+      doc.setDrawColor(200, 200, 200); // Light gray line
+      doc.setLineWidth(0.5);
+      doc.line(separatorX, infoBoxY + 3, separatorX, infoBoxY + infoBoxHeight - 3);
+      
+      // Left column: Customer info
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      let leftY = infoBoxY + 7;
+      doc.text(`Customer: ${receipt.customerName}`, leftColumnX, leftY);
+      leftY += 6;
+      
+      // Email
+      doc.setFontSize(9);
+      doc.text(`Email: ${receipt.customerEmail}`, leftColumnX, leftY);
+      leftY += 6;
+      
+      // Phone
+      doc.text(`Phone: ${siteConfig.phone}`, leftColumnX, leftY);
+      
+      // Right column: Pickup info
+      let rightY = infoBoxY + 7;
+      doc.setFontSize(10);
+      doc.text(`Pickup Time: ${receipt.pickupTime}`, rightColumnX, rightY);
+      rightY += 6;
+      
+      // Pickup location - split after Brooklyn to wrap
+      doc.setFontSize(9);
+      doc.text(`Pickup Location: 580 Coney Island Ave, Brooklyn,`, rightColumnX, rightY);
+      rightY += 6;
+      doc.text(`NY 11218`, rightColumnX, rightY);
+      
+      yPos = infoBoxY + infoBoxHeight + 8;
+      
+      // Special Instructions Box (light yellow background) - only if notes exist
+      if (receipt.notes && receipt.notes.trim()) {
+        const notesBoxY = yPos;
+        const notesBoxHeight = 12;
+        const notesBoxWidth = pageWidth - 40;
+        doc.setFillColor(254, 252, 232); // Light yellow
+        doc.roundedRect(20, notesBoxY, notesBoxWidth, notesBoxHeight, 3, 3, "F");
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Notes: ${receipt.notes}`, 25, notesBoxY + 7);
+        yPos = notesBoxY + notesBoxHeight + 10;
+      } else {
+        yPos += 5;
       }
-      
-      yPos += 7;
 
       // Helper function to add a new page with header (fallback version)
       const addNewPageFallback = () => {
         doc.addPage();
-        doc.setFontSize(20);
-        doc.setTextColor(220, 38, 38);
-        doc.text("GYRO CAFE", 105, 20, { align: "center" });
-        doc.setFontSize(12);
+        // "Order Receipt" title
+        doc.setFontSize(18);
         doc.setTextColor(0, 0, 0);
-        doc.text("Order Receipt", 105, 30, { align: "center" });
-        return 45; // Return starting yPos for new page
+        doc.setFont(undefined, "bold");
+        doc.text("Order Receipt", 20, 20);
+        return 35; // Return starting yPos for new page
       };
 
       // Items grouped by category
@@ -510,10 +654,15 @@ function OrderPickupThankYouContent() {
         const pageHeight = 280;
         const bottomMargin = 40;
         
-        doc.setFontSize(12);
-        doc.text("Items Ordered:", 20, yPos);
-        yPos += 8;
+        // "ITEMS ORDERED" heading in red
+        doc.setFontSize(14);
+        doc.setTextColor(220, 38, 38); // Red
+        doc.setFont(undefined, "bold");
+        doc.text("ITEMS ORDERED", 20, yPos);
+        yPos += 10;
         doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont(undefined, "normal");
         
         // Iterate through grouped items
         Object.entries(groupedItems).forEach(([categoryId, categoryItems]) => {
@@ -522,11 +671,12 @@ function OrderPickupThankYouContent() {
             yPos = addNewPageFallback();
           }
           
-          // Category header
+          // Category header (bold, slightly larger)
           doc.setFontSize(11);
           doc.setFont(undefined, "bold");
+          doc.setTextColor(0, 0, 0);
           doc.text(getCategoryName(categoryId), 20, yPos);
-          yPos += 7;
+          yPos += 8;
           doc.setFontSize(10);
           doc.setFont(undefined, "normal");
           
@@ -538,80 +688,80 @@ function OrderPickupThankYouContent() {
               // Re-add category header if we're on a new page
               doc.setFontSize(11);
               doc.setFont(undefined, "bold");
+              doc.setTextColor(0, 0, 0);
               doc.text(getCategoryName(categoryId), 20, yPos);
-              yPos += 7;
+              yPos += 8;
               doc.setFontSize(10);
               doc.setFont(undefined, "normal");
             }
             
-            const itemText = `${item.quantity}x ${item.name}`;
+            const itemText = item.quantity > 1 
+              ? `${item.name} (x${item.quantity})`
+              : item.name;
             const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
-            doc.text(itemText, 25, yPos); // Indent items slightly
-            doc.text(itemPrice, 180, yPos, { align: "right" });
+            
+            // Draw dotted line from item name to price
+            const itemStartX = 25;
+            const itemEndX = 170;
+            const priceX = 180;
+            const lineY = yPos - 2;
+            
+            // Draw dotted line (simulate with small dashes)
+            doc.setDrawColor(200, 200, 200);
+            doc.setLineWidth(0.1);
+            for (let x = itemStartX + doc.getTextWidth(itemText) + 2; x < priceX - 2; x += 1.5) {
+              doc.line(x, lineY, x + 0.8, lineY);
+            }
+            
+            doc.text(itemText, itemStartX, yPos);
+            doc.text(itemPrice, priceX, yPos, { align: "right" });
             yPos += 7;
           });
           
           yPos += 3; // Space between categories
         });
         
-        // Calculate and display total items count
-        const totalItems = receipt.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        yPos += 5;
-        
-        // Check if we need a new page before adding total items
-        if (yPos > pageHeight - bottomMargin - 15) {
-          yPos = addNewPageFallback();
-        }
-        
-        doc.setFontSize(10);
-        doc.setFont(undefined, "bold");
-        doc.text(`Total Items: ${totalItems}`, 20, yPos);
-        yPos += 10;
+        yPos += 5; // Space after items
       }
 
-      // Totals
-      doc.setFontSize(10);
-      doc.text(`Item Total: $${(receipt.itemTotal || 0).toFixed(2)}`, 20, yPos);
-      yPos += 7;
-      
-      if (receipt.bogoPitaPromo?.discount > 0) {
-        doc.text(`BOGO 50% Off Pita: -$${receipt.bogoPitaPromo.discount.toFixed(2)}`, 20, yPos);
-        yPos += 7;
-      }
-      
-      if (receipt.promotion?.discount > 0) {
-        doc.text(`Promotion: -$${receipt.promotion.discount.toFixed(2)}`, 20, yPos);
-        yPos += 7;
-      }
-      
       // Totals - ensure they're on the last page
       const pageHeight = 280;
-      const totalsHeight = 60;
+      const totalsHeight = 50;
       if (yPos > pageHeight - totalsHeight) {
         yPos = addNewPageFallback();
       }
       
-      // Use receipt values: total is Grand Total, tax is Tax, subtotal is calculated
+      // Calculate totals
       const grandTotal = receipt.total || 0;
       const taxAmount = receipt.tax || 0;
       const subtotal = receipt.subtotalAfterDiscounts || (grandTotal - taxAmount);
+      const totalItems = receipt.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
       
-      doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yPos);
-      yPos += 7;
-      doc.text(`Tax (8.875%): $${taxAmount.toFixed(2)}`, 20, yPos);
+      // Items count and subtotal
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont(undefined, "normal");
+      doc.text(`Items (${totalItems}): $${subtotal.toFixed(2)}`, 20, yPos);
       yPos += 7;
       
+      // Tax with percentage
+      const taxPercent = taxAmount > 0 ? ((taxAmount / subtotal) * 100).toFixed(3) : "8.875";
+      doc.text(`Tax (${taxPercent}%): $${taxAmount.toFixed(2)}`, 20, yPos);
+      yPos += 7;
+      
+      // GRAND TOTAL in bold red
       doc.setFontSize(12);
+      doc.setTextColor(220, 38, 38); // Red
       doc.setFont(undefined, "bold");
-      doc.text(`Grand Total: $${grandTotal.toFixed(2)}`, 20, yPos);
+      doc.text(`GRAND TOTAL: $${grandTotal.toFixed(2)}`, 20, yPos);
       yPos += 15;
 
       // Footer
       doc.setFont(undefined, "normal");
-      doc.setFontSize(8);
-      doc.text("Thank you for your order!", 105, yPos, { align: "center" });
-      yPos += 5;
-      doc.text("Payment confirmed via Stripe.", 105, yPos, { align: "center" });
+      doc.setFontSize(9);
+      doc.setTextColor(0, 0, 0);
+      const footerText = `Thanks for choosing Gyro Cafe. Questions? Call us at ${siteConfig.phone}`;
+      doc.text(footerText, pageWidth / 2, yPos, { align: "center", maxWidth: pageWidth - 40 });
 
       // Save PDF
       doc.save(`GyroCafe-Receipt-${receipt.orderNumber}.pdf`);

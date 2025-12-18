@@ -131,9 +131,9 @@ export default function Home() {
 
       <FeaturedVideoSlider items={featuredVideos} collageItems={remainingVideos} />
 
-      <VideoSliderSection items={remainingVideos} />
+      {/* <VideoSliderSection items={remainingVideos} />
 
-      <SocialFeed items={getMarqueeItems()} />
+      <SocialFeed items={getMarqueeItems()} /> */}
 
       <ReviewsCarousel
         reviews={reviews}
