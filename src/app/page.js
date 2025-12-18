@@ -33,7 +33,7 @@ export default function Home() {
         contentWidth="max-w-[150rem]"
         primaryCta={{
           label: "Order Pickup",
-          href: siteConfig.ctas.pickup.href,
+          href: "/menu",
         }}
         secondaryCta={{
           label: "Order Delivery",
