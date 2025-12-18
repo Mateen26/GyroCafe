@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = `${siteConfig.name} · Brooklyn's Halal Classic`;
+const title = `${siteConfig.name} · Brooklyn's Classic Gyro Cafe`;
 const description =
   "Gyro Cafe has served Brooklyn since 2007 with halal platters, gyros, naanwiches, and our signature SAÜCED trio. Order pickup and get it fresh.";
 

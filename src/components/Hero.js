@@ -36,6 +36,7 @@ export function Hero({
   secondaryCta,
   backgroundImage,
   backgroundPosition = "center",
+  backgroundPositionMobile,
   align = "left",
   vertical = "center",
   contentWidth = "max-w-[90rem]",
@@ -45,8 +46,26 @@ export function Hero({
   const paddingClass = paddingByAlign[align] ?? paddingByAlign.left;
   const gradientClass = gradientByAlign[align] ?? gradientByAlign.center;
 
+  // Use mobile position if provided, otherwise use default backgroundPosition
+  const mobilePosition = backgroundPositionMobile || backgroundPosition;
+
   return (
     <Section background="transparent" className="relative p-0" noContainer>
+      {/* Add style tag for responsive object-position */}
+      {backgroundPositionMobile && (
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .hero-bg-image-mobile {
+              object-position: ${mobilePosition} !important;
+            }
+            @media (min-width: 768px) {
+              .hero-bg-image-mobile {
+                object-position: ${backgroundPosition} !important;
+              }
+            }
+          `
+        }} />
+      )}
       <div className="relative h-[90vh] min-h-[480px] w-full overflow-hidden mb-10 pt-20 md:pt-0">
         {backgroundImage ? (
           <Image
@@ -54,8 +73,8 @@ export function Hero({
             alt=""
             fill
             priority
-            className="object-cover"
-            style={{ objectPosition: backgroundPosition }}
+            className={`object-cover ${backgroundPositionMobile ? 'hero-bg-image-mobile' : ''}`}
+            style={!backgroundPositionMobile ? { objectPosition: backgroundPosition } : undefined}
           />
         ) : (
           <div className="h-full w-full bg-brand-red" />
