@@ -24,6 +24,7 @@ export default function Home() {
       <Hero
         backgroundImage="/IMG_4354.JPG"
         backgroundPosition="center 60%"
+        backgroundPositionMobile="left 60%"
         eyebrow="Gyro Cafe · Coney Island Ave"
         title="Since 2007, a Brooklyn Classic."
         description={`What started as a small family run gyro spot on Coney Island Avenue grew into a neighborhood staple. A place where the grill’s always hot, the sauce is always fresh, and the faces are familiar.\n\nFor nearly two decades, Gyro Café has been serving Brooklyn’s heartbeat: late-night meals, lunch breaks, and everything in between — made fresh, made Halal, Gyro’s The Cafe Way.`}
@@ -131,9 +132,9 @@ export default function Home() {
 
       <FeaturedVideoSlider items={featuredVideos} collageItems={remainingVideos} />
 
-      <VideoSliderSection items={remainingVideos} />
+      {/* <VideoSliderSection items={remainingVideos} />
 
-      <SocialFeed items={getMarqueeItems()} />
+      <SocialFeed items={getMarqueeItems()} /> */}
 
       <ReviewsCarousel
         reviews={reviews}

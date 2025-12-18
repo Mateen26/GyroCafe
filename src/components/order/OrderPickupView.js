@@ -81,13 +81,15 @@ export default function OrderPickupView() {
 
         // Step 2: Create checkout session directly from backend
         const origin = typeof window !== "undefined" ? window.location.origin : "";
+        // Ensure no double slashes in URLs
+        const cleanOrigin = origin.replace(/\/+$/, '');
         const checkoutPayload = {
           item: `Gyro Cafe Order - ${items.length} item${items.length > 1 ? "s" : ""}`,
           amount: total,
           status: "pending",
           token: tokenData.token,
-          success_url: `${origin}/order-pickup/thank-you`,
-          cancel_url: `${origin}/order-pickup?canceled=1`,
+          success_url: `${cleanOrigin}/order-pickup/thank-you`,
+          cancel_url: `${cleanOrigin}/order-pickup?canceled=1`,
           notes: form.notes,
           tax: tax,
           subtotal: subtotalAfterDiscounts,

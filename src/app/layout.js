@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { NavigationProgress } from "@/components/NavigationProgress";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/components/cart/CartContext";
 import { UpsellModalWrapper } from "@/components/UpsellModalWrapper";
@@ -20,7 +21,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = `${siteConfig.name} · Brooklyn's Halal Classic`;
+const title = `${siteConfig.name} · Brooklyn's Classic Gyro Cafe`;
 const description =
   "Gyro Cafe has served Brooklyn since 2007 with halal platters, gyros, naanwiches, and our signature SAÜCED trio. Order pickup and get it fresh.";
 
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} bg-white text-brand-dark antialiased`}
       >
         <CartProvider>
+          <NavigationProgress />
           <Header />
           <CartDrawer />
           <UpsellModalWrapper />
