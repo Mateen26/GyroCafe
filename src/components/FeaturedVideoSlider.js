@@ -114,6 +114,8 @@ function MainVideoPlayer({ item, videoRef }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [autoplayFailed, setAutoplayFailed] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [showUnmuteButton, setShowUnmuteButton] = useState(false);
 
   useEffect(() => {
     if (!item.video || !videoRef.current) return;
@@ -125,32 +127,36 @@ function MainVideoPlayer({ item, videoRef }) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video.setAttribute("autoplay", "");
-            // Main video plays with sound
-            video.muted = false;
+            // Start muted for autoplay (browsers require this)
+            video.muted = true;
+            setIsMuted(true);
             const playPromise = video.play();
             if (playPromise !== undefined) {
               playPromise
                 .then(() => {
+                  // Video is playing, now try to unmute immediately
                   setAutoplayFailed(false);
                   setIsPlaying(true);
+                  // Attempt to unmute after play starts
+                  setTimeout(() => {
+                    try {
+                      video.muted = false;
+                      setIsMuted(false);
+                    } catch (e) {
+                      // Browser may block unmuting, keep muted
+                      setIsMuted(true);
+                    }
+                  }, 100);
                 })
                 .catch((error) => {
-                  // If autoplay with sound fails, try muted
-                  video.muted = true;
-                  video.play().then(() => {
-                    setAutoplayFailed(false);
-                    setIsPlaying(true);
-                  }).catch(() => {
-                    setAutoplayFailed(true);
-                    setIsLoading(false);
-                  });
+                  // If autoplay fails, show play button
+                  setAutoplayFailed(true);
+                  setIsLoading(false);
                 });
             }
           } else {
             video.pause();
             setIsPlaying(false);
-            video.removeAttribute("autoplay");
           }
         });
       },
@@ -168,6 +174,22 @@ function MainVideoPlayer({ item, videoRef }) {
       setIsLoading(false);
       setIsPlaying(true);
       setAutoplayFailed(false);
+      
+      // Attempt to unmute immediately after video starts playing
+      // Some browsers allow this after play has started
+      setTimeout(() => {
+        try {
+          if (video.muted) {
+            video.muted = false;
+            setIsMuted(false);
+          } else {
+            setIsMuted(false);
+          }
+        } catch (e) {
+          // Browser may block unmuting, keep current state
+          setIsMuted(video.muted);
+        }
+      }, 200);
     };
 
     const handlePause = () => {
@@ -193,6 +215,28 @@ function MainVideoPlayer({ item, videoRef }) {
     };
   }, [item.video, videoRef]);
 
+  // Show unmute button if video is playing but muted
+  useEffect(() => {
+    if (isPlaying && isMuted && !autoplayFailed) {
+      setShowUnmuteButton(true);
+      // Hide button after 5 seconds
+      const timer = setTimeout(() => {
+        setShowUnmuteButton(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowUnmuteButton(false);
+    }
+  }, [isPlaying, isMuted, autoplayFailed]);
+
+  const handleUnmute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = false;
+      setIsMuted(false);
+      setShowUnmuteButton(false);
+    }
+  };
+
   return (
     <article
       ref={containerRef}
@@ -207,6 +251,8 @@ function MainVideoPlayer({ item, videoRef }) {
           loop
           playsInline
           preload="auto"
+          autoPlay
+          muted
         />
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-neutral-800">
@@ -219,11 +265,17 @@ function MainVideoPlayer({ item, videoRef }) {
               onClick={() => {
                 if (videoRef.current) {
                   videoRef.current.muted = false;
-                  videoRef.current.play();
+                  setIsMuted(false);
+                  videoRef.current.play().then(() => {
+                    setAutoplayFailed(false);
+                    setIsPlaying(true);
+                  }).catch(() => {
+                    // If still fails, keep showing button
+                  });
                 }
               }}
               className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-black shadow-lg transition hover:bg-white hover:scale-110"
-              aria-label="Play video"
+              aria-label="Play video with sound"
             >
               <svg
                 className="ml-1 h-8 w-8"
@@ -234,6 +286,28 @@ function MainVideoPlayer({ item, videoRef }) {
               </svg>
             </button>
           </div>
+        )}
+        {/* Temporary unmute button - shown when video is playing but muted */}
+        {showUnmuteButton && isPlaying && isMuted && (
+          <button
+            onClick={handleUnmute}
+            className="absolute bottom-4 right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/70 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/90 hover:scale-110"
+            aria-label="Unmute video"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M6.343 6.343l10.607 10.607M6.343 17.657L17.95 7.05"
+              />
+            </svg>
+          </button>
         )}
       </div>
      

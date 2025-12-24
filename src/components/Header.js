@@ -78,7 +78,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Link
-            href={siteConfig.ctas.pickup.href}
+            href="/menu"
             className="hidden rounded-full border border-brand-red bg-brand-red px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white shadow-md shadow-brand-red/20 transition hover:opacity-90 md:inline-block"
           >
             {siteConfig.ctas.pickup.label}
@@ -197,7 +197,7 @@ function MobileMenu({ open, onClose, links }) {
           {/* CTA Buttons */}
           <div className="mt-8 space-y-3">
             <Link
-              href={siteConfig.ctas.pickup.href}
+              href="/menu"
               onClick={onClose}
               className="block rounded-full border border-brand-red bg-brand-red px-5 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white shadow-md shadow-brand-red/20 transition hover:opacity-90"
             >
