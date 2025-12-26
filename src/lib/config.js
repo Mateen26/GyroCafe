@@ -16,7 +16,7 @@ export const siteConfig = {
   social: [
     {
       label: "Instagram",
-      href: "https://instagram.com/gyrocafebk",
+      href: "https://instagram.com/gyrocafe",
       handle: "@GyroCafeBK",
     },
     {

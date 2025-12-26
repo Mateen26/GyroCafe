@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/config";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
 export const metadata = {
   title: "Catering Menu · Gyro Cafe",
@@ -10,360 +10,286 @@ export const metadata = {
 
 export default function CateringMenuPage() {
   return (
-    <main className="flex flex-col">
-      {/* Header Section */}
-      <Section background="red">
-        <div className="space-y-4 text-white py-20">
-          <h1 className="text-4xl font-bold uppercase tracking-tight md:text-5xl lg:text-6xl">
-            Catering Menu
-          </h1>
-          <p className="text-base font-semibold uppercase tracking-wide text-white/90 md:text-lg">
-            Half Tray: serves approx. 15 | Full Tray: serves approx. 30
-          </p>
-          <p className="text-sm text-white/80 md:text-base">
-            Included with every protein tray: Half tray white sauce + Half tray hot sauce.
-          </p>
-        </div>
-      </Section>
-
-      {/* Main Content Section */}
-      <Section background="white">
-        <div className="py-20">
-          <div className="grid gap-12 lg:grid-cols-[1.2fr,1fr] lg:gap-16">
-            {/* Left Column - Gyro & Curry Trays */}
-            <div className="space-y-10">
-              {/* Gyro Trays Table */}
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold uppercase tracking-tight text-brand-red md:text-3xl">
-                  Gyro Trays
-                </h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-brand-red text-white">
-                        <th className="border border-brand-red/30 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide">
-                          Item
-                        </th>
-                        <th className="border border-brand-red/30 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide">
-                          15 People
-                        </th>
-                        <th className="border border-brand-red/30 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide">
-                          30 People
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Chicken Gyro
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $105
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $182
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200 bg-neutral-50">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Mixed Gyro (Chicken & Lamb)
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $120
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $210
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Lamb Gyro
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $140
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $240
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Curry Trays Table */}
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold uppercase tracking-tight text-brand-red md:text-3xl">
-                  Curry Trays
-                </h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-brand-red text-white">
-                        <th className="border border-brand-red/30 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide">
-                          Item
-                        </th>
-                        <th className="border border-brand-red/30 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide">
-                          15 People
-                        </th>
-                        <th className="border border-brand-red/30 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide">
-                          30 People
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Chicken Curry
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $95
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $165
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200 bg-neutral-50">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Lamb Curry
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $130
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $225
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Vegetarian Chickpea Curry
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $80
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          $140
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+    <main className="min-h-screen  py-8">
+      {/* Flyer Canvas Container */}
+      <div className="mx-auto max-w-[1024px] bg-[#800000] shadow-2xl border border-neutral-800">
+        {/* Top Header Area */}
+        <div className="relative bg-[#800000] p-4 border-b border-neutral-700">
+          {/* Red Diagonal Corner Accent */}
+          <div className="absolute top-0 right-0 w-0 h-0 border-l-[120px] border-l-transparent border-t-[120px] border-t-[#351010]"></div>
+          
+          <div className="relative flex items-start justify-between gap-4">
+            {/* Left: Logo + Wordmark */}
+            <div className="flex items-center gap-3 flex-shrink-0 z-10">
+              <div className="relative h-32 w-32">
+                <Image
+                  src="/logo.jpeg"
+                  alt="Gyro Cafe logo"
+                  fill
+                  className="object-contain"
+                />
               </div>
             </div>
 
-            {/* Right Column - Sides & Tray Guide */}
-            <div className="space-y-10">
-              {/* Sides & Add-ons Table */}
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold uppercase tracking-tight text-brand-red md:text-3xl">
-                  Sides & Add-ons
-                </h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-brand-red text-white">
-                        <th className="border border-brand-red/30 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide">
-                          Item
-                        </th>
-                        <th className="border border-brand-red/30 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide">
-                          15 People
-                        </th>
-                        <th className="border border-brand-red/30 px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide">
-                          30 People
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Basmati Rice
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Half tray $40
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Full tray $65
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200 bg-neutral-50">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Pita Bread
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Half tray $25
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Full tray $40
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Falafel (25 / 50 pcs)
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Half tray $30
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Full tray $55
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200 bg-neutral-50">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Hummus (tray)
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark" colSpan={2}>
-                          $45
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Garden Salad
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Half tray $55
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Full tray $75
-                        </td>
-                      </tr>
-                      <tr className="border-b border-neutral-200 bg-neutral-50">
-                        <td className="border border-neutral-200 px-4 py-3 text-sm font-medium text-brand-dark">
-                          Shepherd Salad
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Half tray $65
-                        </td>
-                        <td className="border border-neutral-200 px-4 py-3 text-center text-sm text-brand-dark">
-                          Full tray $95
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-            {/* Additional Sauce Options Section */}
-          <Section background="red" className="bg-gradient-to-b from-brand-red to-red-700">
-        <div className="py-16">
-          <div className="mx-auto max-w-2xl">
-            <h2 className="mb-8 text-center text-2xl font-bold uppercase tracking-tight text-white md:text-3xl">
-              Additional Sauce Options
-            </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="flex flex-col items-center rounded-lg border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
-                <div className="relative mb-4 h-40 w-40 overflow-hidden rounded-lg sm:h-48 sm:w-48">
-                  <Image
-                    src="/menu/GYRO SAUCES/WHITE SAUCE.jpg"
-                    alt="White Sauce"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <span className="mb-2 text-center text-sm font-medium text-white md:text-base">
-                  Extra White Sauce (Half tray)
-                </span>
-                <span className="text-lg font-bold text-white md:text-xl">$25</span>
-              </div>
-              <div className="flex flex-col items-center rounded-lg border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
-                <div className="relative mb-4 h-40 w-40 overflow-hidden rounded-lg sm:h-48 sm:w-48">
-                  <Image
-                    src="/menu/GYRO SAUCES/RED SAUCE.jpg"
-                    alt="Hot Sauce"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <span className="mb-2 text-center text-sm font-medium text-white md:text-base">
-                  Extra Hot Sauce (Half tray)
-                </span>
-                <span className="text-lg font-bold text-white md:text-xl">$25</span>
-              </div>
-              <div className="flex flex-col items-center rounded-lg border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
-                <div className="relative mb-4 h-40 w-40 overflow-hidden rounded-lg sm:h-48 sm:w-48">
-                  <Image
-                    src="/menu/GYRO SAUCES/MANGO.jpg"
-                    alt="Mango Sauce"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <span className="mb-2 text-center text-sm font-medium text-white md:text-base">
-                  Mango Sauce (Half tray)
-                </span>
-                <span className="text-lg font-bold text-white md:text-xl">$30</span>
+            {/* Center/Right: Title and Contact Info */}
+            <div className="flex-1 text-right z-10">
+              <h1 className="text-5xl font-bold uppercase tracking-tight text-white mb-2">
+                Catering Menu
+              </h1>
+              {/* Gold Divider Line */}
+              <div className="h-0.5 bg-[#f2b705] mb-2"></div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-[#f2b705] mb-2">
+                HALF TRAY – SERVES APPROX. 15 | FULL TRAY – SERVES – 30
+              </p>
+              <div className="space-y-1 text-sm text-[#f2b705]">
+                <a href={`tel:${siteConfig.phone}`} className="block hover:text-[#f2d466]">
+                  {siteConfig.phone}
+                </a>
+                <a href={`mailto:${siteConfig.email}`} className="block hover:text-[#f2d466]">
+                  {siteConfig.email}
+                </a>
               </div>
             </div>
-          </div>
-        </div>
-      </Section>
 
-              {/* Tray Size Guide */}
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold uppercase tracking-tight text-brand-red md:text-3xl">
-                  Tray Size Guide
-                </h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2 rounded-lg border-2 border-brand-red/20 bg-neutral-50 p-4 text-center">
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-lg bg-neutral-200">
-                      {/* Placeholder for Half Tray image */}
-                      <div className="flex h-full items-center justify-center text-neutral-400">
-                        <span className="text-xs">Half Tray Image</span>
-                      </div>
-                    </div>
-                    <p className="text-sm font-semibold uppercase tracking-wide text-brand-dark">
-                      Half Tray
-                    </p>
-                    <p className="text-xs text-neutral-600">Serves ~15</p>
-                  </div>
-                  <div className="space-y-2 rounded-lg border-2 border-brand-red/20 bg-neutral-50 p-4 text-center">
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-lg bg-neutral-200">
-                      {/* Placeholder for Full Tray image */}
-                      <div className="flex h-full items-center justify-center text-neutral-400">
-                        <span className="text-xs">Full Tray Image</span>
-                      </div>
-                    </div>
-                    <p className="text-sm font-semibold uppercase tracking-wide text-brand-dark">
-                      Full Tray
-                    </p>
-                    <p className="text-xs text-neutral-600">Serves ~30</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      
-      {/* Footer Section */}
-      <Section background="red">
-        <div className="space-y-4 py-12 text-center text-white">
-          <div className="space-y-2 text-sm md:text-base">
-            <p className="font-semibold uppercase tracking-wide">
-              Pickup Pricing: All prices listed are for pickup.
-            </p>
-            <p className="font-semibold uppercase tracking-wide">
-              Delivery Available: Additional fee based on distance.
-            </p>
-            <p className="text-xs text-white/80 md:text-sm">
-              Tax: Prices listed do not include sales tax.
-            </p>
-          </div>
-          <div className="pt-4 text-sm text-white/70">
-            <p>
-              Questions? Call{" "}
-              <a href={`tel:${siteConfig.phone}`} className="underline hover:text-white">
-                {siteConfig.phone}
-              </a>{" "}
-              or email{" "}
-              <a href={`mailto:${siteConfig.email}`} className="underline hover:text-white">
-                {siteConfig.email}
+            {/* Top-Right: Social Icons Stacked */}
+            <div className="flex flex-col gap-2 z-10">
+              <a
+                href={siteConfig.social?.[1]?.href || "https://facebook.com/gyrocafe"}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="grid h-10 w-10 place-items-center rounded-full bg-[#b51212] text-white transition hover:bg-red-700"
+              >
+                <FaFacebookF />
               </a>
-            </p>
+              <a
+                href={siteConfig.social?.[0]?.href || "https://instagram.com/gyrocafebk"}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="DoorDash"
+                className="grid h-10 w-10 place-items-center rounded-full bg-[#b51212] text-white font-bold transition hover:bg-red-700"
+              >
+                <FaInstagram />
+              </a>
+            </div>
           </div>
         </div>
-      </Section>
+
+        {/* Protein Trays Section */}
+        <div className="p-4">
+          {/* Dark Header Bar */}
+          <div className="bg-[#111] px-4 py-3 mb-0 rounded-t-lg flex items-center">
+            <h2 className="text-xl font-bold uppercase tracking-tight text-white mr-4">PROTEIN TRAYS</h2>
+            <div className="h-0.5 bg-[#f2b705] flex-1"></div>
+          </div>
+          
+          {/* Light Gray Panel */}
+          <div className="bg-[#ededed] rounded-xs p-4 border border-neutral-300" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+            {/* 3-Column Table Header - Yellow Background */}
+            <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
+              <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111] rounded-tl-lg">GYRO TRAYS</div>
+              <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People</div>
+              <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People</div>
+            </div>
+            
+            {/* Rows */}
+            <div className="border-l border-r border-[#111]">
+              <div className="grid grid-cols-3 border-b-2 border-[#111]">
+                <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Chicken Gyro</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$105</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$182</div>
+              </div>
+              <div className="grid grid-cols-3 border-b-2 border-[#111]">
+                <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Mixed Gyro (Chicken & Lamb)</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$120</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$210</div>
+              </div>
+              <div className="grid grid-cols-3">
+                <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Lamb Gyro</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$140</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$240</div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+            {/* Note Below Table - Black Background, Yellow Text */}
+            <div className="bg-[#111] px-4 mx-4 py-3  text-center -mt-2">
+              <p className="text-md   text-[#f2b705] leading-relaxed">
+                All protein trays include one half tray of our signature white sauce and hot sauce.
+                <br />
+               <p className="text-md  text-white leading-relaxed">Additional sauce trays available upon request.</p>
+              </p>
+            </div>
+
+        {/* Curry Trays Section */}
+        <div className="p-4 -mt-3">
+          {/* Dark Header Bar */}
+          <div className="bg-[#111] px-4 py-3 mb-0 rounded-t-lg flex items-center">
+            <h2 className="text-xl font-bold uppercase tracking-tight text-white mr-4">CURRY TRAYS</h2>
+            <div className="h-0.5 bg-[#f2b705] flex-1"></div>
+          </div>
+          
+          {/* Light Gray Panel */}
+          <div className="bg-[#ededed] p-4 border border-neutral-300 rounded-xs" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+            {/* 3-Column Table Header - Yellow Background */}
+            <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
+              <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111]">CURRY TRAYS</div>
+              <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People</div>
+              <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People</div>
+            </div>
+            
+            {/* Rows */}
+            <div className="border-l border-r border-[#111]">
+              <div className="grid grid-cols-3 border-b-2 border-[#111]">
+                <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Chicken Curry</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$95</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$165</div>
+              </div>
+              <div className="grid grid-cols-3 border-b-2 border-[#111]">
+                <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Lamb Curry</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$130</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$225</div>
+              </div>
+              <div className="grid grid-cols-3">
+                <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Vegetarian Chickpea Curry</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$80</div>
+                <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$140</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Two-Column Bottom Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-2  p-4 -mt-8">
+          {/* Left Column */}
+          <div className="flex flex-col">
+            <div className="flex flex-col">
+              {/* & SIDES ADD-ONS */}
+              <div>
+                <div className="bg-[#111] px-4 py-3 mb-0 rounded-t-lg">
+                  <h2 className="text-xl font-bold uppercase tracking-tight text-[#f2b705]">& SIDES ADD-ONS</h2>
+                  <div className="h-0.5 bg-[#f2b705] mt-1"></div>
+                </div>
+                <div className="bg-[#ededed] p-4 border border-neutral-300" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+                  <div className="space-y-2">
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Basmati Rice</span>
+                      <div className="text-sm text-[#111]">
+                        <span className="font-bold text-[#b51212]">$40</span> | <span>FULL TRAY $65</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Pita Bread</span>
+                      <div className="text-sm text-[#111]">
+                        <span className="font-bold text-[#b51212]">$25</span> | <span>FULL TRAY $40</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Falafel</span>
+                      <span className="text-sm text-[#111]">25 pieces (30 pieces) <span className="font-bold text-[#b51212]">$55</span></span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Hummus</span>
+                      <span className="text-sm text-[#111]">One size tray <span className="font-bold text-[#b51212]">$45</span></span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Garden Salad</span>
+                      <div className="text-sm text-[#111]">
+                        <span className="font-bold text-[#b51212]">$55</span> | <span>FULL TRAY $75</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-sm font-medium text-[#111]">Shepherd Salad</span>
+                      <div className="text-sm text-[#111]">
+                        <span className="font-bold text-[#b51212]">$65</span> | <span>FULL TRAY $95</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ADDITIONAL SAUCE OPTIONS */}
+              <div>
+                <div className="bg-[#f2b705] px-4 py-3 mb-0 rounded-t-lg">
+                  <h2 className="text-xl font-bold uppercase tracking-tight text-black">ADDITIONAL SAUCE OPTIONS</h2>
+                </div>
+                <div className="bg-[#ededed] p-4 border border-neutral-300" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+                  <div className="space-y-2">
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Extra White Sauce (half tray)</span>
+                      <span className="text-sm font-bold text-[#b51212]">$25</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-neutral-300">
+                      <span className="text-sm font-medium text-[#111]">Extra Hot Sauce (half tray)</span>
+                      <span className="text-sm font-bold text-[#b51212]">$25</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-sm font-medium text-[#111]">Mango Sauce (half tray)</span>
+                      <span className="text-sm font-bold text-[#b51212]">$30</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fine Print */}
+            <div className="space-y-1 text-xs text-white leading-tight mt-4">
+              <p className="font-semibold uppercase whitespace-nowrap">PICKUP PRICING:</p>
+              <p className="uppercase whitespace-nowrap">DELIVERY AVAILABLE: Delivery can be arranged for an additional fee based on distance and</p>
+              <p className="italic whitespace-nowrap">*Prices listed do not include sales tax.</p>
+            </div>
+          </div>
+
+          {/* Right Column: TRAY SIZE GUIDE */}
+          <div className="flex flex-col lg:h-[86%]">
+            <div className="bg-[#111] px-4 py-3 mb-0 rounded-t-lg">
+              <h2 className="text-xl font-bold uppercase tracking-tight text-white">TRAY SIZE GUIDE</h2>
+              <div className="h-0.5 bg-[#f2b705] mt-1"></div>
+            </div>
+            <div className="bg-[#ededed] p-4 border border-neutral-300 flex-1 flex flex-col justify-between" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <div className="space-y-4 flex-1 flex flex-col justify-center">
+                {/* Half Tray Placeholder */}
+                <div className="space-y-2">
+                  <div className="relative bg-[#b51212] rounded-lg p-6 border-4 border-red-800 shadow-inner">
+                    {/* Inner tray lip effect */}
+                    <div className="absolute inset-2 border-2 border-red-600 rounded"></div>
+                    {/* Highlight gradient */}
+                    <div className="absolute top-2 left-2 right-2 h-8 bg-gradient-to-b from-red-300/30 to-transparent rounded-t"></div>
+                  </div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-[#111] text-center">
+                    HALF TRAY – SERVES ~15
+                  </p>
+                </div>
+                
+                {/* Full Tray Placeholder */}
+                <div className="space-y-2">
+                  <div className="relative bg-[#b51212] rounded-lg p-8 border-4 border-red-800 shadow-inner">
+                    {/* Inner tray lip effect */}
+                    <div className="absolute inset-3 border-2 border-red-600 rounded"></div>
+                    {/* Highlight gradient */}
+                    <div className="absolute top-3 left-3 right-3 h-10 bg-gradient-to-b from-red-300/30 to-transparent rounded-t"></div>
+                  </div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-[#111] text-center">
+                    FULL TRAY – SERVES ~30
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer: Red Bar */}
+        <div className="bg-[#b51212] p-4 text-white">
+          <div className="space-y-2 text-sm text-center">
+            <div className="space-y-1">
+              <p className="whitespace-nowrap">{siteConfig.phone}</p>
+              <p className="whitespace-nowrap">www.GyroCafeBK.com</p>
+              <p className="whitespace-nowrap">{siteConfig.address}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
-
