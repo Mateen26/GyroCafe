@@ -122,7 +122,9 @@
             </div>
             
             {/* Light Gray Panel */}
-            <div className="bg-[#ededed] rounded-xs p-4 border border-neutral-300" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+            <div className="bg-[#ededed] rounded-xs p-4 border border-neutral-300 relative" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <div className="absolute inset-0 pointer-events-none opacity-15 rounded-xs" style={{ backgroundImage: 'url(/catering/logo1.svg), url(/catering/logo2.svg)', backgroundSize: '200px, 200px', backgroundPosition: 'top 15px left 15px, top 15px right 15px', backgroundRepeat: 'no-repeat, no-repeat' }}></div>
+              <div className="relative z-10">
               {/* 3-Column Table Header - Yellow Background */}
               <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
                 <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111] rounded-tl-lg">GYRO TRAYS</div>
@@ -148,7 +150,7 @@
                   <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$240</div>
                 </div>
               </div>
-              
+              </div>
             </div>
           </div>
               {/* Note Below Table - Black Background, Yellow Text */}
@@ -230,8 +232,8 @@
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Falafel</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">25 pieces</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">(30 pieces) $55</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">25$ (30 pieces) </div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">55$ (60 pieces)</div>
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Hummus</div>
@@ -294,13 +296,7 @@
                   <div className="h-0.5 bg-[#f2b705] mt-1"></div>
                 </div>
               </div>
-              <div className="bg-[#ededed] p-4 border border-neutral-300 sm:max-h-[430px] lg:max-h-[560px] sm:flex sm:flex-col sm:justify-between" style={{ 
-                backgroundImage: 'url(/catering/logo2.svg), url(/catering/logo1.svg), url(/catering/logo1.svg), url(/tablebg.jpeg)', 
-                backgroundSize: '140px, 130px, 90px, cover', 
-                backgroundPosition: 'left center, right bottom, right top, center', 
-                backgroundRepeat: 'no-repeat, no-repeat, no-repeat, no-repeat',
-                backgroundBlendMode: 'multiply'
-              }}>
+              <div className="bg-[#ededed] p-4 border border-neutral-300 sm:max-h-[430px] lg:max-h-[560px] sm:flex sm:flex-col sm:justify-between" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 {/* Half Tray */}
                 <div className="flex flex-col items-center justify-center flex-1">
                   <div className="relative w-full h-[150px] sm:h-[170px] lg:h-[220px]">
@@ -318,7 +314,7 @@
                 
                 {/* Full Tray */}
                 <div className="flex flex-col items-center justify-center flex-1 mt-4 sm:mt-0">
-                  <div className="relative w-full h-[150px] sm:h-[170px] lg:h-[190px]">
+                  <div className="relative w-full h-[150px] sm:h-[170px] lg:h-[200px]">
                     <Image
                       src="/catering/RED_ALUM_TRAY_FULL.png"
                       alt="Full Tray"
