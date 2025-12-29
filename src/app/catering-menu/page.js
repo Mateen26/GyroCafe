@@ -50,10 +50,19 @@
             <div className="relative flex items-start justify-between gap-4">
               {/* Left: Logo + Wordmark */}
               <div className="flex items-center gap-3 flex-shrink-0 z-10">
-                <div className="relative h-32 w-32">
+              
+                <div className="relative h-40 w-40">
                   <Image
                     src="/logo.jpeg"
                     alt="Gyro Cafe logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="relative h-40 w-40 opacity-90">
+                  <Image
+                    src="/catering/logo1.svg"
+                    alt="Decorative food icon"
                     fill
                     className="object-contain"
                   />
@@ -117,10 +126,10 @@
               {/* 3-Column Table Header - Yellow Background */}
               <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
                 <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111] rounded-tl-lg">GYRO TRAYS</div>
-                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People</div>
-                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People</div>
+                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People (half tray)</div>
+                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People (full tray)</div>
               </div>
-              
+
               {/* Rows */}
               <div className="border-l border-r border-[#111]">
                 <div className="grid grid-cols-3 border-b-2 border-[#111]">
@@ -164,8 +173,8 @@
               {/* 3-Column Table Header - Yellow Background */}
               <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
                 <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111]">CURRY TRAYS</div>
-                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People</div>
-                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People</div>
+                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People (half tray)</div>
+                <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People (full tray)</div>
               </div>
               
               {/* Rows */}
@@ -203,8 +212,8 @@
                   {/* 3-Column Table Header - Yellow Background */}
                   <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
                     <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111] rounded-tl-lg">SIDES ADD-ONS</div>
-                    <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 People</div>
-                    <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 People</div>
+                    <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3 border-r-2 border-[#111]">15 people (half tray)</div>
+                    <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] text-center px-4 py-3">30 people (full tray)</div>
                   </div>
                   
                   {/* Rows */}
@@ -212,12 +221,12 @@
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Basmati Rice</div>
                       <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$40</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">FULL TRAY $65</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3"> $65</div>
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Pita Bread</div>
                       <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$25</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">FULL TRAY $40</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3"> $40</div>
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Falafel</div>
@@ -226,18 +235,17 @@
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Hummus</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">One size</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">tray $45</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 col-span-2">$45</div>
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Garden Salad</div>
                       <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$55</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">FULL TRAY $75</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3"> $75</div>
                     </div>
                     <div className="grid grid-cols-3">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Shepherd Salad</div>
                       <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$65</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">FULL TRAY $95</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3"> $95</div>
                     </div>
                   </div>
                 </div>
@@ -272,11 +280,27 @@
 
             {/* Right Column: TRAY SIZE GUIDE */}
             <div className="flex flex-col self-start h-fit">
-              <div className="bg-[#111] px-4 py-3 mb-0 rounded-t-lg">
-                <h2 className="text-xl font-bold uppercase tracking-tight text-white">TRAY SIZE GUIDE</h2>
-                <div className="h-0.5 bg-[#f2b705] mt-1"></div>
+              <div className="bg-[#111] px-4 py-3 mb-0 rounded-t-lg flex items-center gap-3">
+                <div className="relative h-8 w-8 opacity-70">
+                  <Image
+                    src="/catering/logo2.svg"
+                    alt="Decorative food icon"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-xl font-bold uppercase tracking-tight text-white">TRAY SIZE GUIDE</h2>
+                  <div className="h-0.5 bg-[#f2b705] mt-1"></div>
+                </div>
               </div>
-              <div className="bg-[#ededed] p-4 border border-neutral-300 sm:max-h-[430px] lg:max-h-[560px] sm:flex sm:flex-col sm:justify-between" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <div className="bg-[#ededed] p-4 border border-neutral-300 sm:max-h-[430px] lg:max-h-[560px] sm:flex sm:flex-col sm:justify-between" style={{ 
+                backgroundImage: 'url(/catering/logo2.svg), url(/catering/logo1.svg), url(/catering/logo1.svg), url(/tablebg.jpeg)', 
+                backgroundSize: '140px, 130px, 90px, cover', 
+                backgroundPosition: 'left center, right bottom, right top, center', 
+                backgroundRepeat: 'no-repeat, no-repeat, no-repeat, no-repeat',
+                backgroundBlendMode: 'multiply'
+              }}>
                 {/* Half Tray */}
                 <div className="flex flex-col items-center justify-center flex-1">
                   <div className="relative w-full h-[150px] sm:h-[170px] lg:h-[220px]">
@@ -309,19 +333,25 @@
               </div>
             </div>
           </div>
-          <div className="space-y-1 text-md font-bold text-white leading-tight mt-4 text-center my-2">
+          <div className="space-y-1  font-bold text-white leading-tight mt-4 text-center my-2">
+                <p className="uppercase text-[11.8px] whitespace-nowrap " >These are only our classic menu items. We cater everything on our menu. please speak to a manager for details on catering any items not listed here. </p>
+                <p className="italic whitespace-nowrap text-md text-[#f2b705]">LISTED PRICES ARE FOR PICKUP ONLY. DELIVERY CAN BE ARRANGED AT ADDITIONAL CHARGE. TAX NOT INCLUDED</p>
+              </div>
+          {/* <div className="space-y-1 text-md font-bold text-white leading-tight mt-4 text-center my-2">
                 <p className="uppercase whitespace-nowrap"> <span className="text-[#f2b705]">DELIVERY AVAILABLE:</span> Delivery can be arranged for an additional fee based on distance and order total.</p>
                 <p className="italic whitespace-nowrap">*Prices listed do not include sales tax.</p>
-              </div>
+              </div> */}
 
           {/* Footer: Red Bar */}
           <div className="bg-[#b51212] p-4 text-white">
-            <div className="space-y-2 text-sm text-center">
-              <div className="space-y-1">
-                <p className="whitespace-nowrap">{siteConfig.phone}</p>
-                <p className="whitespace-nowrap">www.GyroCafeBK.com</p>
-                <p className="whitespace-nowrap">{siteConfig.address}</p>
-              </div>
+            <div className="text-center">
+              <p className="text-lg font-bold">
+                <span>{siteConfig.phone}</span>
+                <span className="mx-4 text-[#f2b705]">|</span>
+                <span>www.GyroCafeBK.com</span>
+                <span className="mx-4 text-[#f2b705]">|</span>
+                <span>{siteConfig.address}</span>
+              </p>
             </div>
           </div>
 
