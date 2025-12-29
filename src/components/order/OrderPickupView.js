@@ -94,6 +94,9 @@ export default function OrderPickupView() {
           tax: tax,
           subtotal: subtotalAfterDiscounts,
           itemTotal: itemTotal,
+          pickupTime: form.pickupTime,
+          phone: form.phone,
+          bogoPitaPromo: bogoPitaPromo,
           orderItems: items.map((item) => ({
             itemId: item.id,
             quantity: item.quantity ?? 1,

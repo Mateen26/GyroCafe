@@ -1,0 +1,154 @@
+/* Smoke Burst Animation - Expands from edges, drifts, and fades */
+@keyframes smokeBurst {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.5) translate(0, 0);
+  }
+  30% {
+    opacity: 0.9;
+    transform: scale(1.2) translate(var(--smoke-drift-x, 0), var(--smoke-drift-y, 0));
+  }
+  60% {
+    opacity: 0.6;
+    transform: scale(1.5) translate(calc(var(--smoke-drift-x, 0) * 1.5), calc(var(--smoke-drift-y, 0) * 1.5));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2) translate(calc(var(--smoke-drift-x, 0) * 2), calc(var(--smoke-drift-y, 0) * 2));
+  }
+}
+
+/* Crack Appear Animation - Fades in, jitters, fades out */
+@keyframes crackAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1) rotate(-2deg);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.05) rotate(2deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1) rotate(-1deg);
+  }
+  80% {
+    opacity: 0.5;
+    transform: scale(0.95) rotate(1deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+}
+
+/* Smoke Overlay Base Styles */
+.smoke-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9998;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(200, 200, 200, 0.3) 30%,
+    rgba(150, 150, 150, 0.2) 60%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  animation: smokeBurst 0.9s ease-out forwards;
+  animation-delay: 0.7s;
+}
+
+/* Smoke from Left */
+.smoke-left {
+  left: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  --smoke-drift-x: -30px;
+  --smoke-drift-y: -10px;
+}
+
+/* Smoke from Right */
+.smoke-right {
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  --smoke-drift-x: 30px;
+  --smoke-drift-y: 10px;
+}
+
+/* Smoke from Top */
+.smoke-top {
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  --smoke-drift-x: 10px;
+  --smoke-drift-y: -30px;
+}
+
+/* Smoke from Bottom */
+.smoke-bottom {
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  --smoke-drift-x: -10px;
+  --smoke-drift-y: 30px;
+}
+
+/* Crack Overlay Base Styles */
+.crack-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9999;
+  width: 120px;
+  height: 120px;
+  background-image: 
+    linear-gradient(45deg, transparent 30%, rgba(0, 0, 0, 0.6) 30%, rgba(0, 0, 0, 0.6) 35%, transparent 35%),
+    linear-gradient(-45deg, transparent 30%, rgba(0, 0, 0, 0.6) 30%, rgba(0, 0, 0, 0.6) 35%, transparent 35%),
+    linear-gradient(135deg, transparent 30%, rgba(0, 0, 0, 0.5) 30%, rgba(0, 0, 0, 0.5) 35%, transparent 35%),
+    linear-gradient(-135deg, transparent 30%, rgba(0, 0, 0, 0.5) 30%, rgba(0, 0, 0, 0.5) 35%, transparent 35%);
+  background-size: 40% 40%, 40% 40%, 40% 40%, 40% 40%;
+  background-position: top left, top right, bottom left, bottom right;
+  background-repeat: no-repeat;
+  animation: crackAppear 0.7s ease-out forwards;
+  animation-delay: 0.7s;
+}
+
+/* Crack at Top Left */
+.crack-top-left {
+  top: 0;
+  left: 0;
+  background-position: top left, top left, top left, top left;
+  background-size: 100% 100%, 0 0, 0 0, 0 0;
+}
+
+/* Crack at Top Right */
+.crack-top-right {
+  top: 0;
+  right: 0;
+  background-position: top right, top right, top right, top right;
+  background-size: 0 0, 100% 100%, 0 0, 0 0;
+}
+
+/* Crack at Bottom Left */
+.crack-bottom-left {
+  bottom: 0;
+  left: 0;
+  background-position: bottom left, bottom left, bottom left, bottom left;
+  background-size: 0 0, 0 0, 100% 100%, 0 0;
+}
+
+/* Crack at Bottom Right */
+.crack-bottom-right {
+  bottom: 0;
+  right: 0;
+  background-position: bottom right, bottom right, bottom right, bottom right;
+  background-size: 0 0, 0 0, 0 0, 100% 100%;
+}
+
