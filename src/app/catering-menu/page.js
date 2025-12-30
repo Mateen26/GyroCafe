@@ -232,8 +232,8 @@
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Falafel</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">25$ (30 pieces) </div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">55$ (60 pieces)</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$25 (30 pieces) </div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$55 (60 pieces)</div>
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Hummus</div>
