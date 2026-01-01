@@ -79,6 +79,16 @@ export function MenuGrid({
                     sizes="(min-width: 1280px) 360px, (min-width: 768px) 45vw, 100vw"
                   />
                 ) : null}
+                {/* Out of Stock Label */}
+                {item.outOfStock && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <div className="rounded-lg bg-red-600 px-8 py-4 text-center shadow-2xl">
+                      <span className="text-2xl font-bold uppercase tracking-wider text-white">
+                        OUT OF STOCK
+                      </span>
+                    </div>
+                  </div>
+                )}
                 <div className="absolute left-4 top-4 flex flex-wrap gap-2">
                   {item.tags?.map((tag) => (
                     <span
@@ -114,9 +124,10 @@ export function MenuGrid({
                       category: item.category,
                     })
                   }
-                  className="w-full justify-center"
+                  className={`w-full justify-center ${item.outOfStock ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : ''}`}
+                  disabled={item.outOfStock}
                 >
-                  Add to Cart
+                  {item.outOfStock ? "Out of Stock" : "Add to Cart"}
                 </Button>
               </div>
             </article>

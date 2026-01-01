@@ -598,6 +598,27 @@ export const menuItems = [
     description:
       "Fresh-Baked heavyweight 6 oz Peanut Butter Cookie loaded with rich, dark chocolate chunks and peanut butter chips. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],
+    outOfStock: true,
+  },
+  {
+    id: "big-body-oatmeal-raisin",
+    name: "Big Body Oatmeal Raisin (Cookie)",
+    category: "pookie",
+    price: 4.0,
+    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
+    description:
+      "Fresh-Baked heavyweight 6 oz Oatmeal Raisin Cookie. Bold, warm, and seriously satisfying.",
+    tags: ["sweet"],
+  },
+  {
+    id: "big-body-nutella-chocolate-chip",
+    name: "Big Body Nutella Chocolate Chip (Cookie)",
+    category: "pookie",
+    price: 4.0,
+    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
+    description:
+      "Fresh-Baked heavyweight 6 oz Nutella Chocolate Chip Cookie loaded with rich, nutella chocolate chunks. Bold, warm, and seriously satisfying.",
+    tags: ["sweet"],
   },
   {
     id: "big-body-white-black-oreo",
@@ -613,10 +634,10 @@ export const menuItems = [
     id: "decadent-assortment",
     name: "Decadent Assortment",
     category: "pookie",
-    price: 12.0,
+    price: 18.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
-      "Indecisive on flavor? Try all three of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
+      "Indecisive on flavor? Try all four of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
     tags: ["sweet"],
   },
 
