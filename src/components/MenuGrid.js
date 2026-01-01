@@ -82,7 +82,7 @@ export function MenuGrid({
                 {/* Out of Stock Label */}
                 {item.outOfStock && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <div className="rounded-lg bg-red-600 px-8 py-4 text-center shadow-2xl">
+                    <div className="rounded-2xl bg-red-600 px-8 py-4 text-center shadow-2xl">
                       <span className="text-2xl font-bold uppercase tracking-wider text-white">
                         OUT OF STOCK
                       </span>

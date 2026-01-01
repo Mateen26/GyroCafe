@@ -609,6 +609,7 @@ export const menuItems = [
     description:
       "Fresh-Baked heavyweight 6 oz Oatmeal Raisin Cookie. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],
+    outOfStock: true,
   },
   {
     id: "big-body-nutella-chocolate-chip",
@@ -619,6 +620,7 @@ export const menuItems = [
     description:
       "Fresh-Baked heavyweight 6 oz Nutella Chocolate Chip Cookie loaded with rich, nutella chocolate chunks. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],
+    outOfStock: true,
   },
   {
     id: "big-body-white-black-oreo",
@@ -629,6 +631,7 @@ export const menuItems = [
     description:
       "6 oz Big Body Cookie filled with white and dark chocolate chips, topped with Oreos. Warm them up for 20 seconds for the gooeist bite :)",
     tags: ["sweet"],
+    outOfStock: true,
   },
   {
     id: "decadent-assortment",
@@ -639,6 +642,7 @@ export const menuItems = [
     description:
       "Indecisive on flavor? Try all four of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
     tags: ["sweet"],
+    outOfStock: true,
   },
 
   // MILKSHAKES
