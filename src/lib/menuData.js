@@ -583,7 +583,7 @@ export const menuItems = [
     id: "big-body-chocolate-chip",
     name: "Big Body Chocolate Chip (Cookie)",
     category: "pookie",
-    price: 4.0,
+    price: 5.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "A Fresh-baked thicc & gooey, 6 oz Chocolate Chip Cookie with crispy edges and a soft, melty center. Pure big-body bliss in every bite.",
@@ -593,7 +593,7 @@ export const menuItems = [
     id: "big-body-dark-chocolate-peanut-butter",
     name: "Big Body Dark Chocolate Peanut Butter (Cookie)",
     category: "pookie",
-    price: 4.0,
+    price: 5.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "Fresh-Baked heavyweight 6 oz Peanut Butter Cookie loaded with rich, dark chocolate chunks and peanut butter chips. Bold, warm, and seriously satisfying.",
@@ -604,7 +604,7 @@ export const menuItems = [
     id: "big-body-oatmeal-raisin",
     name: "Big Body Oatmeal Raisin (Cookie)",
     category: "pookie",
-    price: 4.0,
+    price: 5.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "Fresh-Baked heavyweight 6 oz Oatmeal Raisin Cookie. Bold, warm, and seriously satisfying.",
@@ -615,7 +615,7 @@ export const menuItems = [
     id: "big-body-nutella-chocolate-chip",
     name: "Big Body Nutella Chocolate Chip (Cookie)",
     category: "pookie",
-    price: 4.0,
+    price: 5.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "Fresh-Baked heavyweight 6 oz Nutella Chocolate Chip Cookie loaded with rich, nutella chocolate chunks. Bold, warm, and seriously satisfying.",
@@ -626,7 +626,7 @@ export const menuItems = [
     id: "big-body-white-black-oreo",
     name: "Big Body White and Black Oreo Cookie",
     category: "pookie",
-    price: 4.0,
+    price: 5.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "6 oz Big Body Cookie filled with white and dark chocolate chips, topped with Oreos. Warm them up for 20 seconds for the gooeist bite :)",
