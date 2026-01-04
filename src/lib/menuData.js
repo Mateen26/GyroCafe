@@ -592,7 +592,7 @@ export const menuItems = [
   },
   {
     id: "big-body-nutella-chocolate-chip",
-    name: "Big Body Nutella Chocolate Chip (Cookie)",
+    name: "Big Body Nutella Cookie",
     category: "pookie",
     price: 5.0,
     image: "/menu/cookies/BIG BODY NUTELLA COOKIE.png",
@@ -620,6 +620,17 @@ export const menuItems = [
       "Fresh-Baked heavyweight 6 oz Reese's Peanut Butter Cookie loaded with rich Reese's pieces and peanut butter chips. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],
   },
+  {
+    id: "decadent-assortment",
+    name: "Decadent Assortment",
+    category: "pookie",
+    price: 18.0,
+    image: "/menu/cookies/DECADENT ASSORTMENT.png",
+    description:
+      "Indecisive on flavor? Try all four of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
+    tags: ["sweet"],
+    outOfStock: false,
+  },
   // OUT OF STOCK COOKIES
   {
     id: "big-body-dark-chocolate-peanut-butter",
@@ -643,17 +654,7 @@ export const menuItems = [
     tags: ["sweet"],
     outOfStock: true,
   },
-  {
-    id: "decadent-assortment",
-    name: "Decadent Assortment",
-    category: "pookie",
-    price: 18.0,
-    image: "/menu/cookies/DECADENT ASSORTMENT.png",
-    description:
-      "Indecisive on flavor? Try all four of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
-    tags: ["sweet"],
-    outOfStock: true,
-  },
+  
 
   // MILKSHAKES
   {
