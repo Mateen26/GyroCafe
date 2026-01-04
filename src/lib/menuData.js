@@ -579,16 +579,48 @@ export const menuItems = [
   },
 
   // POOKIE
+  // IN STOCK COOKIES
   {
     id: "big-body-chocolate-chip",
     name: "Big Body Chocolate Chip (Cookie)",
     category: "pookie",
     price: 5.0,
-    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
+    image: "/menu/cookies/BIG BODY CHOCOLATE CHIP COOKIE.png",
     description:
       "A Fresh-baked thicc & gooey, 6 oz Chocolate Chip Cookie with crispy edges and a soft, melty center. Pure big-body bliss in every bite.",
     tags: ["sweet"],
   },
+  {
+    id: "big-body-nutella-chocolate-chip",
+    name: "Big Body Nutella Chocolate Chip (Cookie)",
+    category: "pookie",
+    price: 5.0,
+    image: "/menu/cookies/BIG BODY NUTELLA COOKIE.png",
+    description:
+      "Fresh-Baked heavyweight 6 oz Nutella Chocolate Chip Cookie loaded with rich, nutella chocolate chunks. Bold, warm, and seriously satisfying.",
+    tags: ["sweet"],
+  },
+  {
+    id: "big-body-white-black-oreo",
+    name: "BIG BODY OREO COOKIE",
+    category: "pookie",
+    price: 5.0,
+    image: "/menu/cookies/BIG BODY OREO COOKIE.png",
+    description:
+      "6 oz Big Body Cookie filled with white and dark chocolate chips, topped with Oreos. Warm them up for 20 seconds for the gooeist bite :)",
+    tags: ["sweet"],
+  },
+  {
+    id: "big-body-reeses-peanut-butter",
+    name: "Big Body Reese's Peanut Butter Cookie",
+    category: "pookie",
+    price: 5.0,
+    image: "/menu/cookies/BIG BODY REESE'S PEANUT BUTTER COOKIE.png",
+    description:
+      "Fresh-Baked heavyweight 6 oz Reese's Peanut Butter Cookie loaded with rich Reese's pieces and peanut butter chips. Bold, warm, and seriously satisfying.",
+    tags: ["sweet"],
+  },
+  // OUT OF STOCK COOKIES
   {
     id: "big-body-dark-chocolate-peanut-butter",
     name: "Big Body Dark Chocolate Peanut Butter (Cookie)",
@@ -612,33 +644,11 @@ export const menuItems = [
     outOfStock: true,
   },
   {
-    id: "big-body-nutella-chocolate-chip",
-    name: "Big Body Nutella Chocolate Chip (Cookie)",
-    category: "pookie",
-    price: 5.0,
-    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
-    description:
-      "Fresh-Baked heavyweight 6 oz Nutella Chocolate Chip Cookie loaded with rich, nutella chocolate chunks. Bold, warm, and seriously satisfying.",
-    tags: ["sweet"],
-    outOfStock: true,
-  },
-  {
-    id: "big-body-white-black-oreo",
-    name: "Big Body White and Black Oreo Cookie",
-    category: "pookie",
-    price: 5.0,
-    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
-    description:
-      "6 oz Big Body Cookie filled with white and dark chocolate chips, topped with Oreos. Warm them up for 20 seconds for the gooeist bite :)",
-    tags: ["sweet"],
-    outOfStock: true,
-  },
-  {
     id: "decadent-assortment",
     name: "Decadent Assortment",
     category: "pookie",
     price: 18.0,
-    image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
+    image: "/menu/cookies/DECADENT ASSORTMENT.png",
     description:
       "Indecisive on flavor? Try all four of our 6 oz Big Body Cookies. Warm them up for 20 seconds for the gooeist bite :)",
     tags: ["sweet"],
