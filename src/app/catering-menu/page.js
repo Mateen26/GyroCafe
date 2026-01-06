@@ -43,15 +43,14 @@
           }}
         >
           {/* Top Header Area */}
-          <div className="relative bg-[#800000] p-4 border-b border-neutral-700">
+          <div className="relative bg-[#800000] p-3 sm:p-4 border-b border-neutral-700">
             {/* Red Diagonal Corner Accent */}
-            <div className="absolute top-0 right-0 w-0 h-0 border-l-[120px] border-l-transparent border-t-[120px] border-t-[#351010]"></div>
+            <div className="hidden sm:block absolute top-0 right-0 w-0 h-0 border-l-[120px] border-l-transparent border-t-[120px] border-t-[#351010]"></div>
             
-            <div className="relative flex items-start justify-between gap-4">
+            <div className="relative flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
               {/* Left: Logo + Wordmark */}
-              <div className="flex items-center gap-3 flex-shrink-0 z-10">
-              
-                <div className="relative h-40 w-40">
+              <div className="flex items-center justify-center gap-4 sm:gap-3 flex-shrink-0 z-10">
+                <div className="relative h-32 w-32 sm:h-36 sm:w-36 lg:h-40 lg:w-40">
                   <Image
                     src="/logo.jpeg"
                     alt="Gyro Cafe logo"
@@ -59,7 +58,7 @@
                     className="object-contain"
                   />
                 </div>
-                <div className="relative h-40 w-40 opacity-90">
+                <div className="relative h-32 w-32 sm:h-36 sm:w-36 lg:h-40 lg:w-40 opacity-90">
                   <Image
                     src="/catering/logo1.svg"
                     alt="Decorative food icon"
@@ -70,27 +69,29 @@
               </div>
 
               {/* Center/Right: Title and Contact Info */}
-              <div className="flex-1 text-right z-10">
-                <h1 className="text-5xl font-bold uppercase tracking-tight text-white mb-2">
+              <div className="flex-1 text-center sm:text-right z-10">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-white mb-2">
                   Catering Menu
                 </h1>
                 {/* Gold Divider Line */}
                 <div className="h-0.5 bg-[#f2b705] mb-2"></div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-[#f2b705] mb-2">
+                <p className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-[#f2b705] mb-2">
                   HALF TRAY – SERVES APPROX. 15 | FULL TRAY – SERVES – 30
                 </p>
-                <div className="space-y-1 text-sm text-[#f2b705]">
-                  <a href={`tel:${siteConfig.phone}`} className="block hover:text-[#f2d466]">
+                {/* Contact Info - Flex Row */}
+                <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 text-xs sm:text-sm text-[#f2b705] mb-3 sm:mb-0">
+                  <a href={`tel:${siteConfig.phone}`} className="hover:text-[#f2d466]">
                     {siteConfig.phone}
                   </a>
-                  <a href={`mailto:${siteConfig.email}`} className="block hover:text-[#f2d466]">
+                  <span className="hidden sm:inline">|</span>
+                  <a href={`mailto:${siteConfig.email}`} className="hover:text-[#f2d466]">
                     {siteConfig.email}
                   </a>
                 </div>
               </div>
 
-              {/* Top-Right: Social Icons Stacked */}
-              <div className="flex flex-col gap-2 z-10">
+              {/* Top-Right: Social Icons Row */}
+              <div className="flex flex-row sm:flex-col gap-3 sm:gap-2 z-10">
                 <a
                   href={siteConfig.social?.[1]?.href || "https://facebook.com/gyrocafe"}
                   target="_blank"
@@ -171,7 +172,9 @@
             </div>
             
             {/* Light Gray Panel */}
-            <div className="bg-[#ededed] p-4 border border-neutral-300 rounded-xs" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+            <div className="bg-[#ededed] p-4 border border-neutral-300 rounded-xs relative" style={{ backgroundImage: 'url(/tablebg.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <div className="absolute inset-0 pointer-events-none opacity-15 rounded-xs" style={{ backgroundImage: 'url(/catering/logo2.svg), url(/catering/logo1.svg)', backgroundSize: '200px, 200px', backgroundPosition: 'top 15px left 15px, top 15px right 15px', backgroundRepeat: 'no-repeat, no-repeat' }}></div>
+              <div className="relative z-10">
               {/* 3-Column Table Header - Yellow Background */}
               <div className="grid grid-cols-3 border-l border-r rounded-tl-lg rounded-tr-lg border-[#111] mb-0">
                 <div className="bg-[#f2b705] font-bold uppercase text-sm text-[#111] px-4 py-3 border-r-2 border-[#111]">CURRY TRAYS</div>
@@ -196,6 +199,7 @@
                   <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$80</div>
                   <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$140</div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -232,8 +236,8 @@
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Falafel</div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">25$ (30 pieces) </div>
-                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">55$ (60 pieces)</div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3 border-r-2 border-[#111]">$25 (30 pieces) </div>
+                      <div className="text-sm font-bold text-[#b51212] text-center px-4 py-3">$55 (60 pieces)</div>
                     </div>
                     <div className="grid grid-cols-3 border-b-2 border-[#111]">
                       <div className="text-sm font-bold text-[#b51212] px-4 py-3 border-r-2 border-[#111]">Hummus</div>

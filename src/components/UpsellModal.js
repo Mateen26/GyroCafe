@@ -8,7 +8,9 @@ import { upsellConfig } from "@/lib/promotionsConfig";
 
 export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
   const [chocolateChipQty, setChocolateChipQty] = useState(0);
-  const [peanutButterQty, setPeanutButterQty] = useState(0);
+  const [nutellaQty, setNutellaQty] = useState(0);
+  const [oreoQty, setOreoQty] = useState(0);
+  const [reesesQty, setReesesQty] = useState(0);
   const [selectedFries, setSelectedFries] = useState(false);
   const [selectedSoda, setSelectedSoda] = useState(false);
   const [selectedBoth, setSelectedBoth] = useState(false);
@@ -17,7 +19,9 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
   useEffect(() => {
     if (!isOpen) {
       setChocolateChipQty(0);
-      setPeanutButterQty(0);
+      setNutellaQty(0);
+      setOreoQty(0);
+      setReesesQty(0);
       setSelectedFries(false);
       setSelectedSoda(false);
       setSelectedBoth(false);
@@ -28,7 +32,7 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
   const friesPrice = upsellConfig.products.fries.upsellPrice;
   const sodaPrice = upsellConfig.products.drink.upsellPrice;
   const bothPrice = friesPrice + sodaPrice;
-  const pookieTotal = (chocolateChipQty + peanutButterQty) * 4.0;
+  const pookieTotal = (chocolateChipQty + nutellaQty + oreoQty + reesesQty) * 5.0;
 
   // Calculate total price based on selections
   const calculateTotalPrice = useMemo(() => {
@@ -56,12 +60,12 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
       if (selectedSoda) qty += 1;
     }
     
-    qty += chocolateChipQty + peanutButterQty;
+    qty += chocolateChipQty + nutellaQty + oreoQty + reesesQty;
     return qty;
-  }, [selectedFries, selectedSoda, selectedBoth, chocolateChipQty, peanutButterQty]);
+  }, [selectedFries, selectedSoda, selectedBoth, chocolateChipQty, nutellaQty, oreoQty, reesesQty]);
 
   // Check if any items are selected
-  const hasSelectedItems = selectedFries || selectedSoda || selectedBoth || chocolateChipQty > 0 || peanutButterQty > 0;
+  const hasSelectedItems = selectedFries || selectedSoda || selectedBoth || chocolateChipQty > 0 || nutellaQty > 0 || oreoQty > 0 || reesesQty > 0;
 
   if (!isOpen) return null;
 
@@ -104,7 +108,9 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
   const handleAddSelected = () => {
     const pookieQuantities = {
       chocolateChip: chocolateChipQty,
-      peanutButter: peanutButterQty,
+      nutella: nutellaQty,
+      oreo: oreoQty,
+      reeses: reesesQty,
     };
     
     // Determine which type to pass based on selections
@@ -121,7 +127,7 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
     // We'll pass the selections object instead
     if (type) {
       onSelect(type, pookieQuantities);
-    } else if (chocolateChipQty > 0 || peanutButterQty > 0) {
+    } else if (chocolateChipQty > 0 || nutellaQty > 0 || oreoQty > 0 || reesesQty > 0) {
       // Only cookies selected - pass a special type or handle differently
       // For now, pass "cookies" as type or modify onSelect to handle this
       onSelect("cookies", pookieQuantities);
@@ -133,16 +139,24 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
   const handleIncrement = (type) => {
     if (type === "chocolateChip") {
       setChocolateChipQty((prev) => prev + 1);
-    } else if (type === "peanutButter") {
-      setPeanutButterQty((prev) => prev + 1);
+    } else if (type === "nutella") {
+      setNutellaQty((prev) => prev + 1);
+    } else if (type === "oreo") {
+      setOreoQty((prev) => prev + 1);
+    } else if (type === "reeses") {
+      setReesesQty((prev) => prev + 1);
     }
   };
 
   const handleDecrement = (type) => {
     if (type === "chocolateChip") {
       setChocolateChipQty((prev) => Math.max(0, prev - 1));
-    } else if (type === "peanutButter") {
-      setPeanutButterQty((prev) => Math.max(0, prev - 1));
+    } else if (type === "nutella") {
+      setNutellaQty((prev) => Math.max(0, prev - 1));
+    } else if (type === "oreo") {
+      setOreoQty((prev) => Math.max(0, prev - 1));
+    } else if (type === "reeses") {
+      setReesesQty((prev) => Math.max(0, prev - 1));
     }
   };
 
@@ -242,7 +256,7 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                           Big Body Chocolate Chip
                         </span>
                         <span className="text-xs font-medium text-brand-red">
-                          $4.00
+                          $5.00
                         </span>
                       </div>
                       <div className="flex shrink-0 items-center gap-3">
@@ -267,30 +281,30 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                       </div>
                     </div>
 
-                    {/* Big Body Dark Chocolate Peanut Butter */}
+                    {/* Big Body Nutella Chocolate Chip */}
                     <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
                         <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
-                          Big Body Dark Chocolate Peanut Butter
+                          Big Body Nutella Chocolate Chip
                         </span>
                         <span className="text-xs font-medium text-brand-red">
-                          $4.00
+                          $5.00
                         </span>
                       </div>
                       <div className="flex shrink-0 items-center gap-3">
                         <button
-                          onClick={() => handleDecrement("peanutButter")}
+                          onClick={() => handleDecrement("nutella")}
                           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-neutral-300 bg-white text-lg font-bold text-neutral-600 shadow-sm transition-all hover:border-brand-red hover:bg-brand-red hover:text-white hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-neutral-300 disabled:hover:bg-white disabled:hover:text-neutral-600 disabled:hover:shadow-sm"
-                          disabled={peanutButterQty === 0}
+                          disabled={nutellaQty === 0}
                           aria-label="Decrease quantity"
                         >
                           -
                         </button>
                         <span className="min-w-[2rem] shrink-0 text-center text-base font-bold text-brand-dark">
-                          {peanutButterQty}
+                          {nutellaQty}
                         </span>
                         <button
-                          onClick={() => handleIncrement("peanutButter")}
+                          onClick={() => handleIncrement("nutella")}
                           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-brand-red bg-brand-red text-lg font-bold text-white shadow-md shadow-brand-red/30 transition-all hover:bg-brand-red/90 hover:shadow-lg active:scale-95"
                           aria-label="Increase quantity"
                         >
@@ -298,6 +312,71 @@ export function UpsellModal({ isOpen, onClose, onSelect, capacity = 1 }) {
                         </button>
                       </div>
                     </div>
+
+                    {/* Big Body White and Black Oreo */}
+                    <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
+                      <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
+                          Big Body White and Black Oreo
+                        </span>
+                        <span className="text-xs font-medium text-brand-red">
+                          $5.00
+                        </span>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-3">
+                        <button
+                          onClick={() => handleDecrement("oreo")}
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-neutral-300 bg-white text-lg font-bold text-neutral-600 shadow-sm transition-all hover:border-brand-red hover:bg-brand-red hover:text-white hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-neutral-300 disabled:hover:bg-white disabled:hover:text-neutral-600 disabled:hover:shadow-sm"
+                          disabled={oreoQty === 0}
+                          aria-label="Decrease quantity"
+                        >
+                          -
+                        </button>
+                        <span className="min-w-[2rem] shrink-0 text-center text-base font-bold text-brand-dark">
+                          {oreoQty}
+                        </span>
+                        <button
+                          onClick={() => handleIncrement("oreo")}
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-brand-red bg-brand-red text-lg font-bold text-white shadow-md shadow-brand-red/30 transition-all hover:bg-brand-red/90 hover:shadow-lg active:scale-95"
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Big Body Reese's Peanut Butter */}
+                    <div className="flex items-center gap-2 md:gap-4 rounded-xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-3 md:p-4 shadow-sm transition hover:border-brand-red/30 hover:shadow-md">
+                      <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <span className="break-words text-xs md:text-sm font-semibold text-neutral-800">
+                          Big Body Reese's Peanut Butter Cookie
+                        </span>
+                        <span className="text-xs font-medium text-brand-red">
+                          $5.00
+                        </span>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-3">
+                        <button
+                          onClick={() => handleDecrement("reeses")}
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-neutral-300 bg-white text-lg font-bold text-neutral-600 shadow-sm transition-all hover:border-brand-red hover:bg-brand-red hover:text-white hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-neutral-300 disabled:hover:bg-white disabled:hover:text-neutral-600 disabled:hover:shadow-sm"
+                          disabled={reesesQty === 0}
+                          aria-label="Decrease quantity"
+                        >
+                          -
+                        </button>
+                        <span className="min-w-[2rem] shrink-0 text-center text-base font-bold text-brand-dark">
+                          {reesesQty}
+                        </span>
+                        <button
+                          onClick={() => handleIncrement("reeses")}
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-brand-red bg-brand-red text-lg font-bold text-white shadow-md shadow-brand-red/30 transition-all hover:bg-brand-red/90 hover:shadow-lg active:scale-95"
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
 

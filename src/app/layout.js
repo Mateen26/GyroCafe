@@ -7,6 +7,7 @@ import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/components/cart/CartContext";
 import { UpsellModalWrapper } from "@/components/UpsellModalWrapper";
 import { UpgradeModalWrapper } from "@/components/UpgradeModalWrapper";
+import { WingFlavorModalWrapper } from "@/components/WingFlavorModalWrapper";
 import { siteConfig } from "@/lib/config";
 
 import "./globals.css";
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
           <CartDrawer />
           <UpsellModalWrapper />
           <UpgradeModalWrapper />
+          <WingFlavorModalWrapper />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </CartProvider>
