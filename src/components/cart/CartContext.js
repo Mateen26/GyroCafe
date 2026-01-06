@@ -42,11 +42,21 @@ function cartReducer(state, action) {
     case "ADD_ITEM": {
       const { item, shouldOpenCart } = action.payload;
       const items = [...state.items];
-      const existingIndex = items.findIndex(
-        (cartItem) => cartItem.id === item.id && 
+      // For wing items, only merge if same size AND same flavor
+      const existingIndex = items.findIndex((cartItem) => {
+        if (item.metadata?.requiresFlavor && cartItem.metadata?.requiresFlavor) {
+          // Wing items: match by id AND flavor
+          return cartItem.id === item.id && 
+                 cartItem.metadata?.wingFlavor === item.metadata?.wingFlavor;
+        }
         // For upsell items, match by original product ID too
-        (!item.metadata?.isUpsellItem || cartItem.metadata?.isUpsellItem)
-      );
+        if (item.metadata?.isUpsellItem || cartItem.metadata?.isUpsellItem) {
+          return cartItem.id === item.id && 
+                 (!item.metadata?.isUpsellItem || cartItem.metadata?.isUpsellItem);
+        }
+        // Regular items: match by id
+        return cartItem.id === item.id;
+      });
 
       if (existingIndex > -1) {
         items[existingIndex] = {
@@ -150,6 +160,8 @@ export function CartProvider({ children }) {
   const [showUpsellModal, setShowUpsellModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [pendingUpgradeItem, setPendingUpgradeItem] = useState(null);
+  const [showWingFlavorModal, setShowWingFlavorModal] = useState(false);
+  const [pendingWingItem, setPendingWingItem] = useState(null);
   const [toastNotification, setToastNotification] = useState({ isOpen: false, message: "" });
   const previousItemsRef = useRef([]);
   const isProcessingUpgradeRef = useRef(false); // Track if we're currently processing an upgrade
@@ -602,6 +614,30 @@ export function CartProvider({ children }) {
     dispatch({ type: "SET_FULFILLMENT_TYPE", payload: type });
   }, []);
 
+  const handleWingFlavorSelect = useCallback((wingItemWithFlavor) => {
+    // Add wing item with flavor to cart
+    const isMobile = isMobileDevice();
+    if (isMobile) {
+      // Show toast notification on mobile
+      setToastNotification({
+        isOpen: true,
+        message: `${wingItemWithFlavor.name} (${wingItemWithFlavor.metadata.wingFlavor}) added to cart`,
+        type: "success",
+      });
+      // Auto-dismiss toast after 3 seconds
+      setTimeout(() => {
+        setToastNotification({ isOpen: false, message: "" });
+      }, 3000);
+      // Don't open cart on mobile
+      dispatch({ type: "ADD_ITEM", payload: { item: wingItemWithFlavor, shouldOpenCart: false } });
+    } else {
+      // Open cart on desktop
+      dispatch({ type: "ADD_ITEM", payload: { item: wingItemWithFlavor, shouldOpenCart: true } });
+    }
+    // Clear pending wing item
+    setPendingWingItem(null);
+  }, []);
+
   const handleUpgradeSelect = useCallback((accepted) => {
     if (!pendingUpgradeItem) {
       return;
@@ -775,6 +811,11 @@ export function CartProvider({ children }) {
           setToastNotification,
           handleUpsellSelect,
           handleUpgradeSelect,
+          showWingFlavorModal,
+          setShowWingFlavorModal,
+          pendingWingItem,
+          setPendingWingItem,
+          handleWingFlavorSelect,
     }),
     [
       state.items,
@@ -807,6 +848,11 @@ export function CartProvider({ children }) {
       setToastNotification,
       handleUpsellSelect,
       handleUpgradeSelect,
+      showWingFlavorModal,
+      setShowWingFlavorModal,
+      pendingWingItem,
+      setPendingWingItem,
+      handleWingFlavorSelect,
     ]
   );
 

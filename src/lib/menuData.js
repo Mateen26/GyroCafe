@@ -31,6 +31,11 @@ export const menuCategories = [
     description: "Loaded fries, nachos, salads, and signature creations.",
   },
   {
+    id: "wings",
+    name: "Wings",
+    description: "Fresh never frozen wings cooked to order and sauced your way.",
+  },
+  {
     id: "salads",
     name: "Salads",
     description: "Fresh, crisp salads with Mediterranean flair.",
@@ -654,7 +659,85 @@ export const menuItems = [
     tags: ["sweet"],
     outOfStock: true,
   },
-  
+
+  // WINGS
+  {
+    id: "wings-6",
+    name: "6 Wings",
+    category: "wings",
+    price: 9.99,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "A small batch of fresh never frozen wings cooked to order and tossed in your choice of sauce. Perfect for a quick bite or solo snack.",
+    tags: [],
+    requiresFlavor: true,
+  },
+  {
+    id: "wings-10",
+    name: "10 Wings",
+    category: "wings",
+    price: 14.99,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "Our most popular portion of fresh never frozen wings cooked to order and sauced your way. Great for one hungry person or light sharing.",
+    tags: ["fan favorite"],
+    requiresFlavor: true,
+  },
+  {
+    id: "wings-15",
+    name: "15 Wings",
+    category: "wings",
+    price: 20.99,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "A generous serving of fresh never frozen wings cooked to order and tossed in your choice of sauce. Ideal for sharing or when you are extra hungry.",
+    tags: [],
+    requiresFlavor: true,
+  },
+  {
+    id: "wings-20",
+    name: "20 Wings",
+    category: "wings",
+    price: 26.99,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "A share ready order of fresh never frozen wings cooked to order and sauced to your liking. Feeds two to three people comfortably.",
+    tags: [],
+    requiresFlavor: true,
+  },
+  {
+    id: "wings-30",
+    name: "30 Wings",
+    category: "wings",
+    price: 38.99,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "A party friendly spread of fresh never frozen wings cooked to order and tossed in your choice of sauce. Perfect for small groups or game nights.",
+    tags: [],
+    requiresFlavor: true,
+  },
+  {
+    id: "wings-60",
+    name: "60 Wings",
+    category: "wings",
+    price: 74.99,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "A crowd pleasing platter of fresh never frozen wings cooked to order and sauced your way. Ideal for parties gatherings or events.",
+    tags: [],
+    requiresFlavor: true,
+  },
+  {
+    id: "wings-100",
+    name: "100 Wings",
+    category: "wings",
+    price: 120.0,
+    image: "/menu/wings/WINGS.png",
+    description:
+      "Our largest wing offering featuring fresh never frozen wings cooked to order and finished in your choice of sauce. Best for large events offices or serious wing lovers.",
+    tags: [],
+    requiresFlavor: true,
+  },
 
   // MILKSHAKES
   {

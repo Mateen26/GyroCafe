@@ -889,7 +889,9 @@ function OrderPickupThankYouContent() {
                             {categoryItems.map((item, index) => (
                               <div key={`${categoryId}-${index}`} className="flex justify-between text-sm">
                                 <span className="text-brand-dark">
-                                  {item.quantity}x {item.name}
+                                  {item.quantity}x {item.metadata?.wingFlavor 
+                                    ? `${item.name} (${item.metadata.wingFlavor})`
+                                    : item.name}
                                 </span>
                                 <span className="font-semibold text-brand-dark">
                                   ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}

@@ -352,7 +352,11 @@ function CartItemList({ items }) {
               <p className="text-xs uppercase tracking-wide text-neutral-500">
                 {item.category}
               </p>
-              <p className="text-sm font-semibold text-brand-dark">{item.name}</p>
+              <p className="text-sm font-semibold text-brand-dark">
+                {item.metadata?.wingFlavor 
+                  ? `${item.name} (${item.metadata.wingFlavor})`
+                  : item.name}
+              </p>
               <p className="text-xs text-neutral-500">
                 Qty: {item.quantity} · Each {formatCurrency(item.price)}
               </p>

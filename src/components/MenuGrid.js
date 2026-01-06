@@ -18,7 +18,7 @@ export function MenuGrid({
   const [activeCategory, setActiveCategory] = useState(
     initialCategory ?? categories[0]?.id
   );
-  const { addItem } = useCart();
+  const { addItem, setShowWingFlavorModal, setPendingWingItem } = useCart();
 
   const filteredItems = useMemo(() => {
     if (!activeCategory) return items;
@@ -115,15 +115,32 @@ export function MenuGrid({
                   ) : null}
                 </div>
                 <Button
-                  onClick={() =>
-                    addItem({
-                      id: item.id,
-                      name: item.name,
-                      price: item.price,
-                      image: item.image,
-                      category: item.category,
-                    })
-                  }
+                  onClick={() => {
+                    if (item.outOfStock) return;
+                    
+                    // If item requires flavor selection, open flavor modal
+                    if (item.requiresFlavor) {
+                      setPendingWingItem({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        image: item.image,
+                        category: item.category,
+                        description: item.description,
+                        metadata: {},
+                      });
+                      setShowWingFlavorModal(true);
+                    } else {
+                      // Regular item, add directly to cart
+                      addItem({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        image: item.image,
+                        category: item.category,
+                      });
+                    }
+                  }}
                   className={`w-full justify-center ${item.outOfStock ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : ''}`}
                   disabled={item.outOfStock}
                 >
