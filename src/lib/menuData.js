@@ -636,6 +636,26 @@ export const menuItems = [
     tags: ["sweet"],
     outOfStock: false,
   },
+  {
+    id: "chocolate-chip-muffin",
+    name: "Chocolate Chip Muffin",
+    category: "pookie",
+    price: 3.0,
+    image: "/menu/cookies/chocochip-muffin.jpeg",
+    description:
+      "Fresh-baked muffin loaded with rich chocolate chips. Moist, tender, and perfectly sweet. A classic treat that hits every time.",
+    tags: ["sweet"],
+  },
+  {
+    id: "blueberry-muffin",
+    name: "Blueberry Muffin",
+    category: "pookie",
+    price: 3.0,
+    image: "/menu/cookies/blueberry-muffin.jpeg",
+    description:
+      "Fresh-baked muffin bursting with juicy blueberries. Light, fluffy, and naturally sweet. A timeless favorite that never disappoints.",
+    tags: ["sweet"],
+  },
   // OUT OF STOCK COOKIES
   {
     id: "big-body-dark-chocolate-peanut-butter",
@@ -731,7 +751,7 @@ export const menuItems = [
     id: "wings-100",
     name: "100 Wings",
     category: "wings",
-    price: 120.0,
+    price: 119.99,
     image: "/menu/wings/WINGS.png",
     description:
       "Our largest wing offering featuring fresh never frozen wings cooked to order and finished in your choice of sauce. Best for large events offices or serious wing lovers.",
