@@ -641,7 +641,7 @@ export const menuItems = [
     name: "Chocolate Chip Muffin",
     category: "pookie",
     price: 3.0,
-    image: "/menu/cookies/chocochip-muffin.jpeg",
+    image: "/menu/cookies/choclate chip.png",
     description:
       "Fresh-baked muffin loaded with rich chocolate chips. Moist, tender, and perfectly sweet. A classic treat that hits every time.",
     tags: ["sweet"],
@@ -651,7 +651,7 @@ export const menuItems = [
     name: "Blueberry Muffin",
     category: "pookie",
     price: 3.0,
-    image: "/menu/cookies/blueberry-muffin.jpeg",
+    image: "/menu/cookies/blueberry-mufin-new.png",
     description:
       "Fresh-baked muffin bursting with juicy blueberries. Light, fluffy, and naturally sweet. A timeless favorite that never disappoints.",
     tags: ["sweet"],
