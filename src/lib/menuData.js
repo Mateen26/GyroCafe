@@ -577,7 +577,7 @@ export const menuItems = [
     id: "baklava",
     name: "Pistachio Baklava",
     category: "desserts",
-    price: 1.5,
+    price: 1.75,
     image: "/menu/GYRO DESSERTS/pistachio baklava.png",
     description: "Layers of flaky phyllo, pistachio, and honey syrup.",
     tags: ["halal", "sweet", "fan favorite"],
