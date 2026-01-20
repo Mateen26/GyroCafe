@@ -55,7 +55,7 @@ export function MenuGrid({
                       key={category.id}
                       type="button"
                       onClick={() => setActiveCategory(category.id)}
-                      className={`rounded-full border-2 px-6 py-3.5 text-sm md:text-base font-bold uppercase tracking-wide transition-all duration-200 ${
+                      className={`rounded-full border-2 px-4 py-3 text-sm md:text-[14px] font-bold uppercase tracking-wide transition-all duration-200 ${
                         isActive
                           ? "border-brand-red bg-brand-red text-white shadow-lg shadow-brand-red/40 scale-105 ring-2 ring-brand-red/20"
                           : "border-neutral-300 bg-white text-neutral-700 hover:border-brand-red hover:bg-brand-red/10 hover:text-brand-red hover:shadow-md hover:scale-105 active:scale-100"
