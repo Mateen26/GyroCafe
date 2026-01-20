@@ -719,7 +719,7 @@ export function CartProvider({ children }) {
     }, 150);
   }, [pendingUpgradeItem, state.items]);
 
-  const handleUpsellSelect = useCallback(async (type, pookieQuantities = { chocolateChip: 0, nutella: 0, oreo: 0, reeses: 0, chocolateChipMuffin: 0, blueberryMuffin: 0 }) => {
+  const handleUpsellSelect = useCallback(async (type, pookieQuantities = { chocolateChip: 0, nutella: 0, decadent: 0 }) => {
     // Dynamically import menuItems to get image paths
     const { menuItems } = await import("@/lib/menuData");
     const isMobile = isMobileDevice();
@@ -742,10 +742,7 @@ export function CartProvider({ children }) {
     if (type === "cookies") {
       addPookieToCart("big-body-chocolate-chip", pookieQuantities.chocolateChip);
       addPookieToCart("big-body-nutella-chocolate-chip", pookieQuantities.nutella);
-      addPookieToCart("big-body-white-black-oreo", pookieQuantities.oreo);
-      addPookieToCart("big-body-reeses-peanut-butter", pookieQuantities.reeses);
-      addPookieToCart("chocolate-chip-muffin", pookieQuantities.chocolateChipMuffin);
-      addPookieToCart("blueberry-muffin", pookieQuantities.blueberryMuffin);
+      addPookieToCart("decadent-assortment", pookieQuantities.decadent);
       return;
     }
 
@@ -771,10 +768,7 @@ export function CartProvider({ children }) {
     // Add Pookie items if quantities are greater than 0
     addPookieToCart("big-body-chocolate-chip", pookieQuantities.chocolateChip);
     addPookieToCart("big-body-nutella-chocolate-chip", pookieQuantities.nutella);
-    addPookieToCart("big-body-white-black-oreo", pookieQuantities.oreo);
-    addPookieToCart("big-body-reeses-peanut-butter", pookieQuantities.reeses);
-    addPookieToCart("chocolate-chip-muffin", pookieQuantities.chocolateChipMuffin);
-    addPookieToCart("blueberry-muffin", pookieQuantities.blueberryMuffin);
+    addPookieToCart("decadent-assortment", pookieQuantities.decadent);
   }, [state.items]);
 
   const upsellCapacity = useMemo(

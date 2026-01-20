@@ -42,24 +42,31 @@ export function MenuGrid({
         </header>
 
         {showFilters ? (
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => {
-              const isActive = category.id === activeCategory;
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition ${
-                    isActive
-                      ? "border-brand-red bg-brand-red text-white shadow shadow-brand-red/30"
-                      : "border-neutral-200 text-neutral-500 hover:border-brand-red hover:text-brand-red"
-                  }`}
-                >
-                  {category.name}
-                </button>
-              );
-            })}
+          <div className="space-y-4">
+            <div className="rounded-2xl border-2 border-neutral-200 bg-gradient-to-br from-neutral-50 to-white p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-neutral-500">
+                Browse Categories
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {categories.map((category) => {
+                  const isActive = category.id === activeCategory;
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => setActiveCategory(category.id)}
+                      className={`rounded-full border-2 px-6 py-3.5 text-sm md:text-base font-bold uppercase tracking-wide transition-all duration-200 ${
+                        isActive
+                          ? "border-brand-red bg-brand-red text-white shadow-lg shadow-brand-red/40 scale-105 ring-2 ring-brand-red/20"
+                          : "border-neutral-300 bg-white text-neutral-700 hover:border-brand-red hover:bg-brand-red/10 hover:text-brand-red hover:shadow-md hover:scale-105 active:scale-100"
+                      }`}
+                    >
+                      {category.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         ) : null}
 

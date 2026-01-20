@@ -577,7 +577,7 @@ export const menuItems = [
     id: "baklava",
     name: "Pistachio Baklava",
     category: "desserts",
-    price: 1.5,
+    price: 1.75,
     image: "/menu/GYRO DESSERTS/pistachio baklava.png",
     description: "Layers of flaky phyllo, pistachio, and honey syrup.",
     tags: ["halal", "sweet", "fan favorite"],
@@ -637,6 +637,16 @@ export const menuItems = [
     outOfStock: false,
   },
   {
+    id: "big-body-white-chocolate-lava",
+    name: "Big Body White Chocolate Lava Cookie",
+    category: "pookie",
+    price: 4.0,
+    image: "/menu/cookies/BIG BODY NUTELLA COOKIE.png",
+    description:
+      "Fresh-Baked heavyweight 6 oz White Chocolate Lava Cookie with a molten white chocolate center. Bold, warm, and seriously satisfying.",
+    tags: ["sweet"],
+  },
+  {
     id: "chocolate-chip-muffin",
     name: "Chocolate Chip Muffin",
     category: "pookie",
@@ -645,6 +655,7 @@ export const menuItems = [
     description:
       "Fresh-baked muffin loaded with rich chocolate chips. Moist, tender, and perfectly sweet. A classic treat that hits every time.",
     tags: ["sweet"],
+    outOfStock: true,
   },
   {
     id: "blueberry-muffin",
@@ -655,6 +666,7 @@ export const menuItems = [
     description:
       "Fresh-baked muffin bursting with juicy blueberries. Light, fluffy, and naturally sweet. A timeless favorite that never disappoints.",
     tags: ["sweet"],
+    outOfStock: true,
   },
   // OUT OF STOCK COOKIES
   {
