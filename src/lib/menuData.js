@@ -589,7 +589,7 @@ export const menuItems = [
     id: "big-body-chocolate-chip",
     name: "Big Body Chocolate Chip (Cookie)",
     category: "pookie",
-    price: 5.0,
+    price: 4.0,
     image: "/menu/cookies/BIG BODY CHOCOLATE CHIP COOKIE.png",
     description:
       "A Fresh-baked thicc & gooey, 6 oz Chocolate Chip Cookie with crispy edges and a soft, melty center. Pure big-body bliss in every bite.",
@@ -599,7 +599,7 @@ export const menuItems = [
     id: "big-body-nutella-chocolate-chip",
     name: "Big Body Nutella Cookie",
     category: "pookie",
-    price: 5.0,
+    price: 4.0,
     image: "/menu/cookies/BIG BODY NUTELLA COOKIE.png",
     description:
       "Fresh-Baked heavyweight 6 oz Nutella Chocolate Chip Cookie loaded with rich, nutella chocolate chunks. Bold, warm, and seriously satisfying.",
@@ -609,7 +609,7 @@ export const menuItems = [
     id: "big-body-white-black-oreo",
     name: "BIG BODY OREO COOKIE",
     category: "pookie",
-    price: 5.0,
+    price: 4.0,
     image: "/menu/cookies/BIG BODY OREO COOKIE.png",
     description:
       "6 oz Big Body Cookie filled with white and dark chocolate chips, topped with Oreos. Warm them up for 20 seconds for the gooeist bite :)",
@@ -619,7 +619,7 @@ export const menuItems = [
     id: "big-body-reeses-peanut-butter",
     name: "Big Body Reese's Peanut Butter Cookie",
     category: "pookie",
-    price: 5.0,
+    price: 4.0,
     image: "/menu/cookies/BIG BODY REESE'S PEANUT BUTTER COOKIE.png",
     description:
       "Fresh-Baked heavyweight 6 oz Reese's Peanut Butter Cookie loaded with rich Reese's pieces and peanut butter chips. Bold, warm, and seriously satisfying.",
@@ -641,7 +641,7 @@ export const menuItems = [
     name: "Big Body White Chocolate Lava Cookie",
     category: "pookie",
     price: 4.0,
-    image: "/menu/cookies/BIG BODY NUTELLA COOKIE.png",
+    image: "/menu/cookies/BIG BODY NUTELLA COOKIEe.png",
     description:
       "Fresh-Baked heavyweight 6 oz White Chocolate Lava Cookie with a molten white chocolate center. Bold, warm, and seriously satisfying.",
     tags: ["sweet"],
@@ -673,7 +673,7 @@ export const menuItems = [
     id: "big-body-dark-chocolate-peanut-butter",
     name: "Big Body Dark Chocolate Peanut Butter (Cookie)",
     category: "pookie",
-    price: 5.0,
+    price: 4.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "Fresh-Baked heavyweight 6 oz Peanut Butter Cookie loaded with rich, dark chocolate chunks and peanut butter chips. Bold, warm, and seriously satisfying.",
@@ -684,7 +684,7 @@ export const menuItems = [
     id: "big-body-oatmeal-raisin",
     name: "Big Body Oatmeal Raisin (Cookie)",
     category: "pookie",
-    price: 5.0,
+    price: 4.0,
     image: "/menu/GYRO DESSERTS/BIG BODY CHOCCHIP-DARKCHOC.png",
     description:
       "Fresh-Baked heavyweight 6 oz Oatmeal Raisin Cookie. Bold, warm, and seriously satisfying.",
