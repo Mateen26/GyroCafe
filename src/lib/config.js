@@ -13,6 +13,8 @@ export const siteConfig = {
   googleReviewUrl:
     process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
     "https://maps.google.com/?cid=gyro-cafe-review-placeholder",
+  googleTagId:
+    process.env.NEXT_PUBLIC_GOOGLE_TAG_ID,
   social: [
     {
       label: "Instagram",

@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -48,11 +49,30 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const googleTagId = siteConfig.googleTagId;
+  
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-white text-brand-dark antialiased`}
       >
+        {/* Google tag (gtag.js) */}
+        {googleTagId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${googleTagId}');
+              `}
+            </Script>
+          </>
+        )}
         <CartProvider>
           <NavigationProgress />
           <Header />
